@@ -70,6 +70,52 @@ class LectureDetail extends StatelessWidget {
               height: 8,
               width: double.maxFinite,
             ),
+            // 탭바
+            DefaultTabController(
+              length: 1,
+              child: Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TabBar(
+                      padding: EdgeInsets.zero,
+                      indicatorPadding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.zero,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      overlayColor: MaterialStateProperty.all(
+                          Colors.transparent), // 호버 효과 제거
+                      tabs: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: SizedBox(
+                            // Container 대신 SizedBox 사용
+                            width: 130,
+                            child: Tab(
+                              child: T5_14px(
+                                text: "퀴즈",
+                                color: OrmeeColor.primaryPuple[400],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      labelColor: OrmeeColor.primaryPuple[400],
+                      unselectedLabelColor: OrmeeColor.gray[800],
+                      indicator: CustomLabelIndicator(
+                        color: OrmeeColor.primaryPuple[400]!,
+                        borderRadius: BorderRadius.circular(1.0),
+                      ),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
