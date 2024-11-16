@@ -23,6 +23,7 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      surfaceTintColor: OrmeeColor.white,
       backgroundColor: OrmeeColor.white,
       elevation: 0,
       leading: IconButton(
