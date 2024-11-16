@@ -40,9 +40,12 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       actions: rightIcon != null
           ? [
-              IconButton(
-                onPressed: rightAction ?? () {}, // 기본은 아무 동작도 하지 않음
-                icon: rightIcon!,
+              Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: IconButton(
+                  onPressed: rightAction ?? () {}, // 기본은 아무 동작도 하지 않음
+                  icon: rightIcon!,
+                ),
               ),
             ]
           : [],
