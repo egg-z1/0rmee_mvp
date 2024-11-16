@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
-import 'package:ormee_mvp/designs/indicator.dart';
+import 'package:ormee_mvp/designs/Indicator.dart';
+import 'package:ormee_mvp/designs/StickyHeaderDelegate.dart';
 
 var profileImage;
 
@@ -19,104 +18,150 @@ class LectureDetail extends StatelessWidget {
         title: "오름토익 기본반 RC",
         rightIcon: SvgPicture.asset("assets/icons/mail-02.svg"),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // 선생님 프로필
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 45,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: OrmeeColor.gray[100],
-                      border: Border.all(
-                        color: OrmeeColor.gray[100]!, // 테두리 색상
-                        width: 1.0, // 테두리 두께
-                      ),
-                      image: profileImage != null
-                          ? DecorationImage(
-                              image: NetworkImage(profileImage),
-                              fit: BoxFit.cover)
-                          : DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/user-profile-03.png'),
-                            ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  // 선생님 이름
-                  T4_16px(text: "강수이"),
-                  SizedBox(
-                    width: 2,
-                  ),
-                  // 과목 이름
-                  C1_12px_M(text: "RC"),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            // 중앙 분리선
-            Container(
-              color: OrmeeColor.gray[50],
-              height: 8,
-              width: double.maxFinite,
-            ),
-            // 탭바
-            DefaultTabController(
-              length: 1,
-              child: Expanded(
+      body: DefaultTabController(
+        length: 1,
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverToBoxAdapter(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TabBar(
-                      padding: EdgeInsets.zero,
-                      indicatorPadding: EdgeInsets.zero,
-                      labelPadding: EdgeInsets.zero,
-                      indicatorSize: TabBarIndicatorSize.label,
-                      overlayColor: MaterialStateProperty.all(
-                          Colors.transparent), // 호버 효과 제거
-                      tabs: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: SizedBox(
-                            // Container 대신 SizedBox 사용
-                            width: 130,
-                            child: Tab(
-                              child: T5_14px(
-                                text: "퀴즈",
-                                color: OrmeeColor.primaryPuple[400],
+                    // 선생님 프로필
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 45,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: OrmeeColor.gray[100],
+                              border: Border.all(
+                                color: OrmeeColor.gray[100]!,
+                                width: 1.0,
                               ),
+                              image: profileImage != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(profileImage),
+                                      fit: BoxFit.cover)
+                                  : DecorationImage(
+                                      image: AssetImage(
+                                          'assets/images/user-profile-03.png'),
+                                    ),
                             ),
                           ),
-                        ),
-                      ],
-                      labelColor: OrmeeColor.primaryPuple[400],
-                      unselectedLabelColor: OrmeeColor.gray[800],
-                      indicator: CustomLabelIndicator(
-                        color: OrmeeColor.primaryPuple[400]!,
-                        borderRadius: BorderRadius.circular(1.0),
+                          SizedBox(width: 8),
+                          T4_16px(text: "강수이"),
+                          SizedBox(width: 2),
+                          C1_12px_M(text: "RC"),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [],
-                      ),
+                    // 중앙 분리선
+                    Container(
+                      color: OrmeeColor.gray[50],
+                      height: 8,
+                      width: double.maxFinite,
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              SliverPersistentHeader(
+                delegate: StickyTabBarDelegate(
+                  tabBar: TabBar(
+                    padding: EdgeInsets.zero,
+                    indicatorPadding: EdgeInsets.zero,
+                    labelPadding: EdgeInsets.zero,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    tabs: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          width: 130,
+                          child: Tab(
+                            child: T5_14px(
+                              text: "퀴즈",
+                              color: OrmeeColor.primaryPuple[400],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                    labelColor: OrmeeColor.primaryPuple[400],
+                    unselectedLabelColor: OrmeeColor.gray[800],
+                    indicator: CustomLabelIndicator(
+                      color: OrmeeColor.primaryPuple[400]!,
+                      borderRadius: BorderRadius.circular(1.0),
+                    ),
+                  ),
+                ),
+                pinned: true,
+              ),
+            ];
+          },
+          body: TabBarView(
+            children: [
+              // 퀴즈 리스트
+              ListView.builder(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                itemCount: 100,
+                itemBuilder: (context, index) => Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: OrmeeColor.gray[200]!,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            T4_16px(
+                              text: "6주차 퀴즈",
+                              color: OrmeeColor.gray[900],
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: OrmeeColor.primaryPuple[400],
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              width: 50,
+                              height: 20,
+                              child: Center(
+                                child: C2_10px_Sb(
+                                  text: "미응시",
+                                  color: OrmeeColor.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            C1_12px_M(
+                              text: "2024.06.06 (수)",
+                              color: OrmeeColor.gray[400],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
