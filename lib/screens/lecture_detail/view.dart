@@ -76,7 +76,7 @@ class LectureDetail extends StatelessWidget {
                     indicatorPadding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.zero,
                     indicatorSize: TabBarIndicatorSize.label,
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    overlayColor: MaterialStateProperty.all(Colors.white),
                     tabs: [
                       Align(
                         alignment: Alignment.centerLeft,
@@ -124,26 +124,10 @@ class LectureDetail extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             T4_16px(
                               text: "6주차 퀴즈",
                               color: OrmeeColor.gray[900],
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: OrmeeColor.primaryPuple[400],
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              width: 50,
-                              height: 20,
-                              child: Center(
-                                child: C2_10px_Sb(
-                                  text: "미응시",
-                                  color: OrmeeColor.white,
-                                ),
-                              ),
                             ),
                           ],
                         ),
