@@ -37,10 +37,9 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: OrmeeColor.gray[800],
               ),
       ),
-      // title 부분을 Obx로 감싸서 반응형으로 만듦
-      title: Obx(() => T3_18px(
-            text: title ?? "Ormee",
-          )),
+      title: T3_18px(
+        text: title ?? "Ormee",
+      ),
       centerTitle: true,
       actions: rightIcon != null
           ? [
