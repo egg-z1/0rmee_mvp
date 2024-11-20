@@ -10,6 +10,7 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? leftAction;
   final Widget? rightIcon;
   final VoidCallback? rightAction;
+  final Color? rightIconColor;
 
   const OrmeeAppBar({
     Key? key,
@@ -18,6 +19,7 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leftAction,
     this.rightIcon,
     this.rightAction,
+    this.rightIconColor,
   }) : super(key: key);
 
   @override
@@ -47,6 +49,7 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: IconButton(
                   onPressed: rightAction ?? () {},
                   icon: rightIcon!,
+                  color: rightIconColor ?? OrmeeColor.gray[800],
                 ),
               ),
             ]

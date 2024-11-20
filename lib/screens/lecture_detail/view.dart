@@ -22,7 +22,10 @@ class LectureDetail extends StatelessWidget {
       backgroundColor: OrmeeColor.white,
       appBar: OrmeeAppBar(
         title: controller.lectureDetail.value?.title ?? "Lecture Details",
-        rightIcon: SvgPicture.asset("assets/icons/mail-02.svg"),
+        rightIcon: controller.lectureDetail.value?.isAvailable == true
+            ? SvgPicture.asset("assets/icons/mail-02.svg")
+            : null,
+        rightIconColor: OrmeeColor.primaryPuple[400],
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
