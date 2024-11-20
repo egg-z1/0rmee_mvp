@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 
@@ -27,7 +27,7 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: OrmeeColor.white,
       elevation: 0,
       leading: IconButton(
-        onPressed: leftAction ?? () => Get.back(), // 기본은 Get.back()으로 설정
+        onPressed: leftAction ?? () => Get.back(),
         icon: leftIcon != null
             ? Icon(leftIcon, color: OrmeeColor.gray[800])
             : SvgPicture.asset(
@@ -35,16 +35,17 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: OrmeeColor.gray[800],
               ),
       ),
-      title: T3_18px(
-        text: title ?? "Ormee",
-      ),
+      // title 부분을 Obx로 감싸서 반응형으로 만듦
+      title: Obx(() => T3_18px(
+            text: title ?? "Ormee",
+          )),
       centerTitle: true,
       actions: rightIcon != null
           ? [
               Container(
                 margin: const EdgeInsets.only(right: 10),
                 child: IconButton(
-                  onPressed: rightAction ?? () {}, // 기본은 아무 동작도 하지 않음
+                  onPressed: rightAction ?? () {},
                   icon: rightIcon!,
                 ),
               ),
