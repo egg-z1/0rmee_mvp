@@ -15,15 +15,24 @@ class LectureDetail extends StatelessWidget {
   LectureDetail({super.key});
   @override
   Widget build(BuildContext context) {
-    final String lectureId = "1"; // 예시용 ID
+    final String lectureId = "5465"; // 예시용 ID
     controller.fetchLectureDetail(lectureId);
 
     return Scaffold(
       backgroundColor: OrmeeColor.white,
       appBar: OrmeeAppBar(
         title: controller.lectureDetail.value?.title ?? "",
-        rightIcon: controller.lectureDetail.value?.isAvailable == true
+        rightIcon: controller.lectureDetail.value?.messageAvailable == true
             ? SvgPicture.asset("assets/icons/mail-02.svg")
+            : null,
+        rightAction: controller.lectureDetail.value?.messageAvailable == true
+            ? () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(child: Text('안녕'));
+                    });
+              }
             : null,
         rightIconColor: OrmeeColor.primaryPuple[400],
       ),
@@ -103,7 +112,7 @@ class LectureDetail extends StatelessWidget {
                               width: 130,
                               child: Tab(
                                 child: T5_14px(
-                                  text: "퀴즈",
+                                  text: "퀴즈 ${detail.activeQuizCount}",
                                   color: OrmeeColor.primaryPuple[400],
                                 ),
                               ),

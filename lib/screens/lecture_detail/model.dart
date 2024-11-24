@@ -33,7 +33,8 @@ class LectureDetailModel {
   final String? profileImage;
   final String name;
   final String title;
-  final bool isAvailable;
+  final bool messageAvailable;
+  final int activeQuizCount;
   final List<Quiz>? quizList;
 
   LectureDetailModel({
@@ -41,7 +42,8 @@ class LectureDetailModel {
     this.profileImage,
     required this.name,
     required this.title,
-    required this.isAvailable,
+    required this.messageAvailable,
+    required this.activeQuizCount,
     this.quizList,
   });
 
@@ -51,12 +53,14 @@ class LectureDetailModel {
       name: json['name'],
       profileImage: json['profileImage'],
       title: json['title'],
-      isAvailable: json['isAvailable'],
-      quizList: json['quizList'] != null
-          ? (json['quizList'] as List)
-              .map((quiz) => Quiz.fromJson(quiz))
-              .toList()
-          : null,
+      messageAvailable: json['messageAvailable'],
+      activeQuizCount: json['activeQuizCount'],
+      quizList:
+          (json['quizList'] != null && (json['quizList'] as List).isNotEmpty)
+              ? (json['quizList'] as List)
+                  .map((quiz) => Quiz.fromJson(quiz))
+                  .toList()
+              : null,
     );
   }
 
@@ -64,7 +68,29 @@ class LectureDetailModel {
         'id': id,
         'name': name,
         'title': title,
-        'isAvailable': isAvailable,
+        'isAvailable': messageAvailable,
         'quizList': quizList?.map((quiz) => quiz.toJson()).toList(),
+      };
+}
+
+class Message {
+  final String id;
+  final String title;
+
+  Message({
+    required this.id,
+    required this.title,
+  });
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      id: json['id'],
+      title: json['title'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
       };
 }
