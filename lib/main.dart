@@ -31,7 +31,7 @@ class OrmeeApp extends StatelessWidget {
                   statusBarColor: OrmeeColor.white,
                   statusBarIconBrightness: Brightness.dark))),
       title: 'Peeroreum',
-      home: Home(),
+      home: LectureDetail(),
       getPages: [
         GetPage(
           name: '/home',

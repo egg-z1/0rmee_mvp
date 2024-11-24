@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 
@@ -10,6 +10,7 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? leftAction;
   final Widget? rightIcon;
   final VoidCallback? rightAction;
+  final Color? rightIconColor;
 
   const OrmeeAppBar({
     Key? key,
@@ -18,15 +19,17 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leftAction,
     this.rightIcon,
     this.rightAction,
+    this.rightIconColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      surfaceTintColor: OrmeeColor.white,
       backgroundColor: OrmeeColor.white,
       elevation: 0,
       leading: IconButton(
-        onPressed: leftAction ?? () => Get.back(), // 기본은 Get.back()으로 설정
+        onPressed: leftAction ?? () => Get.back(),
         icon: leftIcon != null
             ? Icon(leftIcon, color: OrmeeColor.gray[800])
             : SvgPicture.asset(
@@ -40,9 +43,13 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       actions: rightIcon != null
           ? [
-              IconButton(
-                onPressed: rightAction ?? () {}, // 기본은 아무 동작도 하지 않음
-                icon: rightIcon!,
+              Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: IconButton(
+                  onPressed: rightAction ?? () {},
+                  icon: rightIcon!,
+                  color: rightIconColor ?? OrmeeColor.gray[800],
+                ),
               ),
             ]
           : [],
