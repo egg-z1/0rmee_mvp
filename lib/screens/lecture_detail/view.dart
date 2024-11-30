@@ -10,12 +10,16 @@ import 'package:ormee_mvp/screens/lecture_detail/view_model.dart';
 
 class LectureDetail extends StatelessWidget {
   final LectureController controller = Get.put(LectureController());
-  final TextEditingController _controller = TextEditingController();
-  var profileImage;
+  TextEditingController _controller = TextEditingController();
+  var isTextFieldNotEmpty = false.obs; // Rx로 상태 관리
 
   LectureDetail({super.key});
   @override
   Widget build(BuildContext context) {
+    _controller.addListener(() {
+      isTextFieldNotEmpty.value = _controller.text.isNotEmpty;
+    });
+
     final String lectureId = "5465"; // 예시용 ID
     controller.fetchLectureDetail(lectureId);
 
@@ -32,7 +36,8 @@ class LectureDetail extends StatelessWidget {
                   barrierDismissible: false,
                   context: context,
                   builder: (context) {
-                    return customDialog(context, _controller); // 분리된 위젯 함수 호출
+                    return customDialog(context, _controller,
+                        isTextFieldNotEmpty); // 분리된 위젯 함수 호출
                   },
                 );
               }
@@ -199,7 +204,8 @@ class LectureDetail extends StatelessWidget {
   }
 }
 
-Widget customDialog(BuildContext context, TextEditingController controller) {
+Widget customDialog(BuildContext context, TextEditingController controller,
+    RxBool isTextFieldNotEmpty) {
   return Dialog(
     child: Container(
       decoration: BoxDecoration(
@@ -292,6 +298,34 @@ Widget customDialog(BuildContext context, TextEditingController controller) {
             ),
           ),
           SizedBox(height: 16),
+          Row(
+            children: [
+              Spacer(),
+              Obx(() {
+                // isTextFieldNotEmpty 값에 따라 버튼 스타일 변경
+                return TextButton(
+                  onPressed: isTextFieldNotEmpty.value
+                      ? () {} // 텍스트가 있으면 버튼 클릭 가능
+                      : null, // 텍스트가 없으면 버튼 클릭 불가
+                  child: C1_12px_M(
+                    text: "제출하기",
+                    color: isTextFieldNotEmpty.value
+                        ? OrmeeColor.white
+                        : OrmeeColor.gray[600]!,
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: isTextFieldNotEmpty.value
+                        ? OrmeeColor.primaryPuple[300]
+                        : OrmeeColor.gray[100]!,
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                );
+              })
+            ],
+          )
         ],
       ),
     ),
