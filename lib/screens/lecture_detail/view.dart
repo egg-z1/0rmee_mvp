@@ -10,6 +10,7 @@ import 'package:ormee_mvp/screens/lecture_detail/view_model.dart';
 
 class LectureDetail extends StatelessWidget {
   final LectureController controller = Get.put(LectureController());
+  final TextEditingController _controller = TextEditingController();
   var profileImage;
 
   LectureDetail({super.key});
@@ -28,10 +29,12 @@ class LectureDetail extends StatelessWidget {
         rightAction: controller.lectureDetail.value?.messageAvailable == true
             ? () {
                 showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(child: Text('안녕'));
-                    });
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) {
+                    return customDialog(context, _controller); // 분리된 위젯 함수 호출
+                  },
+                );
               }
             : null,
         rightIconColor: OrmeeColor.primaryPuple[400],
@@ -194,4 +197,103 @@ class LectureDetail extends StatelessWidget {
       }),
     );
   }
+}
+
+Widget customDialog(BuildContext context, TextEditingController controller) {
+  return Dialog(
+    child: Container(
+      decoration: BoxDecoration(
+        color: OrmeeColor.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: T4_16px(
+                  text: ' 제출!',
+                  overflow: TextOverflow.visible,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: SvgPicture.asset("assets/icons/xLarge.svg"),
+              ),
+            ],
+          ),
+          SizedBox(height: 24),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: OrmeeColor.gray[100]!,
+              ),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                C1_12px_M(text: '받는 사람:', color: OrmeeColor.gray[500]),
+                C1_12px_M(text: '오르미 T'),
+              ],
+            ),
+          ),
+          SizedBox(height: 16),
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: OrmeeColor.gray[100]!),
+              color: OrmeeColor.gray[100],
+            ),
+            child: TextField(
+              controller: controller,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Pretendard',
+                color: Colors.black,
+              ),
+              cursorColor: OrmeeColor.gray[600],
+              decoration: InputDecoration(
+                hintText: '번호는 쉼표로 구분해서 제출해 주세요.\nex) 1, 7, 18, 22',
+                hintStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Pretendard',
+                  color: OrmeeColor.gray[400]!,
+                ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                border: InputBorder.none,
+                fillColor: OrmeeColor.gray[100],
+              ),
+              maxLines: null, // 여러 줄로 설정
+              onChanged: (value) {
+                // 제한된 문자만 남김
+                final filteredValue =
+                    value.replaceAll(RegExp(r'[^0-9,\s]'), '');
+                if (value != filteredValue) {
+                  controller.value = TextEditingValue(
+                    text: filteredValue,
+                    selection:
+                        TextSelection.collapsed(offset: filteredValue.length),
+                  );
+                }
+              },
+            ),
+          ),
+          SizedBox(height: 16),
+        ],
+      ),
+    ),
+  );
 }
