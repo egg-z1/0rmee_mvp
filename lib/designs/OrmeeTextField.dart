@@ -24,7 +24,8 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 //                 controller: _controller_2,
 //                 textInputAction: TextInputAction.done,
 //                 isTextNotEmpty: isTextFieldNotEmpty2,
-//               )
+//                 isPassword: true,
+//               ),
 
 class CustomTextFormField extends StatelessWidget {
   final String hintText;
@@ -32,13 +33,16 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputAction textInputAction;
   final Function(String)? onFieldSubmitted;
   final RxBool isTextNotEmpty; // Rx<bool>로 상태 관리
+  final bool? isPassword; // 선택적 파라미터
+  final RxBool isObscure = true.obs; // 비밀번호 숨김 상태 관리
 
   CustomTextFormField({
     required this.hintText,
     required this.controller,
     required this.textInputAction,
     this.onFieldSubmitted,
-    required this.isTextNotEmpty, // Rx<bool> 받아오기
+    required this.isTextNotEmpty,
+    this.isPassword,
   });
 
   @override
@@ -51,15 +55,16 @@ class CustomTextFormField extends StatelessWidget {
           controller: controller,
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
-          style: TextStyle(fontSize: 14, color: Colors.black),
+          obscureText: isPassword == true ? isObscure.value : false,
+          style: TextStyle(fontSize: 14, color: OrmeeColor.black),
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey[200]!),
+              borderSide: BorderSide(color: OrmeeColor.gray[200]!),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.black),
+              borderSide: BorderSide(color: OrmeeColor.black),
             ),
             hintText: hintText,
             hintStyle: TextStyle(
@@ -69,17 +74,34 @@ class CustomTextFormField extends StatelessWidget {
               color: OrmeeColor.gray[600],
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            suffixIcon: isTextNotEmpty.value
-                ? IconButton(
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isTextNotEmpty.value)
+                  IconButton(
                     onPressed: () {
                       controller.clear();
+                      isTextNotEmpty.value = false; // 상태 초기화
                     },
                     icon: SvgPicture.asset(
                       "assets/icons/xCircle.svg",
                       color: OrmeeColor.gray[200],
                     ),
-                  )
-                : null,
+                  ),
+                if (isPassword == true && isTextNotEmpty.value)
+                  IconButton(
+                    onPressed: () {
+                      isObscure.value = !isObscure.value; // 토글
+                    },
+                    icon: SvgPicture.asset(
+                      isObscure.value
+                          ? "assets/icons/eye_off.svg"
+                          : "assets/icons/eye_on.svg",
+                      color: OrmeeColor.gray[600],
+                    ),
+                  ),
+              ],
+            ),
           ),
         ));
   }
