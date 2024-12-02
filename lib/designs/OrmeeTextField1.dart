@@ -9,7 +9,7 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 // final TextEditingController _controller_1 = TextEditingController();
 // var isTextFieldNotEmpty1 = false.obs; // Rx로 상태 관리
 //
-// CustomTextFormField(
+// OrmeeTextField1(
 //                 hintText: '이메일을 입력하세요.',
 //                 controller: _controller_1,
 //                 textInputAction: TextInputAction.next,
@@ -19,7 +19,7 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 //                 isTextNotEmpty: isTextFieldNotEmpty1,
 //               ),
 //
-// CustomTextFormField(
+// OrmeeTextField1(
 //                 hintText: '비밀번호를 입력하세요.',
 //                 controller: _controller_2,
 //                 textInputAction: TextInputAction.done,
@@ -27,7 +27,7 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 //                 isPassword: true,
 //               ),
 
-class CustomTextFormField extends StatelessWidget {
+class OrmeeTextField1 extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final TextInputAction textInputAction;
@@ -36,7 +36,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool? isPassword; // 선택적 파라미터
   final RxBool isObscure = true.obs; // 비밀번호 숨김 상태 관리
 
-  CustomTextFormField({
+  OrmeeTextField1({
     required this.hintText,
     required this.controller,
     required this.textInputAction,
