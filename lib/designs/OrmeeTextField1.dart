@@ -10,28 +10,31 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 // var isTextFieldNotEmpty1 = false.obs; // Rx로 상태 관리
 //
 // OrmeeTextField1(
-//                 hintText: '이메일을 입력하세요.',
-//                 controller: _controller_1,
+//                 hintText: "이름을 입력하세요.",
+//                 controller: _controller_id,
 //                 textInputAction: TextInputAction.next,
+//                 isTextNotEmpty: isTextFieldNotEmpty_id,
 //                 onFieldSubmitted: (term) {
 //                   FocusScope.of(context).nextFocus();
 //                 },
-//                 isTextNotEmpty: isTextFieldNotEmpty1,
 //               ),
 //
 // OrmeeTextField1(
 //                 hintText: '비밀번호를 입력하세요.',
-//                 controller: _controller_2,
+//                 controller: _controller_pw,
 //                 textInputAction: TextInputAction.done,
-//                 isTextNotEmpty: isTextFieldNotEmpty2,
+//                 isTextNotEmpty: isTextFieldNotEmpty_pw,
 //                 isPassword: true,
+//                 onFieldSubmitted: (term) {
+//                   FocusScope.of(context).dispose();
+//                 },
 //               ),
 
 class OrmeeTextField1 extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final TextInputAction textInputAction;
-  final Function(String)? onFieldSubmitted;
+  final Function(String) onFieldSubmitted;
   final RxBool isTextNotEmpty; // Rx<bool>로 상태 관리
   final bool? isPassword; // 선택적 파라미터
   final RxBool isObscure = true.obs; // 비밀번호 숨김 상태 관리
@@ -40,7 +43,7 @@ class OrmeeTextField1 extends StatelessWidget {
     required this.hintText,
     required this.controller,
     required this.textInputAction,
-    this.onFieldSubmitted,
+    required this.onFieldSubmitted,
     required this.isTextNotEmpty,
     this.isPassword,
   });

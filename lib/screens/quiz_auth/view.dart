@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
+import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField1.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 
@@ -16,13 +17,14 @@ class QuizAuth extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: OrmeeColor.white,
         appBar: OrmeeAppBar(
           title: "6주차 퀴즈",
         ),
         body: Padding(
           padding: EdgeInsets.fromLTRB(20, 32, 20, 0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               T4_16px(text: "응시자 정보 입력"),
@@ -55,6 +57,11 @@ class QuizAuth extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 isTextNotEmpty: isTextFieldNotEmpty_pw,
                 isPassword: true,
+                onFieldSubmitted: (term) {
+                  FocusScope.of(context).dispose();
+                  // print(_controller_id.text);
+                  // print(_controller_pw.text);
+                },
               ),
             ],
           ),
