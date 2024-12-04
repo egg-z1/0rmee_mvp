@@ -67,8 +67,10 @@ class LectureDetailModel {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
+        'profileImage': profileImage,
         'title': title,
-        'isAvailable': messageAvailable,
+        'messageAvailable': messageAvailable, // 필드명 일치시킴
+        'activeQuizCount': activeQuizCount,
         'quizList': quizList?.map((quiz) => quiz.toJson()).toList(),
       };
 }
