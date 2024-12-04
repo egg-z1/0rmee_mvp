@@ -80,15 +80,14 @@ class LectureDetail extends StatelessWidget {
                                     color: OrmeeColor.gray[100]!,
                                     width: 1.0,
                                   ),
-                                  image: detail.profileImage != null
-                                      ? DecorationImage(
-                                          image: NetworkImage(
-                                              detail.profileImage!),
-                                          fit: BoxFit.cover)
-                                      : DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/user-profile-03.png'),
-                                        ),
+                                  image: DecorationImage(
+                                    image: detail.profileImage != null
+                                        ? NetworkImage(detail.profileImage!)
+                                            as ImageProvider
+                                        : AssetImage(
+                                            'assets/images/defalut_profile.png'),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 8),
@@ -154,7 +153,8 @@ class LectureDetail extends StatelessWidget {
                       itemCount: quizList.length,
                       itemBuilder: (context, index) {
                         final quiz = quizList[index];
-                        Padding(
+                        return Padding(
+                          // return 문 추가
                           padding: EdgeInsets.only(bottom: 16),
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -190,7 +190,7 @@ class LectureDetail extends StatelessWidget {
                               ],
                             ),
                           ),
-                        );
+                        ); // return 문 끝
                       },
                     );
                   }),
