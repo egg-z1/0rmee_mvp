@@ -109,6 +109,7 @@ class LectureDetail extends StatelessWidget {
                       delegate: StickyTabBarDelegate(
                         tabBar: TabBar(
                           padding: EdgeInsets.zero,
+                          dividerColor: OrmeeColor.gray[200],
                           indicatorPadding: EdgeInsets.zero,
                           labelPadding: EdgeInsets.zero,
                           indicatorSize: TabBarIndicatorSize.label,
@@ -179,6 +180,9 @@ class LectureDetail extends StatelessWidget {
                                             : OrmeeColor.gray[300],
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: 16,
                                   ),
                                   Row(
                                     children: [
