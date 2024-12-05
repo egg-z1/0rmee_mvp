@@ -115,6 +115,34 @@ class T4_16px extends StatelessWidget {
   }
 }
 
+class T4_20px extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  final Color? color;
+  final TextOverflow? overflow;
+
+  const T4_20px({
+    Key? key,
+    required this.text,
+    this.color,
+    this.overflow,
+    this.style = const TextStyle(),
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: style.copyWith(
+          color: color ?? OrmeeColor.black,
+          fontFamily: 'Pretendard',
+          fontSize: 20,
+          fontWeight: FontWeight.w600),
+      overflow: overflow ?? TextOverflow.clip,
+    );
+  }
+}
+
 class T5_14px extends StatelessWidget {
   final String text;
   final TextStyle style;
@@ -251,6 +279,34 @@ class B4_14px_M extends StatelessWidget {
           color: color ?? OrmeeColor.black,
           fontFamily: 'Pretendard',
           fontSize: 14,
+          fontWeight: FontWeight.w500),
+      overflow: overflow ?? TextOverflow.clip,
+    );
+  }
+}
+
+class B4_16px_M extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  final Color? color;
+  final TextOverflow? overflow;
+
+  const B4_16px_M({
+    Key? key,
+    required this.text,
+    this.color,
+    this.overflow,
+    this.style = const TextStyle(),
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: style.copyWith(
+          color: color ?? OrmeeColor.black,
+          fontFamily: 'Pretendard',
+          fontSize: 16,
           fontWeight: FontWeight.w500),
       overflow: overflow ?? TextOverflow.clip,
     );
