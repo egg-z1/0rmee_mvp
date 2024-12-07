@@ -6,7 +6,7 @@ import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 
 class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
-  final IconData? leftIcon;
+  final Widget? leftIcon;
   final VoidCallback? leftAction;
   final Widget? rightIcon;
   final VoidCallback? rightAction;
@@ -28,15 +28,13 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: OrmeeColor.white,
       backgroundColor: OrmeeColor.white,
       elevation: 0,
-      leading: IconButton(
-        onPressed: leftAction ?? () => Get.back(),
-        icon: leftIcon != null
-            ? Icon(leftIcon, color: OrmeeColor.gray[800])
-            : SvgPicture.asset(
-                'assets/icons/left.svg',
-                color: OrmeeColor.gray[800],
-              ),
-      ),
+      leading: (leftIcon != null && leftAction != null)
+          ? IconButton(
+              onPressed: leftAction ?? () {},
+              icon: leftIcon!,
+              color: OrmeeColor.gray[800],
+            )
+          : null,
       title: T3_18px(
         text: title ?? "Ormee",
       ),

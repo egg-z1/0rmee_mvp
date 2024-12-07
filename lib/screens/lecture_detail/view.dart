@@ -27,6 +27,10 @@ class LectureDetail extends StatelessWidget {
       () => Scaffold(
         backgroundColor: OrmeeColor.white,
         appBar: OrmeeAppBar(
+          leftIcon: SvgPicture.asset(
+            'assets/icons/left.svg',
+          ),
+          leftAction: () => Get.back(),
           title: controller.lectureDetail.value?.title ?? "",
           rightIcon: controller.lectureDetail.value?.messageAvailable == true
               ? SvgPicture.asset("assets/icons/mail-02.svg")
