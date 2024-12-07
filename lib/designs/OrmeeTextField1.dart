@@ -12,6 +12,7 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 // OrmeeTextField1(
 //                 hintText: "이름을 입력하세요.",
 //                 controller: _controller_id,
+//                 focusNode: focusNode_id,
 //                 textInputAction: TextInputAction.next,
 //                 isTextNotEmpty: isTextFieldNotEmpty_id,
 //                 onFieldSubmitted: (term) {
@@ -22,11 +23,12 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 // OrmeeTextField1(
 //                 hintText: '비밀번호를 입력하세요.',
 //                 controller: _controller_pw,
+//                 focusNode: focusNode_pw,
 //                 textInputAction: TextInputAction.done,
 //                 isTextNotEmpty: isTextFieldNotEmpty_pw,
 //                 isPassword: true,
 //                 onFieldSubmitted: (term) {
-//                   FocusScope.of(context).dispose();
+//                   FocusScope.of(context).unfocus();
 //                 },
 //               ),
 
@@ -38,6 +40,7 @@ class OrmeeTextField1 extends StatelessWidget {
   final RxBool isTextNotEmpty; // Rx<bool>로 상태 관리
   final bool? isPassword; // 선택적 파라미터
   final RxBool isObscure = true.obs; // 비밀번호 숨김 상태 관리
+  final FocusNode focusNode;
 
   OrmeeTextField1({
     required this.hintText,
@@ -46,7 +49,8 @@ class OrmeeTextField1 extends StatelessWidget {
     required this.onFieldSubmitted,
     required this.isTextNotEmpty,
     this.isPassword,
-  });
+    FocusNode? focusNode,
+  }) : focusNode = focusNode ?? FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,7 @@ class OrmeeTextField1 extends StatelessWidget {
 
     return Obx(() => TextFormField(
           controller: controller,
+          focusNode: focusNode,
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
           obscureText: isPassword == true ? isObscure.value : false,
