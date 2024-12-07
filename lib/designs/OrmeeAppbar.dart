@@ -51,6 +51,14 @@ class OrmeeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ]
           : [],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1.0), // Container의 높이
+        child: Container(
+          width: double.maxFinite,
+          height: 1.0,
+          color: OrmeeColor.gray[100], // 원하는 색상
+        ),
+      ),
     );
   }
 
