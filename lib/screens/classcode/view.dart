@@ -57,7 +57,6 @@ class ClassCode extends StatelessWidget {
         return GestureDetector(
           onTap: controller.isTextFieldNotEmpty.value
               ? () {
-                  // 여기에 탭했을 때 실행할 코드 작성
                   Get.to(() =>
                       LectureDetail(lectureId: controller.textController.text));
                 }
