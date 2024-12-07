@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
-import 'package:ormee_mvp/screens/auth/view.dart';
-import 'package:ormee_mvp/screens/home/view.dart';
-import 'package:ormee_mvp/screens/lecture_detail/view.dart';
+import 'package:ormee_mvp/screens/branching/view.dart';
 import 'package:ormee_mvp/screens/quiz/view.dart';
 import 'package:ormee_mvp/screens/quiz_answer/view.dart';
 import 'package:ormee_mvp/screens/quiz_detail/view.dart';
@@ -30,21 +28,9 @@ class OrmeeApp extends StatelessWidget {
               systemOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: OrmeeColor.white,
                   statusBarIconBrightness: Brightness.dark))),
-      title: 'Peeroreum',
-      home: LectureDetail(),
+      title: 'Ormee',
+      home: Branch(),
       getPages: [
-        GetPage(
-          name: '/home',
-          page: () => Home(),
-        ),
-        GetPage(
-          name: '/auth',
-          page: () => Authentication(),
-        ),
-        GetPage(
-          name: '/lecture/detail',
-          page: () => LectureDetail(),
-        ),
         GetPage(
           name: '/quiz',
           page: () => Quiz(),
