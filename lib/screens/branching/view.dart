@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
+import 'package:ormee_mvp/screens/classcode/view.dart';
 
 class Branch extends StatelessWidget {
   const Branch({super.key});
@@ -22,7 +23,7 @@ class Branch extends StatelessWidget {
               height: 45,
             ),
             GestureDetector(
-              onTap: () => Get.toNamed('/classcode'),
+              onTap: () => Get.to(ClassCode()),
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(

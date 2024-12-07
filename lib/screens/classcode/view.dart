@@ -6,6 +6,7 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField1.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/classcode/view_model.dart';
+import 'package:ormee_mvp/screens/lecture_detail/view.dart';
 
 class ClassCode extends StatelessWidget {
   ClassCode({super.key});
@@ -53,22 +54,31 @@ class ClassCode extends StatelessWidget {
         ),
       ),
       bottomSheet: Obx(() {
-        return Container(
-          width: double.maxFinite,
-          color: OrmeeColor.white,
+        return GestureDetector(
+          onTap: controller.isTextFieldNotEmpty.value
+              ? () {
+                  // 여기에 탭했을 때 실행할 코드 작성
+                  Get.to(() =>
+                      LectureDetail(lectureId: controller.textController.text));
+                }
+              : null,
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            height: 48,
-            decoration: BoxDecoration(
-              color: controller.isTextFieldNotEmpty.value
-                  ? OrmeeColor.primaryPuple[400]
-                  : OrmeeColor.gray[300],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: T4_16px(
-                text: "입장하기",
-                color: OrmeeColor.white,
+            width: double.maxFinite,
+            color: OrmeeColor.white,
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              height: 48,
+              decoration: BoxDecoration(
+                color: controller.isTextFieldNotEmpty.value
+                    ? OrmeeColor.primaryPuple[400]
+                    : OrmeeColor.gray[300],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: T4_16px(
+                  text: "입장하기",
+                  color: OrmeeColor.white,
+                ),
               ),
             ),
           ),
