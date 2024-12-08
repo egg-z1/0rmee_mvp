@@ -1,43 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/screens/teacher/header/view_model.dart';
 
-class TeacherHeader extends StatefulWidget implements PreferredSizeWidget {
-  const TeacherHeader({super.key});
+class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
+  TeacherHeader({super.key});
 
-  @override
-  State<TeacherHeader> createState() => _TeacherHeaderState();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(88);
-}
-
-class _TeacherHeaderState extends State<TeacherHeader> {
-  final TextEditingController _searchController = TextEditingController();
-  bool _searchClear = false;
-
-  void _onSearchSubmitted(String value) {
-    if (value.isNotEmpty) {
-      debugPrint('Search Submitted: $value');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('검색어를 입력하세요.')),
-      );
-    }
-  }
-
-  void _onSearchChanged(String value) {
-    setState(() {
-      _searchClear = value.isNotEmpty;
-    });
-  }
-
-  void _clearSearch() {
-    _searchController.clear();
-    setState(() {
-      _searchClear = false;
-    });
-  }
+  final TeacherHeaderController controller = Get.put(TeacherHeaderController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +22,7 @@ class _TeacherHeaderState extends State<TeacherHeader> {
         ),
       ),
       title: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Row(
           children: [
             Image.asset(
@@ -91,9 +61,9 @@ class _TeacherHeaderState extends State<TeacherHeader> {
         children: [
           Expanded(
             child: TextField(
-              controller: _searchController,
-              onChanged: _onSearchChanged,
-              onSubmitted: _onSearchSubmitted,
+              controller: controller.searchController,
+              onChanged: controller.onSearchChanged,
+              onSubmitted: controller.onSearchSubmitted,
               style: TextStyle(
                 color: OrmeeColor.gray[900],
                 fontFamily: 'Pretendard',
@@ -113,19 +83,22 @@ class _TeacherHeaderState extends State<TeacherHeader> {
               textInputAction: TextInputAction.search,
             ),
           ),
-          if (_searchClear)
-            GestureDetector(
-              onTap: _clearSearch,
-              child: SvgPicture.asset(
-                'assets/icons/type=circle_x.svg',
-                color: OrmeeColor.gray[300],
-                height: 24,
-              ),
-            ),
+          Obx(() {
+            return controller.searchClear.value
+                ? GestureDetector(
+                    onTap: controller.clearSearch,
+                    child: SvgPicture.asset(
+                      'assets/icons/type=circle_x.svg',
+                      color: OrmeeColor.gray[300],
+                      height: 24,
+                    ),
+                  )
+                : const SizedBox.shrink();
+          }),
           const SizedBox(width: 16),
           GestureDetector(
             onTap: () {
-              _onSearchSubmitted(_searchController.text);
+              controller.onSearchSubmitted(controller.searchController.text);
             },
             child: SvgPicture.asset(
               'assets/icons/type=search.svg',
@@ -137,4 +110,7 @@ class _TeacherHeaderState extends State<TeacherHeader> {
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(88);
 }
