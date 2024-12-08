@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 
 class TeacherHome extends StatelessWidget {
@@ -9,23 +10,14 @@ class TeacherHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: OrmeeColor.white,
-      appBar: AppBar(),
+      appBar: TeacherHeader(),
       body: Container(
         child: Row(
           children: [
             // sidemenu,
             SizedBox(width: 348, child: TeacherSideMenu()),
             Container(
-              decoration: BoxDecoration(
-                color: OrmeeColor.gray[200],
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
-                    spreadRadius: -20,
-                    blurRadius: 20,
-                  )
-                ],
-              ),
+              color: OrmeeColor.gray[200],
               width: 1,
             ),
             // body

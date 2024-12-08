@@ -30,8 +30,21 @@ class TeacherSideMenu extends StatelessWidget {
         );
       } else {
         return Scaffold(
+          backgroundColor: Colors.transparent,
           body: Container(
-            color: OrmeeColor.gray[50],
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                ),
+                BoxShadow(
+                  color: OrmeeColor.gray[50]!,
+                  spreadRadius: -0.5,
+                  blurRadius: 20.0,
+                  offset: Offset(-15, 15),
+                ),
+              ],
+            ),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
               child: Column(
