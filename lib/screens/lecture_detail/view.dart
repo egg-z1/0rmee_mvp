@@ -13,20 +13,32 @@ class LectureDetail extends StatelessWidget {
   TextEditingController _controller = TextEditingController();
   var isTextFieldNotEmpty = false.obs; // Rx로 상태 관리
 
-  LectureDetail({super.key});
+  final String lectureId;
+
+  LectureDetail({
+    super.key,
+    required this.lectureId,
+  });
+
   @override
   Widget build(BuildContext context) {
     _controller.addListener(() {
       isTextFieldNotEmpty.value = _controller.text.isNotEmpty;
     });
 
-    final String lectureId = "5465"; // 예시용 ID
-    controller.fetchLectureDetail(lectureId);
+    // initState 대신 build에서 한 번만 호출되도록 처리
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchLectureDetail(lectureId);
+    });
 
     return Obx(
       () => Scaffold(
         backgroundColor: OrmeeColor.white,
         appBar: OrmeeAppBar(
+          leftIcon: SvgPicture.asset(
+            'assets/icons/left.svg',
+          ),
+          leftAction: () => Get.back(),
           title: controller.lectureDetail.value?.title ?? "",
           rightIcon: controller.lectureDetail.value?.messageAvailable == true
               ? SvgPicture.asset("assets/icons/mail-02.svg")

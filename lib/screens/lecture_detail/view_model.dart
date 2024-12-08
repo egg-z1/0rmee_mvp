@@ -10,13 +10,6 @@ class LectureController extends GetxController {
   var lectureDetail = Rx<LectureDetailModel?>(null);
   var error = Rx<String?>(null);
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   // 초기 데이터 로드
-  //   fetchLectureDetail("5465");
-  // }
-
   Future<void> fetchLectureDetail(String lectureId) async {
     isLoading(true);
     error(null);
