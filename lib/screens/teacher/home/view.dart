@@ -31,10 +31,11 @@ class TeacherHome extends StatelessWidget {
             onCancel: () {
               Get.back();
             },
-            onConfirm: () {
+            onConfirm: () async {
               print(titleController.textEditingController.text);
               print(dropdownController1.selectedMonth.value);
               print(dropdownController2.selectedMonth.value);
+              //여기에 api 호출 코드 작성
               Get.back();
             },
           );
@@ -44,30 +45,26 @@ class TeacherHome extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: OrmeeColor.white,
-      appBar: TeacherHeader(), // Custom header
+      appBar: TeacherHeader(),
       body: Row(
         children: [
-          // Side menu
           SizedBox(width: 348, child: TeacherSideMenu()),
           Container(
             color: OrmeeColor.gray[200],
             width: 1,
           ),
-          // Main body
           Container(
             color: OrmeeColor.white,
             width: MediaQuery.of(context).size.width - 500,
             child: GestureDetector(
               onTap: () {
-                openOrmeeDialog(); // Call the function to open the dialog
+                openOrmeeDialog();
               },
               child: Container(
                 color: OrmeeColor.error,
                 width: 200,
-                height: 100, // Add height for the tap area
-                child: Center(
-                    child: Text(
-                        'Tap to Open Dialog')), // Optional label to indicate tappable area
+                height: 100,
+                child: Center(child: Text('Tap to Open Dialog')),
               ),
             ),
           ),
