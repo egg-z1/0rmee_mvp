@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeDropDownButton.dart';
+import 'package:ormee_mvp/designs/OrmeeSelect.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField3.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
@@ -43,28 +44,51 @@ class TeacherHome extends StatelessWidget {
       );
     }
 
+    final LayerLink layerLink = LayerLink();
+    OverlayEntry? overlayEntry;
+
+    void openOrmeeSelect() {
+      overlayEntry = OverlayEntry(
+        builder: (context) => OrmeeSelect(
+          answerList: ["Apple", "Banana", "Cherry"],
+          layerLink: layerLink,
+          onSelect: (selected) {
+            print("Selected: $selected");
+            overlayEntry?.remove();
+            overlayEntry = null;
+          },
+        ),
+      );
+      Overlay.of(context).insert(overlayEntry!);
+    }
+
     return Scaffold(
       backgroundColor: OrmeeColor.white,
       appBar: TeacherHeader(),
       body: Row(
         children: [
           SizedBox(width: 348, child: TeacherSideMenu()),
-          Container(
-            color: OrmeeColor.gray[200],
-            width: 1,
-          ),
+          Container(color: OrmeeColor.gray[200], width: 1),
           Container(
             color: OrmeeColor.white,
             width: MediaQuery.of(context).size.width - 500,
-            child: GestureDetector(
-              onTap: () {
-                openOrmeeDialog();
-              },
-              child: Container(
-                color: OrmeeColor.error,
-                width: 200,
-                height: 100,
-                child: Center(child: Text('Tap to Open Dialog')),
+            child: Center(
+              child: CompositedTransformTarget(
+                link: layerLink,
+                child: GestureDetector(
+                  onTap: () {
+                    if (overlayEntry == null) {
+                      // openOrmeeDialog();
+                      openOrmeeSelect();
+                    }
+                  },
+                  child: Container(
+                    color: OrmeeColor.error,
+                    width: 200,
+                    height: 100,
+                    child: const Center(child: Text('Tap to Open Dialog')),
+                  ),
+                ),
               ),
             ),
           ),
