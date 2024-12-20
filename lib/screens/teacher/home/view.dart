@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeDropDownButton.dart';
+import 'package:ormee_mvp/designs/OrmeeQuizInfo.dart';
 import 'package:ormee_mvp/designs/OrmeeSelect.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField3.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
@@ -13,6 +14,7 @@ class TeacherHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dialog component 사용법
     void openOrmeeDialog() {
       final TextFieldController titleController = TextFieldController();
       final DropdownController dropdownController1 = DropdownController();
@@ -46,7 +48,7 @@ class TeacherHome extends StatelessWidget {
 
     final LayerLink layerLink = LayerLink();
     OverlayEntry? overlayEntry;
-
+    // select answer dialog 사용법
     void openOrmeeSelect() {
       overlayEntry = OverlayEntry(
         builder: (context) => OrmeeSelect(
@@ -54,6 +56,27 @@ class TeacherHome extends StatelessWidget {
           layerLink: layerLink,
           onSelect: (selected) {
             print("Selected: $selected");
+            overlayEntry?.remove();
+            overlayEntry = null;
+          },
+        ),
+      );
+      Overlay.of(context).insert(overlayEntry!);
+    }
+
+    // quiz statistics info dialog 사용법
+    void openOrmeeQuizInfo() {
+      overlayEntry = OverlayEntry(
+        builder: (context) => OrmeeQuizInfo(
+          currentIndex: 2,
+          totalIndex: 24,
+          problem:
+              '1. Four football matches will be broadcast live on three major stations _______ this weekend.',
+          answerList: ["nation", "bation", "cation"],
+          answerUserList: [16, 12, 18],
+          answerIndex: 0,
+          layerLink: layerLink,
+          onSelect: (selected) {
             overlayEntry?.remove();
             overlayEntry = null;
           },
@@ -79,7 +102,8 @@ class TeacherHome extends StatelessWidget {
                   onTap: () {
                     if (overlayEntry == null) {
                       // openOrmeeDialog();
-                      openOrmeeSelect();
+                      // openOrmeeSelect();
+                      openOrmeeQuizInfo();
                     }
                   },
                   child: Container(

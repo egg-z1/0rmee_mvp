@@ -20,6 +20,7 @@ final class OrmeeColor extends Color {
     900: Color.fromARGB(255, 32, 33, 35)
   };
   static const Map<int, Color> primaryPuple = <int, Color>{
+    10: Color.fromARGB(255, 242, 240, 255),
     50: Color.fromARGB(255, 236, 233, 255),
     100: Color.fromARGB(255, 206, 200, 253),
     200: Color.fromARGB(255, 173, 165, 252),
