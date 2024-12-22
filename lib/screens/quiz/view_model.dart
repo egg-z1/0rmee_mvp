@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ormee_mvp/designs/OrmeeToast.dart';
 import 'package:ormee_mvp/screens/quiz/model.dart';
 import 'package:ormee_mvp/screens/quiz/service.dart';
 
@@ -26,6 +27,20 @@ class QuizController extends GetxController {
       );
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> submitQuiz(QuizSubmission submission) async {
+    Future<void> submitQuiz(QuizSubmission submission) async {
+      try {
+        isLoading(true);
+        await _service.submitQuiz(submission);
+        return; // 성공적으로 처리된 경우
+      } catch (e) {
+        throw Exception('Quiz submission failed');
+      } finally {
+        isLoading(false);
+      }
     }
   }
 }

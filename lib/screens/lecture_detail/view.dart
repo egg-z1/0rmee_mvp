@@ -7,7 +7,7 @@ import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/designs/Indicator.dart';
 import 'package:ormee_mvp/designs/StickyHeaderDelegate.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view_model.dart';
-import 'package:ormee_mvp/screens/quiz/view.dart';
+import 'package:ormee_mvp/screens/quiz_auth/view.dart';
 
 class LectureDetail extends StatelessWidget {
   final LectureController controller = Get.put(LectureController());
@@ -175,7 +175,7 @@ class LectureDetail extends StatelessWidget {
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 if (quiz.quizAvailable) {
-                                  Get.to(Quiz(
+                                  Get.to(QuizAuth(
                                     quizId: quiz.id,
                                     quizTitle: quiz.quizName,
                                   ));

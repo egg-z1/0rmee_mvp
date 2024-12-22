@@ -54,4 +54,30 @@ class QuizService extends GetConnect {
       rethrow;
     }
   }
+
+  Future<void> submitQuiz(QuizSubmission submission) async {
+    final String url = '/quizes/student';
+    try {
+      final response = await post(url, submission.toJson());
+
+      if (response.isOk) {
+        final body = response.body;
+
+        // 응답 데이터 구조 확인
+        if (body is Map<String, dynamic> &&
+            body['status'] == 'success' &&
+            body['code'] == 200) {
+          return; // 성공적으로 제출됨
+        }
+
+        throw Exception('Invalid response format: ${response.bodyString}');
+      }
+
+      // 응답 실패 처리
+      throw Exception(
+          'Submit failed: [${response.statusCode}] ${response.bodyString}');
+    } catch (e, stackTrace) {
+      throw Exception('Error submitting quiz: $e');
+    }
+  }
 }

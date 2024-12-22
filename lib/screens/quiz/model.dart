@@ -29,3 +29,21 @@ class QuizCard {
     );
   }
 }
+
+class QuizSubmission {
+  final String author;
+  final String password;
+  final List<Map<String, dynamic>> submissions;
+
+  QuizSubmission({
+    required this.author,
+    required this.password,
+    required this.submissions,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'author': author,
+        'password': password,
+        'submissions': submissions,
+      };
+}

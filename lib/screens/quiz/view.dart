@@ -2,109 +2,158 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/designs/OrmeeSingleChoiceList.dart';
+import 'package:ormee_mvp/designs/OrmeeTextField2.dart';
+import 'package:ormee_mvp/designs/OrmeeToast.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
+import 'package:ormee_mvp/screens/quiz/model.dart';
+import 'package:ormee_mvp/screens/quiz/view_model.dart';
 
 class Quiz extends StatelessWidget {
-  Quiz({super.key});
-  final TextEditingController _controller = TextEditingController();
+  final QuizController controller = Get.put(QuizController());
+  final Map<String, String> submissions = {};
+
+  final String quizId;
+  final String quizTitle;
+  final String author;
+  final String password;
+  Quiz({
+    super.key,
+    required this.quizId,
+    required this.quizTitle,
+    required this.author,
+    required this.password,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('퀴즈 페이지'),
-      ),
-      body: Center(
-        child: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                return Dialog(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            T4_16px(text: '틀린문제 제출!'),
-                            Spacer(),
-                            IconButton(
-                                onPressed: () {
-                                  Get.back();
-                                },
-                                icon:
-                                    SvgPicture.asset("assets/icons/xLarge.svg"))
-                          ],
-                        ),
-                        SizedBox(height: 24),
-                        Container(
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchLectureDetail(quizId).then((_) {
+        // 모든 문제에 대해 빈 답안으로 초기화
+        for (var quiz in controller.quizList.value) {
+          submissions[quiz.id] = "";
+        }
+      });
+    });
+
+    return Obx(
+      () => Scaffold(
+        backgroundColor: OrmeeColor.white,
+        appBar: OrmeeAppBar(
+          title: quizTitle,
+          leftIcon: SvgPicture.asset(
+            'assets/icons/left.svg',
+          ),
+          leftAction: () => Get.back(),
+        ),
+        body: controller.isLoading.value
+            ? Center(child: CircularProgressIndicator()) // 로딩 중 표시
+            : controller.quizList.value.isEmpty
+                ? Center(child: Text('퀴즈 정보가 없습니다.')) // 퀴즈가 없을 경우
+                : Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    margin: EdgeInsets.only(bottom: 48),
+                    child: ListView.separated(
+                      itemCount: controller.quizList.value.length,
+                      itemBuilder: (context, index) {
+                        final quiz = controller.quizList.value[index];
+
+                        return Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: OrmeeColor.gray[100]!,
-                              )),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          child: Row(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: OrmeeColor.gray[200]!),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              C1_12px_M(
-                                  text: '받는 사람:', color: OrmeeColor.gray[500]),
-                              C1_12px_M(text: '오르미 T'),
+                              B4_14px_R(text: quiz.content),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              if (quiz.type == "CHOICE") // 선택형 퀴즈
+                                OrmeeSingleChoiceList(
+                                  items: quiz.items
+                                      .where((item) => item != null)
+                                      .map((item) => item ?? "")
+                                      .toList(), // Filter out nulls
+                                  onSelectionChanged: (selectedIndex) {
+                                    print(
+                                        "Selected Index: ${quiz.items[selectedIndex]}");
+                                    submissions[quiz.id] =
+                                        quiz.items[selectedIndex]!;
+                                  },
+                                )
+                              else
+                                // 에세이형 퀴즈 처리
+                                OrmeeTextField2(
+                                  hintText: '답을 입력해주세요.',
+                                  controller: TextEditingController(),
+                                  textInputAction: TextInputAction.done,
+                                  onSelectionUnfocused: (value) {
+                                    print('Unfocused with value: $value');
+                                    submissions[quiz.id] = value;
+                                  },
+                                )
                             ],
                           ),
-                        ),
-                        SizedBox(height: 16),
-                        Container(
-                          width: 310,
-                          height: 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: OrmeeColor.gray[600]!),
-                              color: OrmeeColor.gray[100]),
-                          child: TextField(
-                            controller: _controller,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Pretendard',
-                              color: Colors.black,
-                            ),
-                            cursorColor: OrmeeColor.gray[600],
-                            decoration: InputDecoration(
-                              hintText:
-                                  '번호는 쉼표로 구분해서 제출해 주세요.\nex) 1, 7, 18, 22',
-                              hintStyle: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Pretendard',
-                                color: OrmeeColor.gray[400]!,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 16),
-                              border: InputBorder.none,
-                            ),
-                            maxLines: 2, // 여러 줄로 설정
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        )
-                      ],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(height: 13);
+                      },
                     ),
                   ),
-                );
-              },
+        bottomSheet: GestureDetector(
+          onTap: () async {
+            final submissionList = getSubmissionsList();
+            final submission = QuizSubmission(
+              author: author,
+              password: password,
+              submissions: submissionList,
             );
+            try {
+              await controller.submitQuiz(submission);
+              OrmeeToast.show(context, '시험 응시가 완료되었습니다.');
+              Get.back(); // 이전 페이지로 이동
+              Get.back();
+            } catch (e) {
+              OrmeeToast.show(context, '제출을 다시 시도해주세요.');
+            }
           },
-          child: Icon(Icons.add),
+          child: Container(
+            width: double.maxFinite,
+            color: OrmeeColor.white,
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              height: 48,
+              decoration: BoxDecoration(
+                color: OrmeeColor.primaryPuple[400],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: T4_16px(
+                  text: "제출하기",
+                  color: OrmeeColor.white,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  List<Map<String, dynamic>> getSubmissionsList() {
+    return submissions.entries
+        .map((entry) => {
+              "problemId": int.parse(entry.key),
+              "content": entry.value,
+            })
+        .toList();
   }
 }

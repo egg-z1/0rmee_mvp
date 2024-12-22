@@ -4,16 +4,23 @@ import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField1.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
+import 'package:ormee_mvp/screens/quiz/view.dart';
+import 'package:ormee_mvp/screens/quiz_auth/view_model.dart';
 
 class QuizAuth extends StatelessWidget {
-  const QuizAuth({super.key});
+  final String quizId;
+  final String quizTitle;
+
+  const QuizAuth({
+    super.key,
+    required this.quizId,
+    required this.quizTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _controller_id = TextEditingController();
-    final TextEditingController _controller_pw = TextEditingController();
-    var isTextFieldNotEmpty_id = false.obs;
-    var isTextFieldNotEmpty_pw = false.obs;
+    final controller_id = QuizAuthController();
+    final controller_pw = QuizAuthController();
 
     return SafeArea(
       child: Scaffold(
@@ -37,11 +44,12 @@ class QuizAuth extends StatelessWidget {
               ),
               OrmeeTextField1(
                 hintText: "이름을 입력하세요.",
-                controller: _controller_id,
+                controller: controller_id.textController,
+                focusNode: controller_id.focusNode,
                 textInputAction: TextInputAction.next,
-                isTextNotEmpty: isTextFieldNotEmpty_id,
+                isTextNotEmpty: controller_id.isTextFieldNotEmpty,
                 onFieldSubmitted: (term) {
-                  FocusScope.of(context).nextFocus();
+                  controller_id.focusNode.nextFocus();
                 },
               ),
               SizedBox(
@@ -53,18 +61,57 @@ class QuizAuth extends StatelessWidget {
               ),
               OrmeeTextField1(
                 hintText: '비밀번호를 입력하세요.',
-                controller: _controller_pw,
+                controller: controller_pw.textController,
+                focusNode: controller_pw.focusNode,
                 textInputAction: TextInputAction.done,
-                isTextNotEmpty: isTextFieldNotEmpty_pw,
+                isTextNotEmpty: controller_pw.isTextFieldNotEmpty,
                 isPassword: true,
                 onFieldSubmitted: (term) {
-                  FocusScope.of(context).dispose();
-                  // print(_controller_id.text);
-                  // print(_controller_pw.text);
+                  controller_pw.focusNode.unfocus();
+                  print(controller_id.textController.text);
+                  print(controller_pw.textController.text);
                 },
               ),
             ],
           ),
+        ),
+        bottomSheet: Obx(
+          () {
+            return GestureDetector(
+              onTap: (controller_id.isTextFieldNotEmpty.value &&
+                      controller_pw.isTextFieldNotEmpty.value)
+                  ? () {
+                      Get.to(() => Quiz(
+                            quizId: quizId,
+                            quizTitle: quizTitle,
+                            author: controller_id.textController.text,
+                            password: controller_pw.textController.text,
+                          ));
+                    }
+                  : null,
+              child: Container(
+                width: double.maxFinite,
+                color: OrmeeColor.white,
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: (controller_id.isTextFieldNotEmpty.value &&
+                            controller_pw.isTextFieldNotEmpty.value)
+                        ? OrmeeColor.primaryPuple[400]
+                        : OrmeeColor.gray[300],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: T4_16px(
+                      text: "응시하기",
+                      color: OrmeeColor.white,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

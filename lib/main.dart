@@ -32,10 +32,6 @@ class OrmeeApp extends StatelessWidget {
       home: Branch(),
       getPages: [
         GetPage(
-          name: '/quiz',
-          page: () => Quiz(),
-        ),
-        GetPage(
           name: '/quiz/detail',
           page: () => QuizDetail(),
         ),
