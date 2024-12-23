@@ -53,36 +53,38 @@ class ClassCode extends StatelessWidget {
           ],
         ),
       ),
-      bottomSheet: Obx(() {
-        return GestureDetector(
-          onTap: controller.isTextFieldNotEmpty.value
-              ? () {
-                  Get.to(() =>
-                      LectureDetail(lectureId: controller.textController.text));
-                }
-              : null,
-          child: Container(
-            width: double.maxFinite,
-            color: OrmeeColor.white,
+      bottomSheet: Obx(
+        () {
+          return GestureDetector(
+            onTap: controller.isTextFieldNotEmpty.value
+                ? () {
+                    Get.to(() => LectureDetail(
+                        lectureId: controller.textController.text));
+                  }
+                : null,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              height: 48,
-              decoration: BoxDecoration(
-                color: controller.isTextFieldNotEmpty.value
-                    ? OrmeeColor.primaryPuple[400]
-                    : OrmeeColor.gray[300],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: T4_16px(
-                  text: "입장하기",
-                  color: OrmeeColor.white,
+              width: double.maxFinite,
+              color: OrmeeColor.white,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                height: 48,
+                decoration: BoxDecoration(
+                  color: controller.isTextFieldNotEmpty.value
+                      ? OrmeeColor.primaryPuple[400]
+                      : OrmeeColor.gray[300],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: T4_16px(
+                    text: "입장하기",
+                    color: OrmeeColor.white,
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

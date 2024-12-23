@@ -7,6 +7,7 @@ import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/designs/Indicator.dart';
 import 'package:ormee_mvp/designs/StickyHeaderDelegate.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view_model.dart';
+import 'package:ormee_mvp/screens/quiz_auth/view.dart';
 
 class LectureDetail extends StatelessWidget {
   final LectureController controller = Get.put(LectureController());
@@ -170,41 +171,52 @@ class LectureDetail extends StatelessWidget {
                           return Padding(
                             // return 문 추가
                             padding: EdgeInsets.only(bottom: 16),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: OrmeeColor.gray[200]!,
-                                  width: 1.0,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {
+                                if (quiz.quizAvailable) {
+                                  Get.to(QuizAuth(
+                                    quizId: quiz.id,
+                                    quizTitle: quiz.quizName,
+                                  ));
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: OrmeeColor.gray[200]!,
+                                    width: 1.0,
+                                  ),
                                 ),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    children: [
-                                      T4_16px(
-                                        text: "${quiz.quizName}",
-                                        color: quiz.quizAvailable
-                                            ? OrmeeColor.gray[900]
-                                            : OrmeeColor.gray[300],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 16,
-                                  ),
-                                  Row(
-                                    children: [
-                                      C1_12px_M(
-                                        text: "${quiz.quizDate}",
-                                        color: OrmeeColor.gray[400],
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        T4_16px(
+                                          text: "${quiz.quizName}",
+                                          color: quiz.quizAvailable
+                                              ? OrmeeColor.gray[900]
+                                              : OrmeeColor.gray[300],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                    Row(
+                                      children: [
+                                        C1_12px_M(
+                                          text: "${quiz.quizDate}",
+                                          color: OrmeeColor.gray[400],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ); // return 문 끝

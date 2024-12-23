@@ -12,21 +12,29 @@ class OrmeeTextField2 extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final TextInputAction textInputAction;
-  final Function(String)? onFieldSubmitted;
+  final Function(String) onSelectionUnfocused;
 
   OrmeeTextField2({
     required this.hintText,
     required this.controller,
     required this.textInputAction,
-    this.onFieldSubmitted,
+    required this.onSelectionUnfocused,
   });
 
   @override
   Widget build(BuildContext context) {
+    final FocusNode focusNode = FocusNode();
+
+    focusNode.addListener(() {
+      if (!focusNode.hasFocus) {
+        onSelectionUnfocused(controller.text);
+      }
+    });
+
     return TextFormField(
       controller: controller,
       textInputAction: textInputAction,
-      onFieldSubmitted: onFieldSubmitted,
+      focusNode: focusNode,
       style: TextStyle(fontSize: 14, color: OrmeeColor.black),
       decoration: InputDecoration(
         filled: true,
