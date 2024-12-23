@@ -4,6 +4,24 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 
+// final LayerLink layerLink = LayerLink();
+//     OverlayEntry? overlayEntry;
+//     // select answer dialog 사용법
+//     void openOrmeeSelect() {
+//       overlayEntry = OverlayEntry(
+//         builder: (context) => OrmeeSelect(
+//           answerList: ["Apple", "Banana", "Cherry"],
+//           layerLink: layerLink,
+//           onSelect: (selected) {
+//             print("Selected: $selected");
+//             overlayEntry?.remove();
+//             overlayEntry = null;
+//           },
+//         ),
+//       );
+//       Overlay.of(context).insert(overlayEntry!);
+//     }
+
 class OrmeeSelectController extends GetxController {
   var selectedIndex = Rx<int?>(null);
 

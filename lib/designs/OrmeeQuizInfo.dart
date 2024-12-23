@@ -3,6 +3,27 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 
+// quiz statistics info dialog 사용법
+// void openOrmeeQuizInfo() {
+//   overlayEntry = OverlayEntry(
+//     builder: (context) => OrmeeQuizInfo(
+//       currentIndex: 2,
+//       totalIndex: 24,
+//       problem:
+//           '1. Four football matches will be broadcast live on three major stations _______ this weekend.',
+//       answerList: ["nation", "bation", "cation"],
+//       answerUserList: [16, 12, 18],
+//       answerIndex: 0,
+//       layerLink: layerLink,
+//       onSelect: (selected) {
+//         overlayEntry?.remove();
+//         overlayEntry = null;
+//       },
+//     ),
+//   );
+//   Overlay.of(context).insert(overlayEntry!);
+// }
+
 class OrmeeQuizInfo extends StatelessWidget {
   final int currentIndex;
   final int totalIndex;
