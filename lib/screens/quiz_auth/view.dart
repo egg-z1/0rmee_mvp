@@ -6,15 +6,18 @@ import 'package:ormee_mvp/designs/OrmeeTextField1.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/quiz/view.dart';
 import 'package:ormee_mvp/screens/quiz_auth/view_model.dart';
+import 'package:ormee_mvp/screens/quiz_result/view.dart';
 
 class QuizAuth extends StatelessWidget {
   final String quizId;
   final String quizTitle;
+  final bool quizAvailable;
 
   const QuizAuth({
     super.key,
     required this.quizId,
     required this.quizTitle,
+    required this.quizAvailable,
   });
 
   @override
@@ -81,12 +84,20 @@ class QuizAuth extends StatelessWidget {
               onTap: (controller_id.isTextFieldNotEmpty.value &&
                       controller_pw.isTextFieldNotEmpty.value)
                   ? () {
-                      Get.to(() => Quiz(
-                            quizId: quizId,
-                            quizTitle: quizTitle,
-                            author: controller_id.textController.text,
-                            password: controller_pw.textController.text,
-                          ));
+                      // if (quizAvailable)
+                      //   Get.to(() => Quiz(
+                      //         quizId: quizId,
+                      //         quizTitle: quizTitle,
+                      //         author: controller_id.textController.text,
+                      //         password: controller_pw.textController.text,
+                      //       ));
+                      // else
+                      Get.to(QuizResult(
+                        quizId: quizId,
+                        quizTitle: quizTitle,
+                        author: controller_id.textController.text,
+                        password: controller_pw.textController.text,
+                      ));
                     }
                   : null,
               child: Container(

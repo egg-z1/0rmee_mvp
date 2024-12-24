@@ -174,12 +174,11 @@ class LectureDetail extends StatelessWidget {
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
-                                if (quiz.quizAvailable) {
-                                  Get.to(QuizAuth(
-                                    quizId: quiz.id,
-                                    quizTitle: quiz.quizName,
-                                  ));
-                                }
+                                Get.to(QuizAuth(
+                                  quizId: quiz.id,
+                                  quizTitle: quiz.quizName,
+                                  quizAvailable: quiz.quizAvailable,
+                                ));
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(

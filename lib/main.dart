@@ -5,7 +5,6 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/screens/branching/view.dart';
 import 'package:ormee_mvp/screens/quiz/view.dart';
 import 'package:ormee_mvp/screens/quiz_answer/view.dart';
-import 'package:ormee_mvp/screens/quiz_detail/view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,16 +29,7 @@ class OrmeeApp extends StatelessWidget {
                   statusBarIconBrightness: Brightness.dark))),
       title: 'Ormee',
       home: Branch(),
-      getPages: [
-        GetPage(
-          name: '/quiz/detail',
-          page: () => QuizDetail(),
-        ),
-        GetPage(
-          name: '/quiz/answer',
-          page: () => QuizAnswer(),
-        ),
-      ],
+      getPages: [],
       debugShowCheckedModeBanner: false,
     );
   }
