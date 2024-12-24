@@ -5,6 +5,7 @@ import 'package:ormee_mvp/designs/OrmeeButton2.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeDropDownButton.dart';
+import 'package:ormee_mvp/designs/OrmeeFloatingPopup.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField3.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
@@ -15,6 +16,8 @@ class TeacherHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final RxBool isPopupVisible = true.obs;
+
     return Scaffold(
       backgroundColor: OrmeeColor.white,
       appBar: TeacherHeader(),
@@ -24,31 +27,42 @@ class TeacherHome extends StatelessWidget {
           Container(color: OrmeeColor.gray[200], width: 1),
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 48),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      T1_24px(
-                        text: "강의 홈",
-                        color: OrmeeColor.gray[900],
-                      ),
-                      OrmeeButton2(
-                        onPressed: () {
-                          openOrmeeDialog(context);
-                        },
-                        text: '강의 개설',
-                      ),
-                    ],
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Obx(
+                () => OrmeeFloatingPopupOverlay(
+                  message: "신규 강의를 개설해보세요!",
+                  isVisible: isPopupVisible.value,
+                  onDismiss: () => isPopupVisible.value = false,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 48),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              T1_24px(
+                                text: "강의 홈",
+                                color: OrmeeColor.gray[900],
+                              ),
+                              OrmeeButton2(
+                                onPressed: () {
+                                  openOrmeeDialog(context);
+                                },
+                                text: '강의 개설',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: TeacherHomeTabBar(),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 48),
-                  Expanded(
-                    child: TeacherHomeTabBar(),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
