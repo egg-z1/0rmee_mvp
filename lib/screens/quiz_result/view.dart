@@ -118,6 +118,30 @@ class QuizResult extends StatelessWidget {
           ),
         );
       }),
+      bottomSheet: GestureDetector(
+        onTap: () {
+          Get.back();
+          Get.back();
+        },
+        child: Container(
+          width: double.maxFinite,
+          color: OrmeeColor.white,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            height: 48,
+            decoration: BoxDecoration(
+              color: OrmeeColor.primaryPuple[400],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: T4_16px(
+                text: "강의 상세로 가기",
+                color: OrmeeColor.white,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

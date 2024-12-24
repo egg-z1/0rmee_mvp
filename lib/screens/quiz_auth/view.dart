@@ -84,20 +84,20 @@ class QuizAuth extends StatelessWidget {
               onTap: (controller_id.isTextFieldNotEmpty.value &&
                       controller_pw.isTextFieldNotEmpty.value)
                   ? () {
-                      // if (quizAvailable)
-                      //   Get.to(() => Quiz(
-                      //         quizId: quizId,
-                      //         quizTitle: quizTitle,
-                      //         author: controller_id.textController.text,
-                      //         password: controller_pw.textController.text,
-                      //       ));
-                      // else
-                      Get.to(QuizResult(
-                        quizId: quizId,
-                        quizTitle: quizTitle,
-                        author: controller_id.textController.text,
-                        password: controller_pw.textController.text,
-                      ));
+                      if (quizAvailable)
+                        Get.to(() => Quiz(
+                              quizId: quizId,
+                              quizTitle: quizTitle,
+                              author: controller_id.textController.text,
+                              password: controller_pw.textController.text,
+                            ));
+                      else
+                        Get.to(QuizResult(
+                          quizId: quizId,
+                          quizTitle: quizTitle,
+                          author: controller_id.textController.text,
+                          password: controller_pw.textController.text,
+                        ));
                     }
                   : null,
               child: Container(
@@ -115,7 +115,7 @@ class QuizAuth extends StatelessWidget {
                   ),
                   child: Center(
                     child: T4_16px(
-                      text: "응시하기",
+                      text: quizAvailable ? "응시하기" : "결과보기",
                       color: OrmeeColor.white,
                     ),
                   ),
