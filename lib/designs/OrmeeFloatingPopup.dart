@@ -18,7 +18,7 @@ class OrmeeFloatingPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      // color: Colors.transparent,
+      color: Colors.transparent,
       child: Column(
         children: [
           SvgPicture.asset(
@@ -61,6 +61,8 @@ class OrmeeFloatingPopupOverlay extends StatelessWidget {
   final String message;
   final bool isVisible;
   final VoidCallback onDismiss;
+  final double top;
+  final double right;
 
   const OrmeeFloatingPopupOverlay({
     Key? key,
@@ -68,6 +70,8 @@ class OrmeeFloatingPopupOverlay extends StatelessWidget {
     required this.message,
     required this.isVisible,
     required this.onDismiss,
+    this.top = 48 + 53,
+    this.right = 0,
   }) : super(key: key);
 
   @override
@@ -77,8 +81,45 @@ class OrmeeFloatingPopupOverlay extends StatelessWidget {
         child,
         if (isVisible)
           Positioned(
-            top: 48 + 53,
-            right: 0,
+            top: top,
+            right: right,
+            child: OrmeeFloatingPopup(
+              message: message,
+              onDismiss: onDismiss,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class OrmeeFloatingPopupOverlay2 extends StatelessWidget {
+  final Widget child;
+  final String message;
+  final bool isVisible;
+  final VoidCallback onDismiss;
+  final double top;
+  final double left;
+
+  const OrmeeFloatingPopupOverlay2({
+    Key? key,
+    required this.child,
+    required this.message,
+    required this.isVisible,
+    required this.onDismiss,
+    this.top = 212,
+    this.left = 100,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        child,
+        if (isVisible)
+          Positioned(
+            top: top,
+            left: left,
             child: OrmeeFloatingPopup(
               message: message,
               onDismiss: onDismiss,

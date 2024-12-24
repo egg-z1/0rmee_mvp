@@ -103,10 +103,11 @@ class TeacherHome extends StatelessWidget {
 }
 
 class TeacherHomeTabBar extends StatelessWidget {
-  const TeacherHomeTabBar({super.key});
+  TeacherHomeTabBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final RxBool isPopupVisible = true.obs;
     return DefaultTabController(
       length: 2,
       child: Column(
@@ -141,8 +142,14 @@ class TeacherHomeTabBar extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                _buildTabContent('현재 진행 중인 강의가 없어요.'),
-                _buildTabContent('이전 강의가 없어요.'),
+                Obx(() => OrmeeFloatingPopupOverlay2(
+                    message: '강의 코드를 복사해 학생에게 공유해보세요!',
+                    isVisible: isPopupVisible.value,
+                    onDismiss: () => isPopupVisible.value = false,
+                    top: MediaQuery.of(context).size.height / 5,
+                    child: Lectures())),
+                // NullLecture('현재 진행 중인 강의가 없어요.'),
+                NullLecture('이전 강의가 없어요.'),
               ],
             ),
           ),
@@ -151,7 +158,7 @@ class TeacherHomeTabBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTabContent(String message) {
+  Widget NullLecture(String message) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -164,6 +171,120 @@ class TeacherHomeTabBar extends StatelessWidget {
           T4_20px(
             text: message,
             color: OrmeeColor.gray[400],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget Lectures() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 25,
+          mainAxisSpacing: 25,
+          mainAxisExtent: 220,
+        ),
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return LectureCard(context);
+        },
+      ),
+    );
+  }
+
+  Widget LectureCard(context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(24, 28, 24, 24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: OrmeeColor.white,
+        border: Border.all(color: OrmeeColor.gray[200]!, width: 2),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: OrmeeColor.primaryPuple[400],
+                ),
+                child: SvgPicture.asset(
+                  'assets/icons/type=file.svg',
+                  color: OrmeeColor.white,
+                ),
+              ),
+              SizedBox(width: 8),
+              T4_20px(text: '오르미 토익 rc'),
+              Spacer(),
+              PopupMenuButton<String>(
+                offset: Offset(5, 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: OrmeeColor.gray[200]!, width: 1),
+                ),
+                elevation: 8,
+                color: OrmeeColor.white,
+                shadowColor: OrmeeColor.black.withOpacity(0.5),
+                padding: EdgeInsets.zero,
+                icon: SvgPicture.asset(
+                  'assets/icons/type=more_vertical.svg',
+                  color: OrmeeColor.gray[500],
+                ),
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: B3_18px_M(
+                        text: '삭제하기',
+                        color: OrmeeColor.gray[600],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/type=user_profile.svg',
+                color: OrmeeColor.gray[400],
+              ),
+              SizedBox(width: 8),
+              T6_16px(
+                text: '44명',
+                color: OrmeeColor.primaryPuple[400],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              SvgPicture.asset(
+                'assets/icons/type=calender.svg',
+                color: OrmeeColor.gray[400],
+              ),
+              SizedBox(width: 8),
+              B4_16px_M(
+                text: '2024.08.24',
+                color: OrmeeColor.gray[700],
+              ),
+              Spacer(),
+              InkWell(
+                onTap: () {},
+                child: SvgPicture.asset(
+                  'assets/icons/type=copy.svg',
+                  color: OrmeeColor.primaryPuple[400],
+                ),
+              ),
+            ],
           ),
         ],
       ),
