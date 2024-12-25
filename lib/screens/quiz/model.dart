@@ -4,7 +4,7 @@ class QuizCard {
   final String type;
   final String answer;
   final List<String?> items;
-  final bool? submission;
+  final String? submission;
   final bool? isCorrect;
 
   QuizCard({
