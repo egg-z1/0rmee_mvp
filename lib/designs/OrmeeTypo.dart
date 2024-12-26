@@ -226,6 +226,34 @@ class T5_14px extends StatelessWidget {
   }
 }
 
+class T6_16px extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  final Color? color;
+  final TextOverflow? overflow;
+
+  const T6_16px({
+    Key? key,
+    required this.text,
+    this.color,
+    this.overflow,
+    this.style = const TextStyle(),
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: style.copyWith(
+          color: color ?? OrmeeColor.black,
+          fontFamily: 'Pretendard',
+          fontSize: 16,
+          fontWeight: FontWeight.w600),
+      overflow: overflow ?? TextOverflow.clip,
+    );
+  }
+}
+
 //--------------Body M--------------
 
 class B1_24px_M extends StatelessWidget {

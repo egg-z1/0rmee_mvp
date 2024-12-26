@@ -3,7 +3,7 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/service.dart';
 
 class TeacherSideMenuController extends GetxController {
-  final TeacherSideMenuService _service = TeacherSideMenuService();
+  final TeacherLectureService _service = TeacherLectureService();
   var isLoading = true.obs;
   var error = Rxn<String>();
   var sidemenu = Rx<TeacherSideMenuModel?>(null);
