@@ -9,31 +9,81 @@ import 'package:ormee_mvp/designs/StickyHeaderDelegate.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view_model.dart';
 import 'package:ormee_mvp/screens/quiz_auth/view.dart';
 
-class LectureDetail extends StatelessWidget {
-  final LectureController controller = Get.put(LectureController());
-  TextEditingController _controller = TextEditingController();
-  var isTextFieldNotEmpty = false.obs; // Rx로 상태 관리
-
-  final String lectureId;
-
+class LectureDetail extends StatefulWidget {
   LectureDetail({
     super.key,
-    required this.lectureId,
   });
 
   @override
+  State<LectureDetail> createState() => _LectureDetailState();
+}
+
+class _LectureDetailState extends State<LectureDetail> {
+  final lectureId = Get.parameters['lectureId'];
+
+  final LectureController controller = Get.put(LectureController());
+  final TextEditingController _controller = TextEditingController();
+  final isTextFieldNotEmpty = false.obs;
+  OverlayEntry? overlayEntry;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onTextChanged);
+    controller.fetchLectureDetail(lectureId!);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onTextChanged);
+    _controller.dispose();
+    overlayEntry?.remove();
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    isTextFieldNotEmpty.value = _controller.text.isNotEmpty;
+  }
+
+  void _showOverlay(BuildContext context) {
+    overlayEntry?.remove();
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 44,
+        right: 9,
+        child: Material(
+          color: Colors.transparent,
+          child: Image.asset(
+            'assets/images/message.png',
+            width: 88,
+            height: 37,
+          ),
+        ),
+      ),
+    );
+    if (!Overlay.of(context)!.mounted) return;
+    Overlay.of(context)?.insert(overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    overlayEntry?.remove();
+    overlayEntry = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _controller.addListener(() {
-      isTextFieldNotEmpty.value = _controller.text.isNotEmpty;
-    });
+    return Obx(() {
+      if (controller.lectureDetail.value?.messageAvailable == true) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showOverlay(context);
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _removeOverlay();
+        });
+      }
 
-    // initState 대신 build에서 한 번만 호출되도록 처리
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.fetchLectureDetail(lectureId);
-    });
-
-    return Obx(
-      () => Scaffold(
+      return Scaffold(
         backgroundColor: OrmeeColor.white,
         appBar: OrmeeAppBar(
           leftIcon: SvgPicture.asset(
@@ -50,8 +100,8 @@ class LectureDetail extends StatelessWidget {
                     barrierDismissible: false,
                     context: context,
                     builder: (context) {
-                      return customDialog(context, _controller,
-                          isTextFieldNotEmpty); // 분리된 위젯 함수 호출
+                      return customDialog(
+                          context, _controller, isTextFieldNotEmpty);
                     },
                   );
                 }
@@ -67,7 +117,7 @@ class LectureDetail extends StatelessWidget {
             return Center(child: Text('No lecture details available'));
           }
           return RefreshIndicator(
-            onRefresh: () => controller.fetchLectureDetail(lectureId),
+            onRefresh: () => controller.fetchLectureDetail(lectureId!),
             child: DefaultTabController(
               length: 1,
               child: NestedScrollView(
@@ -77,8 +127,8 @@ class LectureDetail extends StatelessWidget {
                     SliverToBoxAdapter(
                       child: Column(
                         children: [
-                          // 선생님 프로필
                           Container(
+                            width: double.maxFinite,
                             padding: EdgeInsets.symmetric(
                                 vertical: 16, horizontal: 20),
                             child: Row(
@@ -109,7 +159,6 @@ class LectureDetail extends StatelessWidget {
                               ],
                             ),
                           ),
-                          // 중앙 분리선
                           Container(
                             color: OrmeeColor.gray[50],
                             height: 8,
@@ -155,7 +204,6 @@ class LectureDetail extends StatelessWidget {
                 },
                 body: TabBarView(
                   children: [
-                    // 퀴즈 리스트
                     Obx(() {
                       final quizList = controller.lectureDetail.value?.quizList;
 
@@ -169,7 +217,6 @@ class LectureDetail extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final quiz = quizList[index];
                           return Padding(
-                            // return 문 추가
                             padding: EdgeInsets.only(bottom: 16),
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
@@ -203,9 +250,7 @@ class LectureDetail extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
-                                      height: 16,
-                                    ),
+                                    SizedBox(height: 16),
                                     Row(
                                       children: [
                                         C1_12px_M(
@@ -218,7 +263,7 @@ class LectureDetail extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ); // return 문 끝
+                          );
                         },
                       );
                     }),
@@ -228,8 +273,8 @@ class LectureDetail extends StatelessWidget {
             ),
           );
         }),
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -252,7 +297,7 @@ Widget customDialog(BuildContext context, TextEditingController controller,
             children: [
               Expanded(
                 child: T4_16px(
-                  text: ' 제출!',
+                  text: '제출!',
                   overflow: TextOverflow.visible,
                 ),
               ),
@@ -311,9 +356,8 @@ Widget customDialog(BuildContext context, TextEditingController controller,
                 border: InputBorder.none,
                 fillColor: OrmeeColor.gray[100],
               ),
-              maxLines: null, // 여러 줄로 설정
+              maxLines: null,
               onChanged: (value) {
-                // 제한된 문자만 남김
                 final filteredValue =
                     value.replaceAll(RegExp(r'[^0-9,\s]'), '');
                 if (value != filteredValue) {
@@ -331,11 +375,8 @@ Widget customDialog(BuildContext context, TextEditingController controller,
             children: [
               Spacer(),
               Obx(() {
-                // isTextFieldNotEmpty 값에 따라 버튼 스타일 변경
                 return TextButton(
-                  onPressed: isTextFieldNotEmpty.value
-                      ? () {} // 텍스트가 있으면 버튼 클릭 가능
-                      : null, // 텍스트가 없으면 버튼 클릭 불가
+                  onPressed: isTextFieldNotEmpty.value ? () {} : null,
                   child: C1_12px_M(
                     text: "제출하기",
                     color: isTextFieldNotEmpty.value

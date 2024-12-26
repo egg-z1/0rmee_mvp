@@ -48,9 +48,9 @@ class OrmeeTextField1 extends StatelessWidget {
     required this.textInputAction,
     required this.onFieldSubmitted,
     required this.isTextNotEmpty,
+    required this.focusNode, // required로 변경
     this.isPassword,
-    FocusNode? focusNode,
-  }) : focusNode = focusNode ?? FocusNode();
+  });
 
   @override
   Widget build(BuildContext context) {

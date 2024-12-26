@@ -58,8 +58,8 @@ class ClassCode extends StatelessWidget {
           return GestureDetector(
             onTap: controller.isTextFieldNotEmpty.value
                 ? () {
-                    Get.to(() => LectureDetail(
-                        lectureId: controller.textController.text));
+                    Get.toNamed(
+                        '/lectureDetail/${controller.textController.text}');
                   }
                 : null,
             child: Container(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/screens/branching/view.dart';
+import 'package:ormee_mvp/screens/lecture_detail/view.dart';
 import 'package:ormee_mvp/screens/quiz/view.dart';
 import 'package:ormee_mvp/screens/quiz_answer/view.dart';
 
@@ -29,7 +30,12 @@ class OrmeeApp extends StatelessWidget {
                   statusBarIconBrightness: Brightness.dark))),
       title: 'Ormee',
       home: Branch(),
-      getPages: [],
+      getPages: [
+        GetPage(
+          name: '/lectureDetail/:lectureId', // URL 경로로 lectureId를 전달
+          page: () => LectureDetail(),
+        ),
+      ],
       debugShowCheckedModeBanner: false,
     );
   }
