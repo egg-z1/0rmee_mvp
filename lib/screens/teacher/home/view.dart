@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ormee_mvp/designs/OrmeeButton2.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
@@ -9,14 +10,17 @@ import 'package:ormee_mvp/designs/OrmeeFloatingPopup.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField3.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
+import 'package:ormee_mvp/screens/teacher/home/model.dart';
+import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 
 class TeacherHome extends StatelessWidget {
-  const TeacherHome({super.key});
+  final TeacherHomeController controller = Get.put(TeacherHomeController());
+  TeacherHome({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final RxBool isPopupVisible = true.obs;
+    // final RxBool isPopupVisible = true.obs;
 
     return Scaffold(
       backgroundColor: OrmeeColor.white,
@@ -24,44 +28,73 @@ class TeacherHome extends StatelessWidget {
       body: Row(
         children: [
           SizedBox(width: 348, child: TeacherSideMenu()),
-          Container(color: OrmeeColor.gray[200], width: 1),
+          Container(color: OrmeeColor.gray[50], width: 1),
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Obx(
-                () => OrmeeFloatingPopupOverlay(
-                  message: "신규 강의를 개설해보세요!",
-                  isVisible: isPopupVisible.value,
-                  onDismiss: () => isPopupVisible.value = false,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 48),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              T1_24px(
-                                text: "강의 홈",
-                                color: OrmeeColor.gray[900],
-                              ),
-                              OrmeeButton2(
-                                onPressed: () {
-                                  openOrmeeDialog(context);
-                                },
-                                text: '강의 개설',
-                              ),
-                            ],
+              // child: Obx(
+              //   () => OrmeeFloatingPopupOverlay(
+              //     message: "신규 강의를 개설해보세요!",
+              //     isVisible: isPopupVisible.value,
+              //     onDismiss: () => isPopupVisible.value = false,
+              //     child: Container(
+              //       padding: EdgeInsets.symmetric(horizontal: 60),
+              //       child: Column(
+              //         crossAxisAlignment: CrossAxisAlignment.center,
+              //         children: [
+              //           Padding(
+              //             padding: const EdgeInsets.symmetric(vertical: 48),
+              //             child: Row(
+              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //               children: [
+              //                 T1_24px(
+              //                   text: "강의 홈",
+              //                   color: OrmeeColor.gray[900],
+              //                 ),
+              //                 OrmeeButton2(
+              //                   onPressed: () {
+              //                     openOrmeeDialog(context);
+              //                   },
+              //                   text: '강의 개설',
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //           Expanded(
+              //             child: TeacherHomeTabBar(),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 60),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 48),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          T1_24px(
+                            text: "강의 홈",
+                            color: OrmeeColor.gray[900],
                           ),
-                        ),
-                        Expanded(
-                          child: TeacherHomeTabBar(),
-                        ),
-                      ],
+                          OrmeeButton2(
+                            onPressed: () {
+                              openOrmeeDialog(context);
+                            },
+                            text: '강의 개설',
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      child: TeacherHomeTabBar(),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -91,66 +124,90 @@ class TeacherHome extends StatelessWidget {
             Get.back();
           },
           onConfirm: () async {
-            print(titleController.textEditingController.text);
-            print(dropdownController1.selectedMonth.value);
-            print(dropdownController2.selectedMonth.value);
+            controller.fetchTeacherCreateLecture(
+                '3334',
+                LectureCreateModel(
+                  title: titleController.textEditingController.text,
+                  openTime: getLocalDateTimeFromMonthString(
+                      dropdownController1.selectedMonth.value),
+                  dueTime: getLocalDateTimeFromMonthString(
+                      dropdownController2.selectedMonth.value),
+                ));
             Get.back();
           },
         );
       },
     );
   }
+
+  DateTime getLocalDateTimeFromMonthString(String monthString) {
+    int currentYear = DateTime.now().year;
+    String monthNumberString = monthString.replaceAll(RegExp(r'[^0-9]'), '');
+    int month = int.parse(monthNumberString);
+    return DateTime(currentYear, month, 1, 0, 0, 0);
+  }
 }
 
 class TeacherHomeTabBar extends StatelessWidget {
+  final TeacherHomeController controller = Get.put(TeacherHomeController());
   TeacherHomeTabBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final RxBool isPopupVisible = true.obs;
+    controller.fetchTeacherLectures('3334');
+
+    // final RxBool isPopupVisible = true.obs;
     return DefaultTabController(
       length: 2,
       child: Column(
         children: [
-          TabBar(
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            indicatorWeight: 4,
-            indicatorColor: OrmeeColor.primaryPuple[400],
-            indicatorSize: TabBarIndicatorSize.tab,
-            labelColor: OrmeeColor.primaryPuple[400],
-            labelStyle: const TextStyle(
-              fontFamily: 'Pretendard',
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
+          Obx(
+            () => TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              indicatorWeight: 4,
+              indicatorColor: OrmeeColor.primaryPuple[400],
+              indicatorSize: TabBarIndicatorSize.tab,
+              labelColor: OrmeeColor.primaryPuple[400],
+              labelStyle: const TextStyle(
+                fontFamily: 'Pretendard',
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+              unselectedLabelColor: OrmeeColor.gray[500],
+              unselectedLabelStyle: const TextStyle(
+                fontFamily: 'Pretendard',
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+              tabs: [
+                Tab(text: '진행중 강의 ${controller.openLectures.length}'),
+                Tab(text: '이전 강의 ${controller.closedLectures.length}'),
+              ],
             ),
-            unselectedLabelColor: OrmeeColor.gray[500],
-            unselectedLabelStyle: const TextStyle(
-              fontFamily: 'Pretendard',
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-            tabs: const [
-              Tab(text: '진행중 강의 0'),
-              Tab(text: '이전 강의'),
-            ],
           ),
           Container(
             height: 1,
             color: OrmeeColor.gray[200],
           ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                Obx(() => OrmeeFloatingPopupOverlay2(
-                    message: '강의 코드를 복사해 학생에게 공유해보세요!',
-                    isVisible: isPopupVisible.value,
-                    onDismiss: () => isPopupVisible.value = false,
-                    top: MediaQuery.of(context).size.height / 5,
-                    child: Lectures())),
-                // NullLecture('현재 진행 중인 강의가 없어요.'),
-                NullLecture('이전 강의가 없어요.'),
-              ],
+          Obx(
+            () => Expanded(
+              child: TabBarView(
+                children: [
+                  // Obx(() => OrmeeFloatingPopupOverlay2(
+                  //     message: '강의 코드를 복사해 학생에게 공유해보세요!',
+                  //     isVisible: isPopupVisible.value,
+                  //     onDismiss: () => isPopupVisible.value = false,
+                  //     top: MediaQuery.of(context).size.height / 5,
+                  //     child: Lectures())),
+                  controller.openLectures.isNotEmpty
+                      ? Lectures(0)
+                      : NullLecture('현재 진행 중인 강의가 없어요.'),
+                  controller.closedLectures.isNotEmpty
+                      ? Lectures(1)
+                      : NullLecture('이전 강의가 없어요.'),
+                ],
+              ),
             ),
           ),
         ],
@@ -177,7 +234,7 @@ class TeacherHomeTabBar extends StatelessWidget {
     );
   }
 
-  Widget Lectures() {
+  Widget Lectures(int OpenOrClose) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: GridView.builder(
@@ -187,15 +244,17 @@ class TeacherHomeTabBar extends StatelessWidget {
           mainAxisSpacing: 25,
           mainAxisExtent: 220,
         ),
-        itemCount: 10,
+        itemCount: OpenOrClose == 0
+            ? controller.openLectures.length
+            : controller.closedLectures.length,
         itemBuilder: (context, index) {
-          return LectureCard(context);
+          return LectureCard(context, index, OpenOrClose);
         },
       ),
     );
   }
 
-  Widget LectureCard(context) {
+  Widget LectureCard(context, index, OpenOrClose) {
     return Container(
       padding: EdgeInsets.fromLTRB(24, 28, 24, 24),
       decoration: BoxDecoration(
@@ -219,7 +278,10 @@ class TeacherHomeTabBar extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 8),
-              T4_20px(text: '오르미 토익 rc'),
+              T4_20px(
+                  text: OpenOrClose == 0
+                      ? controller.openLectures[index].title
+                      : controller.closedLectures[index].title),
               Spacer(),
               PopupMenuButton<String>(
                 offset: Offset(5, 40),
@@ -235,8 +297,18 @@ class TeacherHomeTabBar extends StatelessWidget {
                   'assets/icons/type=more_vertical.svg',
                   color: OrmeeColor.gray[500],
                 ),
+                onSelected: (String value) {
+                  if (value == 'delete') {
+                    final int lectureCode = OpenOrClose == 0
+                        ? controller.openLectures[index].code
+                        : controller.closedLectures[index].code;
+
+                    controller.fetchTeacherDeleteLecture(lectureCode);
+                  }
+                },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
+                    value: 'delete',
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
@@ -251,20 +323,20 @@ class TeacherHomeTabBar extends StatelessWidget {
             ],
           ),
           Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SvgPicture.asset(
-                'assets/icons/type=user_profile.svg',
-                color: OrmeeColor.gray[400],
-              ),
-              SizedBox(width: 8),
-              T6_16px(
-                text: '44명',
-                color: OrmeeColor.primaryPuple[400],
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: [
+          //     SvgPicture.asset(
+          //       'assets/icons/type=user_profile.svg',
+          //       color: OrmeeColor.gray[400],
+          //     ),
+          //     SizedBox(width: 8),
+          //     T6_16px(
+          //       text: '44명',
+          //       color: OrmeeColor.primaryPuple[400],
+          //     ),
+          //   ],
+          // ),
           Row(
             children: [
               SvgPicture.asset(
@@ -273,7 +345,11 @@ class TeacherHomeTabBar extends StatelessWidget {
               ),
               SizedBox(width: 8),
               B4_16px_M(
-                text: '2024.08.24',
+                text: OpenOrClose == 0
+                    ? DateFormat('yyyy.MM.dd').format(
+                        DateTime.parse(controller.openLectures[index].dueTime))
+                    : DateFormat('yyyy.MM.dd').format(DateTime.parse(
+                        controller.closedLectures[index].dueTime)),
                 color: OrmeeColor.gray[700],
               ),
               Spacer(),
