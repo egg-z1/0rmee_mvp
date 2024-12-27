@@ -30,4 +30,36 @@ class TeacherQuizService extends GetConnect {
       throw Exception('Error occurred: $e');
     }
   }
+
+  Future<QuizzesResponse> fetchOpenQuiz(String quizId) async {
+    final String url = '/quizes/teacher/$quizId/open';
+
+    try {
+      final response = await put(url, quizId);
+
+      if (response.isOk) {
+        return QuizzesResponse.fromJson(response.body);
+      } else {
+        throw Exception('Failed to load quizzes');
+      }
+    } catch (e) {
+      throw Exception('Error occurred: $e');
+    }
+  }
+
+  Future<QuizzesResponse> fetchCloseQuiz(String quizId) async {
+    final String url = '/quizes/teacher/$quizId/close';
+
+    try {
+      final response = await put(url, quizId);
+
+      if (response.isOk) {
+        return QuizzesResponse.fromJson(response.body);
+      } else {
+        throw Exception('Failed to load quizzes');
+      }
+    } catch (e) {
+      throw Exception('Error occurred: $e');
+    }
+  }
 }

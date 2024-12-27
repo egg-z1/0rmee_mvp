@@ -211,44 +211,64 @@ class TeacherQuizList extends StatelessWidget {
                   SizedBox(width: 29),
                   InkWell(
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return OrmeeModal(
-                            titleText: '퀴즈를 게시하시겠어요?',
-                            contentText: '퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.',
-                            onCancel: () {
-                              Get.back();
-                            },
-                            onConfirm: () {
-                              controller.openQuizzes[index].quizAvailable =
-                                  true;
-                              Get.back();
-                            },
-                          );
-                        },
-                      );
+                      controller.openQuizzes[index].quizAvailable
+                          ? showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return OrmeeModal(
+                                  titleText: '퀴즈를 마감하시겠어요?',
+                                  contentText: '퀴즈를 마감하면 재게시가 불가능해요.',
+                                  onCancel: () {
+                                    Get.back();
+                                  },
+                                  onConfirm: () {
+                                    controller.fetchTeacherQuizClose(
+                                        controller.openQuizzes[index].id);
+                                    Get.back();
+                                  },
+                                );
+                              },
+                            )
+                          : showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return OrmeeModal(
+                                  titleText: '퀴즈를 게시하시겠어요?',
+                                  contentText: '퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.',
+                                  onCancel: () {
+                                    Get.back();
+                                  },
+                                  onConfirm: () {
+                                    controller.fetchTeacherQuizOpen(
+                                        controller.openQuizzes[index].id);
+                                    Get.back();
+                                  },
+                                );
+                              },
+                            );
                     },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: OrmeeColor.purple[40]!,
-                          width: 1,
+                    child: Obx(
+                      () => Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: OrmeeColor.purple[40]!,
+                            width: 1,
+                          ),
+                          color: controller.openQuizzes[index].quizAvailable
+                              ? OrmeeColor.white
+                              : OrmeeColor.purple[40],
                         ),
-                        color: controller.openQuizzes[index].quizAvailable
-                            ? OrmeeColor.white
-                            : OrmeeColor.purple[40],
-                      ),
-                      child: Headline2_Semibold(
-                        text: controller.openQuizzes[index].quizAvailable
-                            ? '마감하기'
-                            : '게시하기',
-                        color: controller.openQuizzes[index].quizAvailable
-                            ? OrmeeColor.purple[40]
-                            : OrmeeColor.white,
+                        child: Headline2_Semibold(
+                          text: controller.openQuizzes[index].quizAvailable
+                              ? '마감하기'
+                              : '게시하기',
+                          color: controller.openQuizzes[index].quizAvailable
+                              ? OrmeeColor.purple[40]
+                              : OrmeeColor.white,
+                        ),
                       ),
                     ),
                   ),
