@@ -7,6 +7,14 @@ class ClassCodeController extends GetxController {
   final isTextFieldNotEmpty = false.obs;
 
   @override
+  void onInit() {
+    super.onInit();
+    textController.addListener(() {
+      isTextFieldNotEmpty.value = textController.text.isNotEmpty;
+    });
+  }
+
+  @override
   void onClose() {
     focusNode.dispose();
     textController.dispose();
