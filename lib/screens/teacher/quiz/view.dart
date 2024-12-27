@@ -4,15 +4,18 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
+import 'package:ormee_mvp/screens/teacher/quiz/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_create/view.dart';
 
 class TeacherQuizList extends StatelessWidget {
+  final TeacherQuizController controller = Get.put(TeacherQuizController());
   TeacherQuizList({super.key});
   final RxBool isRegister = true.obs;
-  final RxBool isPost = false.obs;
 
   @override
   Widget build(BuildContext context) {
+    controller.fetchTeacherQuizList('0a962d36-470f-47f4-8224-68f5200547a6');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,11 +30,15 @@ class TeacherQuizList extends StatelessWidget {
                       children: [
                         Heading1_Semibold(text: '진행 퀴즈'),
                         SizedBox(height: 20),
-                        ING_quizCard(context),
+                        controller.openQuizzes.isNotEmpty
+                            ? ING_quizCard(context)
+                            : NULL_quizCard('현재 진행 중인 퀴즈가 없어요.'),
                         SizedBox(height: 20),
                         Heading1_Semibold(text: '마감 퀴즈'),
                         SizedBox(height: 20),
-                        END_quizCard(),
+                        controller.closedQuizzes.isNotEmpty
+                            ? END_quizCard()
+                            : NULL_quizCard('현재 마감한 퀴즈가 없어요.'),
                       ],
                     )
                   : Column(
@@ -141,13 +148,127 @@ class TeacherQuizList extends StatelessWidget {
     );
   }
 
+  Widget NULL_quizCard(text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 78),
+      child: Center(
+          child: Heading2_Semibold(
+        text: text,
+        color: OrmeeColor.grey[30],
+      )),
+    );
+  }
+
   Widget ING_quizCard(context) {
-    return Column(
-      children: List.generate(2, (index) {
-        return Padding(
-          padding:
-              index == 2 - 1 ? EdgeInsets.zero : EdgeInsets.only(bottom: 20),
-          child: Container(
+    return Obx(
+      () => Column(
+        children: List.generate(controller.openQuizzes.length, (index) {
+          return Padding(
+            padding: index == controller.openQuizzes.length - 1
+                ? EdgeInsets.zero
+                : EdgeInsets.only(bottom: 20),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+              decoration: BoxDecoration(
+                border: Border.all(color: OrmeeColor.grey[10]!, width: 1),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 9),
+                    decoration: BoxDecoration(
+                      color: OrmeeColor.purple[3],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SvgPicture.asset(
+                      '/icons/ing_quiz.svg',
+                      color: OrmeeColor.purple[40],
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Headline1_Semibold(
+                          text: controller.openQuizzes[index].quizName),
+                      SizedBox(height: 5),
+                      Label1(
+                        text: controller.openQuizzes[index].quizDate,
+                        color: OrmeeColor.grey[30],
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  SvgPicture.asset(
+                    '/icons/timer.svg',
+                    color: OrmeeColor.purple[40],
+                  ),
+                  SizedBox(width: 5),
+                  Headline1_Semibold(
+                      text: '${controller.openQuizzes[index].timeLimit}분'),
+                  SizedBox(width: 29),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return OrmeeModal(
+                            titleText: '퀴즈를 게시하시겠어요?',
+                            contentText: '퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.',
+                            onCancel: () {
+                              Get.back();
+                            },
+                            onConfirm: () {
+                              controller.openQuizzes[index].quizAvailable =
+                                  true;
+                              Get.back();
+                            },
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: OrmeeColor.purple[40]!,
+                          width: 1,
+                        ),
+                        color: controller.openQuizzes[index].quizAvailable
+                            ? OrmeeColor.white
+                            : OrmeeColor.purple[40],
+                      ),
+                      child: Headline2_Semibold(
+                        text: controller.openQuizzes[index].quizAvailable
+                            ? '마감하기'
+                            : '게시하기',
+                        color: controller.openQuizzes[index].quizAvailable
+                            ? OrmeeColor.purple[40]
+                            : OrmeeColor.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget END_quizCard() {
+    return Obx(
+      () => Column(
+        children: List.generate(controller.closedQuizzes.length, (index) {
+          return Container(
+            margin: index == controller.closedQuizzes.length - 1
+                ? EdgeInsets.zero
+                : EdgeInsets.only(bottom: 20),
             padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
             decoration: BoxDecoration(
               border: Border.all(color: OrmeeColor.grey[10]!, width: 1),
@@ -156,25 +277,16 @@ class TeacherQuizList extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 9),
-                  decoration: BoxDecoration(
-                    color: OrmeeColor.purple[3],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: SvgPicture.asset(
-                    '/icons/ing_quiz.svg',
-                    color: OrmeeColor.purple[40],
-                  ),
-                ),
-                SizedBox(width: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Headline1_Semibold(text: '10/29 퀴즈'),
+                    Headline1_Semibold(
+                      text: controller.closedQuizzes[index].quizName,
+                      color: OrmeeColor.grey[40],
+                    ),
                     SizedBox(height: 5),
                     Label1(
-                      text: '2024.10.29 15:00',
+                      text: controller.closedQuizzes[index].quizDate,
                       color: OrmeeColor.grey[30],
                     ),
                   ],
@@ -182,119 +294,37 @@ class TeacherQuizList extends StatelessWidget {
                 Spacer(),
                 SvgPicture.asset(
                   '/icons/timer.svg',
-                  color: OrmeeColor.purple[40],
+                  color: OrmeeColor.grey[30],
                 ),
                 SizedBox(width: 5),
-                Headline1_Semibold(text: '16분'),
+                Headline1_Semibold(
+                  text: '${controller.closedQuizzes[index].timeLimit}분',
+                  color: OrmeeColor.grey[30],
+                ),
+                // SizedBox(width: 29),
+                // SvgPicture.asset(
+                //   '/icons/users.svg',
+                //   color: OrmeeColor.grey[30],
+                // ),
+                // SizedBox(width: 5),
+                // Headline1_Semibold(
+                //   text: '21',
+                //   color: OrmeeColor.grey[40],
+                // ),
+                // Headline1_Regular(
+                //   text: ' / 32',
+                //   color: OrmeeColor.grey[30],
+                // ),
                 SizedBox(width: 29),
-                InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return OrmeeModal(
-                          titleText: '퀴즈를 게시하시겠어요?',
-                          contentText: '퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.',
-                          onCancel: () {
-                            Get.back();
-                          },
-                          onConfirm: () {
-                            isPost.value = true;
-                            Get.back();
-                          },
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: OrmeeColor.purple[40]!,
-                        width: 1,
-                      ),
-                      color: isPost.value
-                          ? OrmeeColor.white
-                          : OrmeeColor.purple[40],
-                    ),
-                    child: Headline2_Semibold(
-                      text: isPost.value ? '마감하기' : '게시하기',
-                      color: isPost.value
-                          ? OrmeeColor.purple[40]
-                          : OrmeeColor.white,
-                    ),
-                  ),
+                SvgPicture.asset(
+                  '/icons/bottom-m.svg',
+                  color: OrmeeColor.purple[40],
                 ),
               ],
             ),
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget END_quizCard() {
-    return Column(
-      children: List.generate(5, (index) {
-        return Container(
-          margin:
-              index == 5 - 1 ? EdgeInsets.zero : EdgeInsets.only(bottom: 20),
-          padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
-          decoration: BoxDecoration(
-            border: Border.all(color: OrmeeColor.grey[10]!, width: 1),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Headline1_Semibold(
-                    text: '10/20 퀴즈',
-                    color: OrmeeColor.grey[40],
-                  ),
-                  SizedBox(height: 5),
-                  Label1(
-                    text: '2024.10.20 15:00',
-                    color: OrmeeColor.grey[30],
-                  ),
-                ],
-              ),
-              Spacer(),
-              SvgPicture.asset(
-                '/icons/timer.svg',
-                color: OrmeeColor.grey[30],
-              ),
-              SizedBox(width: 5),
-              Headline1_Semibold(
-                text: '16분',
-                color: OrmeeColor.grey[30],
-              ),
-              SizedBox(width: 29),
-              SvgPicture.asset(
-                '/icons/users.svg',
-                color: OrmeeColor.grey[30],
-              ),
-              SizedBox(width: 5),
-              Headline1_Semibold(
-                text: '21',
-                color: OrmeeColor.grey[40],
-              ),
-              Headline1_Regular(
-                text: ' / 32',
-                color: OrmeeColor.grey[30],
-              ),
-              SizedBox(width: 29),
-              SvgPicture.asset(
-                '/icons/bottom-m.svg',
-                color: OrmeeColor.purple[40],
-              ),
-            ],
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
