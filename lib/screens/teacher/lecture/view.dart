@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
+import 'package:ormee_mvp/screens/teacher/quiz/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 import 'package:tab_container/tab_container.dart';
 
@@ -36,37 +37,43 @@ class TeacherLecture extends StatelessWidget {
                 ),
                 SizedBox(height: 13),
                 SizedBox(height: 21),
-                TabContainer(
-                  color: OrmeeColor.white,
-                  tabsStart: 0,
-                  tabsEnd: 0.3,
-                  borderRadius: BorderRadius.circular(25),
-                  tabBorderRadius: BorderRadius.circular(25),
-                  selectedTextStyle: TextStyle(
-                    color: OrmeeColor.purple[40],
-                    fontFamily: 'Pretendard',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  unselectedTextStyle: TextStyle(
-                    color: OrmeeColor.grey[40],
-                    fontFamily: 'Pretendard',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  tabs: const [
-                    Text('퀴즈'),
-                    Text('쪽지'),
-                  ],
-                  children: [
-                    Container(
-                      height: 200,
+                Expanded(
+                  child: TabContainer(
+                    color: OrmeeColor.white,
+                    tabsStart: 0,
+                    tabsEnd: 0.3,
+                    borderRadius: BorderRadius.circular(25),
+                    tabBorderRadius: BorderRadius.circular(25),
+                    childPadding: EdgeInsets.all(30),
+                    selectedTextStyle: TextStyle(
+                      color: OrmeeColor.purple[40],
+                      fontFamily: 'Pretendard',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Container(),
-                  ],
+                    unselectedTextStyle: TextStyle(
+                      color: OrmeeColor.grey[40],
+                      fontFamily: 'Pretendard',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    tabs: const [
+                      Text('퀴즈'),
+                      Text('쪽지'),
+                    ],
+                    children: [
+                      TeacherQuizList(),
+                      Container(
+                        height: 50,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
+          ),
+          SizedBox(
+            width: 70,
           ),
         ],
       ),
