@@ -130,7 +130,6 @@ class _QuizcreateState extends State<Quizcreate> {
       controller: quizCreateController.titleController,
       focusNode: quizCreateController.titleFocusNode,
       keyboardType: TextInputType.multiline,
-      maxLength: 50,
       style: TextStyle(
           fontFamily: 'Pretendard',
           color: OrmeeColor.grey[90],
@@ -780,6 +779,7 @@ class _QuizcreateState extends State<Quizcreate> {
     return IntrinsicWidth(
       child: TextField(
         controller: controller,
+        maxLength: 50,
         decoration: InputDecoration(
             hintText: '입력',
             hintStyle: TextStyle(
