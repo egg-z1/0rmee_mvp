@@ -15,6 +15,7 @@ class TeacherQuizList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.fetchTeacherQuizList('0a962d36-470f-47f4-8224-68f5200547a6');
+    controller.fetchTeacherQuizDraft('0a962d36-470f-47f4-8224-68f5200547a6');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +44,9 @@ class TeacherQuizList extends StatelessWidget {
                     )
                   : Column(
                       children: [
-                        TEMP_quizCard(),
+                        controller.draftQuizzes.isNotEmpty
+                            ? TEMP_quizCard()
+                            : NULL_quizCard('현재 임시 저장한 퀴즈가 없어요.'),
                       ],
                     ),
             ),
@@ -350,10 +353,11 @@ class TeacherQuizList extends StatelessWidget {
 
   Widget TEMP_quizCard() {
     return Column(
-      children: List.generate(6, (index) {
+      children: List.generate(controller.draftQuizzes.length, (index) {
         return Padding(
-          padding:
-              index == 6 - 1 ? EdgeInsets.zero : EdgeInsets.only(bottom: 20),
+          padding: index == controller.draftQuizzes.length - 1
+              ? EdgeInsets.zero
+              : EdgeInsets.only(bottom: 20),
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
             decoration: BoxDecoration(
@@ -366,10 +370,11 @@ class TeacherQuizList extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Headline1_Semibold(text: '10/29 퀴즈'),
+                    Headline1_Semibold(
+                        text: controller.draftQuizzes[index].quizName),
                     SizedBox(height: 5),
                     Label1(
-                      text: '2024.10.29 15:00',
+                      text: controller.draftQuizzes[index].quizDate,
                       color: OrmeeColor.grey[30],
                     ),
                   ],
@@ -380,7 +385,8 @@ class TeacherQuizList extends StatelessWidget {
                   color: OrmeeColor.purple[40],
                 ),
                 SizedBox(width: 5),
-                Headline1_Semibold(text: '16분'),
+                Headline1_Semibold(
+                    text: '${controller.draftQuizzes[index].timeLimit}분'),
                 SizedBox(width: 29),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),

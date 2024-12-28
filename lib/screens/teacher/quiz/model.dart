@@ -24,6 +24,18 @@ class Quiz {
   }
 }
 
+class QuizzesDraft {
+  final List<Quiz> draftQuizzes;
+
+  QuizzesDraft({required this.draftQuizzes});
+
+  factory QuizzesDraft.fromJson(Map<String, dynamic> json) {
+    return QuizzesDraft(
+        draftQuizzes:
+            (json['data'] as List).map((quiz) => Quiz.fromJson(quiz)).toList());
+  }
+}
+
 class QuizzesResponse {
   final List<Quiz> openQuizzes;
   final List<Quiz> closedQuizzes;

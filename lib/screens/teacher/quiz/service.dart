@@ -62,4 +62,20 @@ class TeacherQuizService extends GetConnect {
       throw Exception('Error occurred: $e');
     }
   }
+
+  Future<QuizzesDraft> fetchDraftQuizzes(String teacherId) async {
+    final String url = '/quizes/teacher/$teacherId/draft';
+
+    try {
+      final response = await get(url);
+
+      if (response.isOk) {
+        return QuizzesDraft.fromJson(response.body);
+      } else {
+        throw Exception('Failed to load quizzes');
+      }
+    } catch (e) {
+      throw Exception('Error occurred: $e');
+    }
+  }
 }
