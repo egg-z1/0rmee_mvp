@@ -32,7 +32,7 @@ class OrmeeApp extends StatelessWidget {
       home: Branch(),
       getPages: [
         GetPage(
-          name: '/lectureDetail/:lectureId', // URL 경로로 lectureId를 전달
+          name: '/ClassCode/:lectureId', // URL 경로로 lectureId를 전달
           page: () => LectureDetail(),
         ),
       ],

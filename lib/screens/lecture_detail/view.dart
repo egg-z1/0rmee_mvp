@@ -235,6 +235,7 @@ class _LectureDetailState extends State<LectureDetail> {
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
+                                overlayEntry?.remove();
                                 Get.to(QuizAuth(
                                   quizId: quiz.id,
                                   quizTitle: quiz.quizName,
@@ -255,12 +256,16 @@ class _LectureDetailState extends State<LectureDetail> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        T4_16px(
-                                          text: "${quiz.quizName}",
-                                          color: quiz.quizAvailable
-                                              ? OrmeeColor.gray[900]
-                                              : OrmeeColor.gray[300],
+                                        Expanded(
+                                          child: T4_16px(
+                                            text: "${quiz.quizName}",
+                                            color: quiz.quizAvailable
+                                                ? OrmeeColor.gray[900]
+                                                : OrmeeColor.gray[300],
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ],
                                     ),
