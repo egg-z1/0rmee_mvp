@@ -56,3 +56,35 @@ class MemosResponse {
     );
   }
 }
+
+class MessageStatistics {
+  final int rank;
+  final int contentDetail;
+  final double submitRate;
+  final int submit;
+
+  MessageStatistics({
+    required this.rank,
+    required this.contentDetail,
+    required this.submitRate,
+    required this.submit,
+  });
+
+  factory MessageStatistics.fromJson(Map<String, dynamic> json) {
+    return MessageStatistics(
+      rank: json['rank'],
+      contentDetail: json['contentDetail'],
+      submitRate: json['submitRate'],
+      submit: json['submit'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'rank': rank,
+      'contentDetail': contentDetail,
+      'submitRate': submitRate,
+      'submit': submit,
+    };
+  }
+}

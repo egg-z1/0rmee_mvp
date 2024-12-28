@@ -11,6 +11,8 @@ import 'package:ormee_mvp/screens/teacher/memo/view_model.dart';
 
 class TeacherMemoList extends StatelessWidget {
   final TeacherMemoController controller = Get.put(TeacherMemoController());
+  final TeacherMessageStatisticsController controller1 =
+      Get.put(TeacherMessageStatisticsController());
   TeacherMemoList({super.key});
   final RxBool isComplete = true.obs;
 
@@ -284,7 +286,9 @@ class TeacherMemoList extends StatelessWidget {
                 ),
               ),
               isClick[index] ? Container() : SizedBox(height: 10),
-              isClick[index] ? Container() : Statistic_memoCard(),
+              isClick[index]
+                  ? Container()
+                  : Statistic_memoCard(controller.closeMemos[index].id),
               SizedBox(height: 20),
             ],
           );
@@ -293,7 +297,8 @@ class TeacherMemoList extends StatelessWidget {
     );
   }
 
-  Widget Statistic_memoCard() {
+  Widget Statistic_memoCard(int memoId) {
+    controller1.fetchMessageStatistics(memoId);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       decoration: BoxDecoration(
@@ -328,7 +333,7 @@ class TeacherMemoList extends StatelessWidget {
                 width: 89,
                 child: Center(
                   child: Label1(
-                    text: '오답 비율',
+                    text: '응답 비율',
                     color: OrmeeColor.grey[50],
                   ),
                 ),
@@ -338,7 +343,7 @@ class TeacherMemoList extends StatelessWidget {
                 width: 89,
                 child: Center(
                   child: Label1(
-                    text: '오답 인원',
+                    text: '응답 인원',
                     color: OrmeeColor.grey[50],
                   ),
                 ),
@@ -347,9 +352,9 @@ class TeacherMemoList extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Column(
-            children: List.generate(4, (index) {
+            children: List.generate(controller1.statistics.length, (index) {
               return Container(
-                padding: index == 4 - 1
+                padding: index == controller1.statistics.length - 1
                     ? EdgeInsets.zero
                     : EdgeInsets.only(bottom: 5),
                 child: Row(
@@ -358,7 +363,7 @@ class TeacherMemoList extends StatelessWidget {
                       width: 74,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '${index + 1}',
+                          text: '${controller1.statistics[index].rank}',
                           color: OrmeeColor.grey[50],
                         ),
                       ),
@@ -368,7 +373,8 @@ class TeacherMemoList extends StatelessWidget {
                       width: 89,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '문항 ${index + 1}',
+                          text:
+                              '문항 ${controller1.statistics[index].contentDetail}',
                           color: OrmeeColor.purple[40],
                           textDecoration: TextDecoration.underline,
                         ),
@@ -379,7 +385,7 @@ class TeacherMemoList extends StatelessWidget {
                       width: 89,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '50%',
+                          text: '${controller1.statistics[index].submitRate}%',
                           color: OrmeeColor.grey[60],
                         ),
                       ),
@@ -389,7 +395,7 @@ class TeacherMemoList extends StatelessWidget {
                       width: 89,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '10',
+                          text: '${controller1.statistics[index].submit}',
                           color: OrmeeColor.grey[60],
                         ),
                       ),
