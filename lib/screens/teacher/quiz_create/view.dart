@@ -791,6 +791,7 @@ class _QuizcreateState extends State<Quizcreate> {
                 fontSize: 18,
                 fontWeight: FontWeight.w600
             ),
+            counterText: '',
             border: InputBorder.none
         ),
         style: TextStyle(
