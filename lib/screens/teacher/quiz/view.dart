@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
@@ -119,7 +120,7 @@ class TeacherQuizList extends StatelessWidget {
   createQuizButton() {
     return InkWell(
       onTap: () {
-        Get.to(Quizcreate(lectureId: '9789'));
+        Get.to(Quizcreate(lectureId: '9789', isUpdate: false));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
@@ -285,68 +286,201 @@ class TeacherQuizList extends StatelessWidget {
   }
 
   Widget END_quizCard() {
+    RxList<bool> isClick =
+        List<bool>.filled(controller.closedQuizzes.length, true).obs;
     return Obx(
       () => Column(
         children: List.generate(controller.closedQuizzes.length, (index) {
-          return Container(
-            margin: index == controller.closedQuizzes.length - 1
-                ? EdgeInsets.zero
-                : EdgeInsets.only(bottom: 20),
-            padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
-            decoration: BoxDecoration(
-              border: Border.all(color: OrmeeColor.grey[10]!, width: 1),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+          return InkWell(
+            onTap: () {
+              isClick[index] = !isClick[index];
+            },
+            child: Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Headline1_Semibold(
-                      text: controller.closedQuizzes[index].quizName,
-                      color: OrmeeColor.grey[40],
-                    ),
-                    SizedBox(height: 5),
-                    Label1(
-                      text: controller.closedQuizzes[index].quizDate,
-                      color: OrmeeColor.grey[30],
-                    ),
-                  ],
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: isClick[index]
+                            ? OrmeeColor.grey[10]!
+                            : OrmeeColor.purple[40]!,
+                        width: 1),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Headline1_Semibold(
+                            text: controller.closedQuizzes[index].quizName,
+                            color: isClick[index]
+                                ? OrmeeColor.grey[40]
+                                : OrmeeColor.grey[90],
+                          ),
+                          SizedBox(height: 5),
+                          Label1(
+                            text: controller.closedQuizzes[index].quizDate,
+                            color: OrmeeColor.grey[30],
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      SvgPicture.asset(
+                        '/icons/timer.svg',
+                        color: OrmeeColor.grey[30],
+                      ),
+                      SizedBox(width: 5),
+                      Headline1_Semibold(
+                        text: '${controller.closedQuizzes[index].timeLimit}분',
+                        color: OrmeeColor.grey[30],
+                      ),
+                      SizedBox(width: 29),
+                      SvgPicture.asset(
+                        '/icons/users.svg',
+                        color: OrmeeColor.grey[30],
+                      ),
+                      SizedBox(width: 5),
+                      Headline1_Semibold(
+                        text: '${controller.closedQuizzes[index].submitCount}',
+                        color: OrmeeColor.grey[40],
+                      ),
+                      // Headline1_Regular(
+                      //   text: ' / 32',
+                      //   color: OrmeeColor.grey[30],
+                      // ),
+                      SizedBox(width: 29),
+                      isClick[index]
+                          ? SvgPicture.asset(
+                              '/icons/bottom-m.svg',
+                              color: OrmeeColor.purple[40],
+                            )
+                          : SvgPicture.asset(
+                              '/icons/top-m.svg',
+                              color: OrmeeColor.purple[40],
+                            ),
+                    ],
+                  ),
                 ),
-                Spacer(),
-                SvgPicture.asset(
-                  '/icons/timer.svg',
-                  color: OrmeeColor.grey[30],
-                ),
-                SizedBox(width: 5),
-                Headline1_Semibold(
-                  text: '${controller.closedQuizzes[index].timeLimit}분',
-                  color: OrmeeColor.grey[30],
-                ),
-                SizedBox(width: 29),
-                SvgPicture.asset(
-                  '/icons/users.svg',
-                  color: OrmeeColor.grey[30],
-                ),
-                SizedBox(width: 5),
-                Headline1_Semibold(
-                  text: '${controller.closedQuizzes[index].submitCount}',
-                  color: OrmeeColor.grey[40],
-                ),
-                // Headline1_Regular(
-                //   text: ' / 32',
-                //   color: OrmeeColor.grey[30],
-                // ),
-                SizedBox(width: 29),
-                SvgPicture.asset(
-                  '/icons/bottom-m.svg',
-                  color: OrmeeColor.purple[40],
-                ),
+                isClick[index] ? Container() : SizedBox(height: 10),
+                isClick[index] ? Container() : Statistic_quizCard(),
+                SizedBox(height: 20),
               ],
             ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget Statistic_quizCard() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+      decoration: BoxDecoration(
+        color: OrmeeColor.grey[5],
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 74,
+                child: Center(
+                  child: Label1(
+                    text: '순위',
+                    color: OrmeeColor.grey[50],
+                  ),
+                ),
+              ),
+              SizedBox(width: 55),
+              SizedBox(
+                width: 89,
+                child: Center(
+                  child: Label1(
+                    text: '문항',
+                    color: OrmeeColor.grey[50],
+                  ),
+                ),
+              ),
+              SizedBox(width: 55),
+              SizedBox(
+                width: 89,
+                child: Center(
+                  child: Label1(
+                    text: '오답 비율',
+                    color: OrmeeColor.grey[50],
+                  ),
+                ),
+              ),
+              SizedBox(width: 55),
+              SizedBox(
+                width: 89,
+                child: Center(
+                  child: Label1(
+                    text: '오답 인원',
+                    color: OrmeeColor.grey[50],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Column(
+            children: List.generate(4, (index) {
+              return Container(
+                padding: index == 4 - 1
+                    ? EdgeInsets.zero
+                    : EdgeInsets.only(bottom: 5),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 74,
+                      child: Center(
+                        child: Headline2_Semibold(
+                          text: '${index + 1}',
+                          color: OrmeeColor.grey[50],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 55),
+                    SizedBox(
+                      width: 89,
+                      child: Center(
+                        child: Headline2_Semibold(
+                          text: '문항 ${index + 1}',
+                          color: OrmeeColor.purple[40],
+                          textDecoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 55),
+                    SizedBox(
+                      width: 89,
+                      child: Center(
+                        child: Headline2_Semibold(
+                          text: '50%',
+                          color: OrmeeColor.grey[60],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 55),
+                    SizedBox(
+                      width: 89,
+                      child: Center(
+                        child: Headline2_Semibold(
+                          text: '10',
+                          color: OrmeeColor.grey[60],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
