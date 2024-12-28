@@ -3,9 +3,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/designs/OrmeeToast.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/designs/Indicator.dart';
 import 'package:ormee_mvp/designs/StickyHeaderDelegate.dart';
+import 'package:ormee_mvp/screens/lecture_detail/model.dart';
+import 'package:ormee_mvp/screens/lecture_detail/service.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view_model.dart';
 import 'package:ormee_mvp/screens/quiz_auth/view.dart';
 
@@ -30,7 +33,12 @@ class _LectureDetailState extends State<LectureDetail> {
   void initState() {
     super.initState();
     _controller.addListener(_onTextChanged);
-    controller.fetchLectureDetail(lectureId!);
+    controller.fetchLectureDetail(lectureId!).then((_) {
+      final lectureDetail = controller.lectureDetail.value;
+      if (lectureDetail != null) {
+        controller.fetchMessageDetail(lectureDetail.id);
+      }
+    });
   }
 
   @override
@@ -101,7 +109,13 @@ class _LectureDetailState extends State<LectureDetail> {
                     context: context,
                     builder: (context) {
                       return customDialog(
-                          context, _controller, isTextFieldNotEmpty);
+                        context,
+                        _controller,
+                        isTextFieldNotEmpty,
+                        controller.message.value?.title,
+                        controller.lectureDetail.value?.name,
+                        controller.message.value?.id,
+                      );
                     },
                   );
                 }
@@ -279,7 +293,9 @@ class _LectureDetailState extends State<LectureDetail> {
 }
 
 Widget customDialog(BuildContext context, TextEditingController controller,
-    RxBool isTextFieldNotEmpty) {
+    RxBool isTextFieldNotEmpty, title, teacherName, messageId) {
+  final isSubmitting = false.obs;
+
   return Dialog(
     child: Container(
       decoration: BoxDecoration(
@@ -297,7 +313,7 @@ Widget customDialog(BuildContext context, TextEditingController controller,
             children: [
               Expanded(
                 child: T4_16px(
-                  text: '제출!',
+                  text: '${title}',
                   overflow: TextOverflow.visible,
                 ),
               ),
@@ -322,7 +338,7 @@ Widget customDialog(BuildContext context, TextEditingController controller,
               mainAxisSize: MainAxisSize.min,
               children: [
                 C1_12px_M(text: '받는 사람:', color: OrmeeColor.gray[500]),
-                C1_12px_M(text: '오르미 T'),
+                C1_12px_M(text: '${teacherName}'),
               ],
             ),
           ),
@@ -376,7 +392,27 @@ Widget customDialog(BuildContext context, TextEditingController controller,
               Spacer(),
               Obx(() {
                 return TextButton(
-                  onPressed: isTextFieldNotEmpty.value ? () {} : null,
+                  onPressed: (isTextFieldNotEmpty.value && !isSubmitting.value)
+                      ? () async {
+                          isSubmitting.value = true;
+                          final submission = MessageSubmission(
+                            context: controller.text.trim(),
+                          );
+                          try {
+                            await LectureService().submitMessage(
+                              submission,
+                              messageId,
+                            );
+                            Get.back(); // Close dialog
+                            OrmeeToast.show(context, "제출 완료 되었습니다.");
+                          } catch (e) {
+                            OrmeeToast.show(
+                                context, "제출이 완료 되지 않았습니다. 다시 시도해주세요.");
+                          } finally {
+                            isSubmitting.value = false;
+                          }
+                        }
+                      : null,
                   child: C1_12px_M(
                     text: "제출하기",
                     color: isTextFieldNotEmpty.value

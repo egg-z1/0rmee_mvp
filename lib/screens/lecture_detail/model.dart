@@ -76,7 +76,7 @@ class LectureDetailModel {
 }
 
 class Message {
-  final String id;
+  final int id;
   final String title;
 
   Message({
@@ -90,9 +90,22 @@ class Message {
       title: json['title'],
     );
   }
+}
+
+class MessageSubmission {
+  final String? author;
+  final String? password;
+  final String context;
+
+  MessageSubmission({
+    this.author,
+    this.password,
+    required this.context,
+  });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
+        'author': author ?? '오르미',
+        'password': password ?? '1234',
+        'context': context,
       };
 }
