@@ -15,6 +15,15 @@ class QuizService extends GetConnect {
       request.headers['Content-Type'] = 'application/json; charset=utf-8';
       return request;
     });
+
+    // 응답 인터셉터: 응답 로깅
+    // httpClient.addResponseModifier((request, response) {
+    //   print('📥 Response: [${response.statusCode}] ${request.url}');
+    //   if (response.bodyString != null) {
+    //     print('📥 Body: ${response.bodyString}');
+    //   }
+    //   return response;
+    // });
   }
 
   /// 강의 상세 정보 가져오기

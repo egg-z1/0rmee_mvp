@@ -35,6 +35,13 @@ class Quiz extends StatelessWidget {
         for (var quiz in controller.quizList.value) {
           submissions[quiz.id] = "";
         }
+        if (controller.dueTime.value != null &&
+            controller.timeLimit.value != null) {
+          controller.startTimer(
+            controller.dueTime.value!,
+            controller.timeLimit.value!,
+          );
+        }
       });
     });
 
@@ -52,61 +59,93 @@ class Quiz extends StatelessWidget {
             ? Center(child: CircularProgressIndicator()) // 로딩 중 표시
             : controller.quizList.value.isEmpty
                 ? Center(child: Text('퀴즈 정보가 없습니다.')) // 퀴즈가 없을 경우
-                : Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    margin: EdgeInsets.only(bottom: 48),
-                    child: ListView.separated(
-                      itemCount: controller.quizList.value.length,
-                      itemBuilder: (context, index) {
-                        final quiz = controller.quizList.value[index];
+                : Stack(
+                    children: [
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        margin: EdgeInsets.only(bottom: 48),
+                        child: ListView.separated(
+                          itemCount: controller.quizList.value.length,
+                          itemBuilder: (context, index) {
+                            final quiz = controller.quizList.value[index];
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: OrmeeColor.gray[200]!),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              B4_14px_R(text: quiz.content),
-                              SizedBox(
-                                height: 15,
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(color: OrmeeColor.gray[200]!),
                               ),
-                              if (quiz.type == "CHOICE") // 선택형 퀴즈
-                                OrmeeSingleChoiceList(
-                                  items: quiz.items
-                                      .where((item) => item != null)
-                                      .map((item) => item ?? "")
-                                      .toList(), // Filter out nulls
-                                  onSelectionChanged: (selectedIndex) {
-                                    print(
-                                        "Selected Index: ${quiz.items[selectedIndex]}");
-                                    submissions[quiz.id] =
-                                        quiz.items[selectedIndex]!;
-                                  },
-                                )
-                              else
-                                // 에세이형 퀴즈 처리
-                                OrmeeTextField2(
-                                  hintText: '답을 입력해주세요.',
-                                  controller: TextEditingController(),
-                                  textInputAction: TextInputAction.done,
-                                  onSelectionUnfocused: (value) {
-                                    print('Unfocused with value: $value');
-                                    submissions[quiz.id] = value;
-                                  },
-                                )
-                            ],
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  B4_14px_R(text: quiz.content),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  if (quiz.type == "CHOICE") // 선택형 퀴즈
+                                    OrmeeSingleChoiceList(
+                                      items: quiz.items
+                                          .where((item) => item != null)
+                                          .map((item) => item ?? "")
+                                          .toList(), // Filter out nulls
+                                      onSelectionChanged: (selectedIndex) {
+                                        print(
+                                            "Selected Index: ${quiz.items[selectedIndex]}");
+                                        submissions[quiz.id] =
+                                            quiz.items[selectedIndex]!;
+                                      },
+                                    )
+                                  else
+                                    // 에세이형 퀴즈 처리
+                                    OrmeeTextField2(
+                                      hintText: '답을 입력해주세요.',
+                                      controller: TextEditingController(),
+                                      textInputAction: TextInputAction.done,
+                                      onSelectionUnfocused: (value) {
+                                        print('Unfocused with value: $value');
+                                        submissions[quiz.id] = value;
+                                      },
+                                    )
+                                ],
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const SizedBox(height: 13);
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 73,
+                        child: Center(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFF03A2E), // #F03A2E
+                                  Color(0xFFF87B60), // #F87B60
+                                ],
+                                begin: Alignment.topLeft, // 그라데이션 시작 지점
+                                end: Alignment.bottomRight, // 그라데이션 끝 지점
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Obx(() => T4_16px(
+                                  text: controller.remainingTime.value,
+                                  color: OrmeeColor.white,
+                                )),
                           ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(height: 13);
-                      },
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
         bottomSheet: GestureDetector(
           onTap: () async {
