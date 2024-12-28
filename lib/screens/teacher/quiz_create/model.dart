@@ -1,33 +1,35 @@
 class Quiz {
   String title;
-  String description;
-  DateTime openTime;
+  String? description;
+  DateTime? openTime;
   DateTime dueTime;
   int timeLimit;
-  bool isDraft;
+  bool? isDraft;
   List<Problem> problems;
 
   Quiz({
     required this.title,
-    required this.description,
-    required this.openTime,
+    this.description,
+    this.openTime,
     required this.dueTime,
     required this.timeLimit,
-    required this.isDraft,
+    this.isDraft,
     required this.problems
   });
 
-  factory Quiz.fromJson(Map<String, dynamic> json) {
+  factory Quiz.fromJson(Map<String, dynamic> data) {
     return Quiz(
-      title: json['title'],
-      description: json['description'],
-      openTime: DateTime.parse(json['openTime']),
-      dueTime: DateTime.parse(json['dueTime']),
-      timeLimit: json['timeLimit'],
-      isDraft: json['isDraft'],
-      problems: List<Problem>.from(
-        json['problems'].map((problem) => Problem.fromJson(problem)),
-      ),
+      title: data['title'],
+      description: data['description'],
+      openTime: data['openTime'],
+      dueTime: DateTime.parse(data['dueTime']),
+      timeLimit: data['timeLimit'],
+      isDraft: data['isDraft'],
+      problems: data['problems'] != null
+          ? List<Problem>.from(
+        data['problems'].map((problem) => Problem.fromJson(problem)),
+      )
+          : [],
     );
   }
 
@@ -35,7 +37,7 @@ class Quiz {
     return {
       'title': title,
       'description': description,
-      'openTime': openTime.toIso8601String(),
+      'openTime': openTime?.toIso8601String(),
       'dueTime': dueTime.toIso8601String(),
       'timeLimit': timeLimit,
       'isDraft': isDraft,
