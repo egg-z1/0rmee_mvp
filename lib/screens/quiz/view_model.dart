@@ -80,16 +80,14 @@ class QuizController extends GetxController with QuizTimerMixin {
   }
 
   Future<void> submitQuiz(QuizSubmission submission) async {
-    Future<void> submitQuiz(QuizSubmission submission) async {
-      try {
-        isLoading(true);
-        await _service.submitQuiz(submission);
-        return; // 성공적으로 처리된 경우
-      } catch (e) {
-        throw Exception('Quiz submission failed');
-      } finally {
-        isLoading(false);
-      }
+    try {
+      isLoading(true);
+      await _service.submitQuiz(submission);
+      return; // 성공적으로 처리된 경우
+    } catch (e) {
+      throw Exception('Quiz submission failed');
+    } finally {
+      isLoading(false);
     }
   }
 }

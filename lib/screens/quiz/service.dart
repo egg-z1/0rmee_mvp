@@ -73,6 +73,7 @@ class QuizService extends GetConnect {
   Future<void> submitQuiz(QuizSubmission submission) async {
     final String url = '/quizes/student';
     try {
+      print(submission.toJson());
       final response = await post(url, submission.toJson());
 
       if (response.isOk) {
@@ -82,12 +83,12 @@ class QuizService extends GetConnect {
         if (body is Map<String, dynamic> &&
             body['status'] == 'success' &&
             body['code'] == 200) {
+          print("성공적으로 제출됨");
           return; // 성공적으로 제출됨
         }
 
         throw Exception('Invalid response format: ${response.bodyString}');
       }
-
       // 응답 실패 처리
       throw Exception(
           'Submit failed: [${response.statusCode}] ${response.bodyString}');

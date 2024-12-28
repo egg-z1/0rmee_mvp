@@ -47,22 +47,16 @@ class Quiz extends StatelessWidget {
 
     return Obx(() {
       if (controller.isTimeUp.value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          try {
-            final submissionList = getSubmissionsList();
-            final submission = QuizSubmission(
-              author: author,
-              password: password,
-              submissions: submissionList,
+        FocusScope.of(context).unfocus();
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => customDialog(context),
             );
-            await controller.submitQuiz(submission);
-            OrmeeToast.show(context, '시간이 종료되어 자동으로 제출되었습니다.');
-            Get.back();
-            Get.back();
-          } catch (e) {
-            OrmeeToast.show(context, '자동 제출 중 오류가 발생했습니다.');
-          }
-        });
+          },
+        );
       }
       return Scaffold(
         backgroundColor: OrmeeColor.white,
@@ -212,5 +206,73 @@ class Quiz extends StatelessWidget {
               "content": entry.value,
             })
         .toList();
+  }
+
+  Widget customDialog(BuildContext context) {
+    return Dialog(
+        child: Container(
+      height: 358,
+      width: 273,
+      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 12.5,
+          ),
+          T2_20px(text: "시험 끝!", color: OrmeeColor.gray[900]),
+          SizedBox(
+            height: 5,
+          ),
+          B4_14px_R(text: "제한시간이 끝났어요", color: OrmeeColor.gray[500]),
+          SizedBox(
+            height: 25.5,
+          ),
+          Image.asset("assets/images/phoneOrmee.png"),
+          SizedBox(
+            height: 13,
+          ),
+          GestureDetector(
+            onTap: () async {
+              final submissionList = getSubmissionsList();
+              final submission = QuizSubmission(
+                author: author,
+                password: password,
+                submissions: submissionList,
+              );
+              try {
+                await controller.submitQuiz(submission);
+                controller.isTimeUp.value = false;
+                Get.back(closeOverlays: true);
+                Get.back();
+                Get.back();
+                Get.back();
+                OrmeeToast.show(context, '시험 응시가 완료되었습니다.');
+              } catch (e) {
+                OrmeeToast.show(context, '제출을 다시 시도해주세요.');
+              }
+            },
+            child: Container(
+                height: 43,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  color: OrmeeColor.primaryPuple[400],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: T4_16px(
+                    text: "제출하기",
+                    color: OrmeeColor.white,
+                  ),
+                )),
+          ),
+          SizedBox(
+            height: 6,
+          ),
+        ],
+      ),
+    ));
   }
 }
