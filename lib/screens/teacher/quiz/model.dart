@@ -59,3 +59,39 @@ class QuizzesResponse {
     );
   }
 }
+
+class QuizStatistics {
+  final int rank;
+  final int problemId;
+  final int problemNum;
+  final int incorrectRate;
+  final int incorrectCount;
+
+  QuizStatistics({
+    required this.rank,
+    required this.problemId,
+    required this.problemNum,
+    required this.incorrectRate,
+    required this.incorrectCount,
+  });
+
+  factory QuizStatistics.fromJson(Map<String, dynamic> json) {
+    return QuizStatistics(
+      rank: json['rank'],
+      problemId: json['problemId'],
+      problemNum: json['problemNum'],
+      incorrectRate: json['incorrectRate'],
+      incorrectCount: json['incorrectCount'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'rank': rank,
+      'problemId': problemId,
+      'problemNum': problemNum,
+      'incorrectRate': incorrectRate,
+      'incorrectCount': incorrectCount,
+    };
+  }
+}

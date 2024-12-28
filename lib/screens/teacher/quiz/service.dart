@@ -79,3 +79,31 @@ class TeacherQuizService extends GetConnect {
     }
   }
 }
+
+class ProblemStatisticsService extends GetConnect {
+  ProblemStatisticsService() {
+    httpClient.baseUrl = '${API.hostConnect}';
+    httpClient.timeout = const Duration(seconds: 10);
+
+    httpClient.addRequestModifier<dynamic>((request) async {
+      request.headers['Accept'] = 'application/json';
+      request.headers['Content-Type'] = 'application/json; charset=utf-8';
+      return request;
+    });
+  }
+
+  Future<List<QuizStatistics>> fetchQuizStatistics(String quizId) async {
+    final url = '/quizes/$quizId/teacher/statistics';
+    final response = await get(url);
+
+    if (response.isOk && response.body['data'] != null) {
+      final List<dynamic> data = response.body['data'];
+      if (data.isEmpty) return [];
+      return data
+          .map((item) => QuizStatistics.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } else {
+      throw Exception('Failed to fetch problem statistics: ${response.body}');
+    }
+  }
+}

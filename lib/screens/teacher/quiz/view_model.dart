@@ -57,3 +57,21 @@ class TeacherQuizController extends GetxController {
     }
   }
 }
+
+class TeacherQuizStatisticsController extends GetxController {
+  final ProblemStatisticsService service = ProblemStatisticsService();
+  RxList<QuizStatistics> statistics = <QuizStatistics>[].obs;
+  RxBool isLoading = false.obs;
+
+  Future<void> fetchQuizStatistics(String quizId) async {
+    try {
+      isLoading.value = true;
+      final response = await service.fetchQuizStatistics(quizId);
+      statistics.value = response;
+    } catch (e) {
+      print('Error loading statistics: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}

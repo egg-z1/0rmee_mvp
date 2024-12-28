@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
@@ -10,6 +9,8 @@ import 'package:ormee_mvp/screens/teacher/quiz_create/view.dart';
 
 class TeacherQuizList extends StatelessWidget {
   final TeacherQuizController controller = Get.put(TeacherQuizController());
+  final TeacherQuizStatisticsController controller1 =
+      Get.put(TeacherQuizStatisticsController());
   TeacherQuizList({super.key});
   final RxBool isRegister = true.obs;
 
@@ -367,7 +368,9 @@ class TeacherQuizList extends StatelessWidget {
                 ),
               ),
               isClick[index] ? Container() : SizedBox(height: 10),
-              isClick[index] ? Container() : Statistic_quizCard(),
+              isClick[index]
+                  ? Container()
+                  : Statistic_quizCard(controller.closedQuizzes[index].id),
               SizedBox(height: 20),
             ],
           );
@@ -376,7 +379,8 @@ class TeacherQuizList extends StatelessWidget {
     );
   }
 
-  Widget Statistic_quizCard() {
+  Widget Statistic_quizCard(String quizId) {
+    controller1.fetchQuizStatistics(quizId);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       decoration: BoxDecoration(
@@ -430,9 +434,9 @@ class TeacherQuizList extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Column(
-            children: List.generate(4, (index) {
+            children: List.generate(controller1.statistics.length, (index) {
               return Container(
-                padding: index == 4 - 1
+                padding: index == controller1.statistics.length - 1
                     ? EdgeInsets.zero
                     : EdgeInsets.only(bottom: 5),
                 child: Row(
@@ -441,7 +445,7 @@ class TeacherQuizList extends StatelessWidget {
                       width: 74,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '${index + 1}',
+                          text: '${controller1.statistics[index].rank}',
                           color: OrmeeColor.grey[50],
                         ),
                       ),
@@ -451,7 +455,8 @@ class TeacherQuizList extends StatelessWidget {
                       width: 89,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '문항 ${index + 1}',
+                          text:
+                              '문항 ${controller1.statistics[index].problemNum}',
                           color: OrmeeColor.purple[40],
                           textDecoration: TextDecoration.underline,
                         ),
@@ -462,7 +467,8 @@ class TeacherQuizList extends StatelessWidget {
                       width: 89,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '50%',
+                          text:
+                              '${controller1.statistics[index].incorrectRate}%',
                           color: OrmeeColor.grey[60],
                         ),
                       ),
@@ -472,7 +478,8 @@ class TeacherQuizList extends StatelessWidget {
                       width: 89,
                       child: Center(
                         child: Headline2_Semibold(
-                          text: '10',
+                          text:
+                              '${controller1.statistics[index].incorrectCount}',
                           color: OrmeeColor.grey[60],
                         ),
                       ),
