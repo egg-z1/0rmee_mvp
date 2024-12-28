@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
-import 'package:ormee_mvp/designs/OrmeeToast.dart';
+import 'package:ormee_mvp/designs/OrmeeSnackbar.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_create/model.dart';
@@ -96,9 +96,9 @@ class _QuizcreateState extends State<Quizcreate> {
               const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
                   border: Border.all(color: OrmeeColor.grey[20]!),
-                  borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(10)),
               child: Center(
-                child: Heading1_Semibold(
+                child: Headline1_Semibold(
                   text: '임시저장', color: OrmeeColor.grey[90],),
               ),
             ),
@@ -114,9 +114,9 @@ class _QuizcreateState extends State<Quizcreate> {
               const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
                   color: OrmeeColor.purple[40],
-                  borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(10)),
               child: const Center(
-                child: Heading1_Semibold(text: '등록하기', color: OrmeeColor.white),
+                child: Headline1_Semibold(text: '등록하기', color: OrmeeColor.white),
               ),
             ),
           ),
@@ -282,8 +282,8 @@ class _QuizcreateState extends State<Quizcreate> {
   }
 
   saveQuiz(bool isDraft) {
-    if (!isDraft && quizCreateController.titleController.text.isEmpty) {
-      OrmeeToast.show(context, "제목은 필수입니다.");
+    if (quizCreateController.titleController.text.isEmpty) {
+      OrmeeSnackbar.show(context, "제목은 필수입니다.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
       return;
     }
     quiz.isDraft = isDraft;
@@ -291,7 +291,7 @@ class _QuizcreateState extends State<Quizcreate> {
 
     for (int i = 0; i < quizCreateController.problems.length; i++) {
       if (!isDraft && quizCreateController.problemControllers[i].text.isEmpty) {
-        OrmeeToast.show(context, "문제 ${i + 1}의 내용이 비어 있습니다.");
+        OrmeeSnackbar.show(context, "문제 ${i + 1}의 내용이 비어 있습니다.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
 
         return;
       }
@@ -299,7 +299,8 @@ class _QuizcreateState extends State<Quizcreate> {
           quizCreateController.problemControllers[i].text;
 
       if (!isDraft && quizCreateController.types[i] == null) {
-        OrmeeToast.show(context, "문제 ${i + 1}의 유형이 설정되지 않았습니다.");
+        OrmeeSnackbar.show(context, "문제 ${i + 1}의 유형이 설정되지 않았습니다.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+
 
         return;
       }
@@ -307,7 +308,8 @@ class _QuizcreateState extends State<Quizcreate> {
 
       if (!isDraft && (quizCreateController.answers[i] == null ||
           quizCreateController.answers[i].isEmpty)) {
-        OrmeeToast.show(context, "문제 ${i + 1}의 정답이 설정되지 않았습니다.");
+        OrmeeSnackbar.show(context, "문제 ${i + 1}의 정답이 설정되지 않았습니다.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+
         return;
       }
       quizCreateController.problems[i].answer = quizCreateController.answers[i];
@@ -316,7 +318,8 @@ class _QuizcreateState extends State<Quizcreate> {
         for (int j = 0; j < quizCreateController.options[i].length; j++) {
           String optionText = quizCreateController.optionControllers[i][j].text;
           if (!isDraft && optionText.isEmpty) {
-            OrmeeToast.show(context, "문제 ${i + 1}의 선택지 ${j + 1}이 비어 있습니다.");
+            OrmeeSnackbar.show(context, "문제 ${i + 1}의 선지 ${j + 1}이 비어 있습니다.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+
             return;
           }
           quizCreateController.options[i][j] = optionText;
