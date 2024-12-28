@@ -106,4 +106,19 @@ class ProblemStatisticsService extends GetConnect {
       throw Exception('Failed to fetch problem statistics: ${response.body}');
     }
   }
+
+  Future<ProblemStatistics> fetchProblemStatistics(int problemId) async {
+    final url = '/quizes/teacher/statistics/$problemId';
+    final response = await get(url);
+    if (response.isOk) {
+      try {
+        return ProblemStatistics.fromJson(response.body['data']);
+      } catch (e) {
+        print('JSON 파싱 에러: $e');
+        throw Exception('데이터 파싱 실패: ${e.toString()}');
+      }
+    } else {
+      throw Exception('API 호출 실패: ${response.statusText}');
+    }
+  }
 }

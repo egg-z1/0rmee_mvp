@@ -375,8 +375,7 @@ class TeacherMemoList extends StatelessWidget {
                         child: Headline2_Semibold(
                           text:
                               '문항 ${controller1.statistics[index].contentDetail}',
-                          color: OrmeeColor.purple[40],
-                          textDecoration: TextDecoration.underline,
+                          color: OrmeeColor.grey[90],
                         ),
                       ),
                     ),

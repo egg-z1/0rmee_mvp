@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
+import 'package:ormee_mvp/designs/OrmeeStatisticsAnswer.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/quiz/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_create/view.dart';
@@ -13,6 +14,52 @@ class TeacherQuizList extends StatelessWidget {
       Get.put(TeacherQuizStatisticsController());
   TeacherQuizList({super.key});
   final RxBool isRegister = true.obs;
+
+  final TeacherProblemStatisticsController controller2 =
+      Get.put(TeacherProblemStatisticsController());
+
+  late final List<GlobalKey> containerKeys =
+      List.generate(controller1.statistics.length, (_) => GlobalKey());
+  late final List<GlobalKey> statisticsAnswerKeys =
+      List.generate(controller1.statistics.length, (_) => GlobalKey());
+
+  OverlayEntry? _overlayEntry;
+
+  void openOrmeeStatisticsAnswer(
+      BuildContext context, int index, int problemId, Offset position) {
+    controller2.fetchProblemStatistics(problemId);
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () => closeOverlay(),
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+          ),
+          Positioned(
+            left: position.dx + 100,
+            top: position.dy - 200,
+            child: OrmeeStatisticsAnswer(
+              problemNum: controller1.statistics[index].problemNum,
+              controller: controller2,
+              onClose: closeOverlay,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Overlay.of(context)!.insert(_overlayEntry!);
+  }
+
+  void closeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +87,7 @@ class TeacherQuizList extends StatelessWidget {
                         Heading1_Semibold(text: '마감 퀴즈'),
                         SizedBox(height: 20),
                         controller.closedQuizzes.isNotEmpty
-                            ? END_quizCard()
+                            ? END_quizCard(context)
                             : NULL_quizCard('현재 마감한 퀴즈가 없어요.'),
                       ],
                     )
@@ -286,7 +333,7 @@ class TeacherQuizList extends StatelessWidget {
     );
   }
 
-  Widget END_quizCard() {
+  Widget END_quizCard(context) {
     RxList<bool> isClick =
         List<bool>.filled(controller.closedQuizzes.length, true).obs;
     return Obx(
@@ -370,7 +417,8 @@ class TeacherQuizList extends StatelessWidget {
               isClick[index] ? Container() : SizedBox(height: 10),
               isClick[index]
                   ? Container()
-                  : Statistic_quizCard(controller.closedQuizzes[index].id),
+                  : Statistic_quizCard(
+                      controller.closedQuizzes[index].id, context),
               SizedBox(height: 20),
             ],
           );
@@ -379,7 +427,9 @@ class TeacherQuizList extends StatelessWidget {
     );
   }
 
-  Widget Statistic_quizCard(String quizId) {
+  Widget Statistic_quizCard(String quizId, context) {
+    RxList<bool> isClick2 =
+        List<bool>.filled(controller1.statistics.length, false).obs;
     controller1.fetchQuizStatistics(quizId);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -436,6 +486,7 @@ class TeacherQuizList extends StatelessWidget {
           Column(
             children: List.generate(controller1.statistics.length, (index) {
               return Container(
+                key: containerKeys[index],
                 padding: index == controller1.statistics.length - 1
                     ? EdgeInsets.zero
                     : EdgeInsets.only(bottom: 5),
@@ -451,14 +502,35 @@ class TeacherQuizList extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 55),
-                    SizedBox(
-                      width: 89,
-                      child: Center(
-                        child: Headline2_Semibold(
-                          text:
-                              '문항 ${controller1.statistics[index].problemNum}',
-                          color: OrmeeColor.purple[40],
-                          textDecoration: TextDecoration.underline,
+                    InkWell(
+                      key: statisticsAnswerKeys[index],
+                      onTap: () {
+                        int problem_id =
+                            controller1.statistics[index].problemId;
+                        final RenderBox renderBox = statisticsAnswerKeys[index]
+                            .currentContext!
+                            .findRenderObject() as RenderBox;
+                        final position = renderBox.localToGlobal(Offset.zero);
+                        openOrmeeStatisticsAnswer(
+                            context, index, problem_id, position);
+                        isClick2 = List<bool>.filled(
+                                controller1.statistics.length, false)
+                            .obs;
+                        isClick2[index] = !isClick2[index];
+                      },
+                      child: SizedBox(
+                        width: 89,
+                        child: Center(
+                          child: Obx(
+                            () => Headline2_Semibold(
+                              text:
+                                  '문항 ${controller1.statistics[index].problemNum}',
+                              color: isClick2[index]
+                                  ? OrmeeColor.purple[70]
+                                  : OrmeeColor.purple[40],
+                              textDecoration: TextDecoration.underline,
+                            ),
+                          ),
                         ),
                       ),
                     ),
