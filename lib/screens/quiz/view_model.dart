@@ -9,13 +9,19 @@ class QuizController extends GetxController {
   var isLoading = false.obs;
   var quizList = Rx<List<QuizCard>>([]);
   var error = Rx<String?>(null);
+  var dueTime = Rx<DateTime?>(null);
+  var timeLimit = Rx<int?>(null);
 
   Future<void> fetchLectureDetail(String quizId) async {
     isLoading(true);
     error(null);
 
     try {
-      final List<QuizCard> list = await _service.fetchLectureDetail(quizId);
+      final Map<String, dynamic> result =
+          await _service.fetchLectureDetail(quizId);
+      final DateTime dueTime = result['dueTime'] as DateTime;
+      final int timeLimit = result['timeLimit'] as int;
+      final List<QuizCard> list = result['quizList'] as List<QuizCard>;
       quizList.value = list;
     } catch (e) {
       error(e.toString());

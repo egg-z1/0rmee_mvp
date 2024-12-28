@@ -18,7 +18,7 @@ class QuizService extends GetConnect {
   }
 
   /// 강의 상세 정보 가져오기
-  Future<List<QuizCard>> fetchLectureDetail(String quizId) async {
+  Future<Map<String, Object>> fetchLectureDetail(String quizId) async {
     final String url = '/quizes/$quizId';
     try {
       // GET 요청 전송
@@ -35,11 +35,17 @@ class QuizService extends GetConnect {
             body['status'] == 'success' &&
             body['code'] == 200 &&
             body['data'] != null) {
-          List<QuizCard> quizList = (body['data'] as List)
+          List<QuizCard> quizList = (body['data']['problems'] as List)
               .map((item) => QuizCard.fromJson(item))
               .toList();
+          int timeLimit = body['data']['timeLimit'];
+          DateTime dueTime = DateTime.parse(body['data']['dueTime']);
           // print(quizList);
-          return quizList;
+          return {
+            'dueTime': dueTime,
+            'timeLimit': timeLimit,
+            'quizList': quizList,
+          };
         }
 
         throw Exception('Invalid response format: ${response.bodyString}');
