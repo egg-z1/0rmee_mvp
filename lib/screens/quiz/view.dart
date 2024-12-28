@@ -45,8 +45,26 @@ class Quiz extends StatelessWidget {
       });
     });
 
-    return Obx(
-      () => Scaffold(
+    return Obx(() {
+      if (controller.isTimeUp.value) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          try {
+            final submissionList = getSubmissionsList();
+            final submission = QuizSubmission(
+              author: author,
+              password: password,
+              submissions: submissionList,
+            );
+            await controller.submitQuiz(submission);
+            OrmeeToast.show(context, '시간이 종료되어 자동으로 제출되었습니다.');
+            Get.back();
+            Get.back();
+          } catch (e) {
+            OrmeeToast.show(context, '자동 제출 중 오류가 발생했습니다.');
+          }
+        });
+      }
+      return Scaffold(
         backgroundColor: OrmeeColor.white,
         appBar: OrmeeAppBar(
           title: quizTitle,
@@ -183,8 +201,8 @@ class Quiz extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   List<Map<String, dynamic>> getSubmissionsList() {
