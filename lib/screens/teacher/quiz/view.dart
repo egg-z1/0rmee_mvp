@@ -324,16 +324,16 @@ class TeacherQuizList extends StatelessWidget {
                   text: '${controller.closedQuizzes[index].timeLimit}분',
                   color: OrmeeColor.grey[30],
                 ),
-                // SizedBox(width: 29),
-                // SvgPicture.asset(
-                //   '/icons/users.svg',
-                //   color: OrmeeColor.grey[30],
-                // ),
-                // SizedBox(width: 5),
-                // Headline1_Semibold(
-                //   text: '21',
-                //   color: OrmeeColor.grey[40],
-                // ),
+                SizedBox(width: 29),
+                SvgPicture.asset(
+                  '/icons/users.svg',
+                  color: OrmeeColor.grey[30],
+                ),
+                SizedBox(width: 5),
+                Headline1_Semibold(
+                  text: '${controller.closedQuizzes[index].submitCount}',
+                  color: OrmeeColor.grey[40],
+                ),
                 // Headline1_Regular(
                 //   text: ' / 32',
                 //   color: OrmeeColor.grey[30],

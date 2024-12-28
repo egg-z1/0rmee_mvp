@@ -4,6 +4,7 @@ class Quiz {
   final String quizDate;
   final int timeLimit;
   late final bool quizAvailable;
+  final int submitCount;
 
   Quiz({
     required this.id,
@@ -11,6 +12,7 @@ class Quiz {
     required this.quizDate,
     required this.timeLimit,
     required this.quizAvailable,
+    required this.submitCount,
   });
 
   factory Quiz.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Quiz {
       quizDate: json['quizDate'],
       timeLimit: json['timeLimit'],
       quizAvailable: json['quizAvailable'],
+      submitCount: json['submitCount'],
     );
   }
 }
