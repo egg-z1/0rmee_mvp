@@ -291,13 +291,13 @@ class TeacherQuizList extends StatelessWidget {
     return Obx(
       () => Column(
         children: List.generate(controller.closedQuizzes.length, (index) {
-          return InkWell(
-            onTap: () {
-              isClick[index] = !isClick[index];
-            },
-            child: Column(
-              children: [
-                Container(
+          return Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  isClick[index] = !isClick[index];
+                },
+                child: Container(
                   padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -344,7 +344,9 @@ class TeacherQuizList extends StatelessWidget {
                       SizedBox(width: 5),
                       Headline1_Semibold(
                         text: '${controller.closedQuizzes[index].submitCount}',
-                        color: OrmeeColor.grey[40],
+                        color: isClick[index]
+                            ? OrmeeColor.grey[40]
+                            : OrmeeColor.grey[60],
                       ),
                       // Headline1_Regular(
                       //   text: ' / 32',
@@ -363,11 +365,11 @@ class TeacherQuizList extends StatelessWidget {
                     ],
                   ),
                 ),
-                isClick[index] ? Container() : SizedBox(height: 10),
-                isClick[index] ? Container() : Statistic_quizCard(),
-                SizedBox(height: 20),
-              ],
-            ),
+              ),
+              isClick[index] ? Container() : SizedBox(height: 10),
+              isClick[index] ? Container() : Statistic_quizCard(),
+              SizedBox(height: 20),
+            ],
           );
         }),
       ),
