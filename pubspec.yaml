@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   flutter_svg: ^2.0.14
   intl: ^0.20.1
+  tab_container: ^3.5.3
 
 dev_dependencies:
   flutter_test:
