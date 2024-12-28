@@ -9,7 +9,7 @@ class QuizDetailController extends GetxController {
   var quiz = Rx<QuizDetail?>(null);
   var error = Rx<String?>(null);
 
-  Future<void> fetchLectureDetail(String quizId) async {
+  Future<void> fetchQuizDetail(String quizId) async {
     isLoading(true);
     error(null);
 
@@ -28,5 +28,26 @@ class QuizDetailController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+
+  Future<bool> deleteQuiz(String quizId) async {
+    isLoading(true);
+    error(null);
+
+    try {
+      return await _service.deleteQuiz(quizId);
+    } catch (e) {
+      error(e.toString());
+      Get.snackbar(
+        '오류',
+        '퀴즈 삭제에 실패했습니다. $e',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+      );
+    } finally {
+      isLoading(false);
+    }
+
+    return false;
   }
 }

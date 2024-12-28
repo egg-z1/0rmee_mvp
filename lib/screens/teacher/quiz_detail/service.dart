@@ -24,4 +24,15 @@ class QuizDetailService extends GetConnect {
       throw Exception('Failed to fetch quizzes');
     }
   }
+
+  Future<bool> deleteQuiz(String quizId) async {
+    final String url = '/quizes/teacher/$quizId';
+    final response = await delete(url);
+
+    if(response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete quizzes');
+    }
+  }
 }

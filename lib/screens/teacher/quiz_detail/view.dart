@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/designs/OrmeeModal.dart';
 import 'package:ormee_mvp/designs/OrmeeProblemCard.dart';
+import 'package:ormee_mvp/designs/OrmeeSnackbar.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_create/view.dart';
@@ -15,7 +17,7 @@ class QuizDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchLectureDetail(quizId);
+    controller.fetchQuizDetail(quizId);
     return Scaffold(
       backgroundColor: OrmeeColor.grey[5],
       appBar: TeacherHeader(),
@@ -41,7 +43,22 @@ class QuizDetail extends StatelessWidget {
                   const SizedBox(width: 20,),
                   GestureDetector(
                     onTap: () {
-                      // 삭제 모달
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return OrmeeModal(
+                            titleText: "퀴즈를 삭제하시겠어요?",
+                            contentText: "삭제된 퀴즈는 복구가 불가능해요.",
+                            onCancel: () => Get.back(),
+                            onConfirm: () async {
+                              if(await controller.deleteQuiz(quizId)) {
+                                OrmeeSnackbar.show(context, '퀴즈가 삭제됐습니다.', 'assets/icons/check.svg', OrmeeColor.systemGreen[5]!, OrmeeColor.systemGreen[30]!);
+                              }
+                              Get.back();
+                            },
+                          );
+                        },
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
