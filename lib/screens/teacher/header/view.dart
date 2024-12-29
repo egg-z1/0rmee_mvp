@@ -13,23 +13,16 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: OrmeeColor.white,
+      backgroundColor: OrmeeColor.grey[5],
       surfaceTintColor: Colors.transparent,
       toolbarHeight: 88,
       elevation: 0,
-      shape: Border(
-        bottom: BorderSide(
-          color: OrmeeColor.gray[200]!,
-          width: 1,
-        ),
-      ),
       title: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
           children: [
-            Image.asset(
-              '../assets/images/logo.png',
-              height: 48,
+            SvgPicture.asset(
+              '/icons/logo.svg',
             ),
             const Spacer(),
             OrmeeSearchBar(
@@ -41,15 +34,11 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
             const SizedBox(width: 28),
             SvgPicture.asset(
-              'assets/icons/type=bell.svg',
-              color: OrmeeColor.gray[500],
-              height: 32,
+              '/icons/setting.svg',
             ),
             const SizedBox(width: 28),
             SvgPicture.asset(
-              'assets/icons/type=settings.svg',
-              color: OrmeeColor.gray[500],
-              height: 32,
+              '/icons/bell.svg',
             ),
           ],
         ),
