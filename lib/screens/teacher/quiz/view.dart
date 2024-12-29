@@ -276,6 +276,7 @@ class TeacherQuizList extends StatelessWidget {
                                   onConfirm: () {
                                     controller.fetchTeacherQuizClose(
                                         controller.openQuizzes[index].id);
+                                    Get.forceAppUpdate();
                                     Get.back();
                                   },
                                 );
@@ -293,6 +294,7 @@ class TeacherQuizList extends StatelessWidget {
                                   onConfirm: () {
                                     controller.fetchTeacherQuizOpen(
                                         controller.openQuizzes[index].id);
+                                    Get.forceAppUpdate();
                                     Get.back();
                                   },
                                 );

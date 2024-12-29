@@ -79,6 +79,7 @@ class TeacherMemoList extends StatelessWidget {
                     titleController.textEditingController.clear();
                     titleController.isTextNotEmpty = false.obs;
                     titleController.textLength = 0.obs;
+                    Get.forceAppUpdate();
                     Get.back();
                   },
                   haveDropdown: false,
@@ -184,6 +185,7 @@ class TeacherMemoList extends StatelessWidget {
                             controller.fetchTeacherMemoClose(
                                 '0a962d36-470f-47f4-8224-68f5200547a6',
                                 controller.openMemos[index].id);
+                            Get.forceAppUpdate();
                             Get.back();
                           },
                         );
