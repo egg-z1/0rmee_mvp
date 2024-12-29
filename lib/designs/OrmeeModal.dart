@@ -33,7 +33,7 @@ class OrmeeModal extends StatelessWidget {
               color: OrmeeColor.grey[90],
             ),
             SizedBox(height: 13),
-            contentText!.isNotEmpty
+            contentText != null
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
