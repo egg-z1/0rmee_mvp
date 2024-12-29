@@ -225,6 +225,7 @@ class TeacherSideMenu extends StatelessWidget {
                   dueTime: getLocalDateTimeFromMonthString(
                       dropdownController2.selectedMonth.value),
                 ));
+            Get.forceAppUpdate();
             Get.back();
           },
         );

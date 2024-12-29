@@ -149,6 +149,7 @@ class TeacherHome extends StatelessWidget {
                   dueTime: getLocalDateTimeFromMonthString(
                       dropdownController2.selectedMonth.value),
                 ));
+            Get.forceAppUpdate();
             Get.back();
           },
         );
@@ -299,6 +300,7 @@ class TeacherHomeTabBar extends StatelessWidget {
                             },
                             onConfirm: () {
                               controller.fetchTeacherDeleteLecture(lectureCode);
+                              Get.forceAppUpdate();
                               Get.back();
                             },
                           );
