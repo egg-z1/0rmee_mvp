@@ -22,11 +22,11 @@ class OrmeeSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 480,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      width: 335,
+      padding: const EdgeInsets.symmetric(horizontal: 25),
       decoration: BoxDecoration(
-        color: OrmeeColor.gray[100],
-        borderRadius: BorderRadius.circular(40),
+        color: OrmeeColor.white,
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         children: [
@@ -36,18 +36,18 @@ class OrmeeSearchBar extends StatelessWidget {
               onChanged: onChanged,
               onSubmitted: onSubmitted,
               style: TextStyle(
-                color: OrmeeColor.gray[900],
+                color: OrmeeColor.grey[90],
                 fontFamily: 'Pretendard',
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
                 hintText: '찾으시는 정보를 검색해보세요.',
                 hintStyle: TextStyle(
-                  color: OrmeeColor.gray[500],
+                  color: OrmeeColor.grey[30],
                   fontFamily: 'Pretendard',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
                 border: InputBorder.none,
               ),
@@ -59,7 +59,7 @@ class OrmeeSearchBar extends StatelessWidget {
                 ? GestureDetector(
                     onTap: onClear,
                     child: SvgPicture.asset(
-                      'assets/icons/type=circle_x.svg',
+                      '/icons/type=circle_x.svg',
                       color: OrmeeColor.gray[300],
                       height: 24,
                     ),
@@ -72,9 +72,7 @@ class OrmeeSearchBar extends StatelessWidget {
               onSubmitted(controller.text);
             },
             child: SvgPicture.asset(
-              'assets/icons/type=search.svg',
-              color: OrmeeColor.gray[600],
-              height: 24,
+              '/icons/search.svg',
             ),
           ),
         ],
