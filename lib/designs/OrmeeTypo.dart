@@ -1388,12 +1388,14 @@ class Headline2_Semibold extends StatelessWidget {
   final TextStyle style;
   final Color? color;
   final TextOverflow? overflow;
+  final TextDecoration textDecoration;
 
   const Headline2_Semibold({
     super.key,
     required this.text,
     this.color,
     this.overflow,
+    this.textDecoration = TextDecoration.none,
     this.style = const TextStyle(),
   });
 
@@ -1405,7 +1407,8 @@ class Headline2_Semibold extends StatelessWidget {
           color: color ?? OrmeeColor.black,
           fontFamily: 'Pretendard',
           fontSize: 16,
-          fontWeight: FontWeight.w600),
+          fontWeight: FontWeight.w600,
+          decoration: textDecoration),
       overflow: overflow ?? TextOverflow.clip,
     );
   }
