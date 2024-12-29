@@ -58,3 +58,36 @@ class TeacherMemoService extends GetConnect {
     }
   }
 }
+
+class MessageStatisticsService extends GetConnect {
+  MessageStatisticsService() {
+    httpClient.baseUrl = '${API.hostConnect}';
+    httpClient.timeout = const Duration(seconds: 10);
+
+    httpClient.addRequestModifier<dynamic>((request) async {
+      request.headers['Accept'] = 'application/json';
+      request.headers['Content-Type'] = 'application/json; charset=utf-8';
+      return request;
+    });
+  }
+
+  Future<List<MessageStatistics>> fetchMessageStatistics(int memoId) async {
+    final url = '/teacher/$memoId/messages';
+    final response = await get(url);
+
+    try {
+      if (response.isOk && response.body['data'] != null) {
+        final List<dynamic> data = response.body['data'];
+        return data
+            .map((item) =>
+                MessageStatistics.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception(
+            'Failed to fetch message statistics: ${response.statusText}');
+      }
+    } catch (e) {
+      throw Exception('Error occurred while fetching message statistics: $e');
+    }
+  }
+}

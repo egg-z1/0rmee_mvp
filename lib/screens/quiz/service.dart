@@ -15,10 +15,19 @@ class QuizService extends GetConnect {
       request.headers['Content-Type'] = 'application/json; charset=utf-8';
       return request;
     });
+
+    // 응답 인터셉터: 응답 로깅
+    // httpClient.addResponseModifier((request, response) {
+    //   print('📥 Response: [${response.statusCode}] ${request.url}');
+    //   if (response.bodyString != null) {
+    //     print('📥 Body: ${response.bodyString}');
+    //   }
+    //   return response;
+    // });
   }
 
   /// 강의 상세 정보 가져오기
-  Future<List<QuizCard>> fetchLectureDetail(String quizId) async {
+  Future<Map<String, Object>> fetchLectureDetail(String quizId) async {
     final String url = '/quizes/$quizId';
     try {
       // GET 요청 전송
@@ -35,11 +44,17 @@ class QuizService extends GetConnect {
             body['status'] == 'success' &&
             body['code'] == 200 &&
             body['data'] != null) {
-          List<QuizCard> quizList = (body['data'] as List)
+          List<QuizCard> quizList = (body['data']['problems'] as List)
               .map((item) => QuizCard.fromJson(item))
               .toList();
+          int timeLimit = body['data']['timeLimit'];
+          DateTime dueTime = DateTime.parse(body['data']['dueTime']);
           // print(quizList);
-          return quizList;
+          return {
+            'dueTime': dueTime,
+            'timeLimit': timeLimit,
+            'quizList': quizList,
+          };
         }
 
         throw Exception('Invalid response format: ${response.bodyString}');
@@ -58,6 +73,7 @@ class QuizService extends GetConnect {
   Future<void> submitQuiz(QuizSubmission submission) async {
     final String url = '/quizes/student';
     try {
+      print(submission.toJson());
       final response = await post(url, submission.toJson());
 
       if (response.isOk) {
@@ -67,12 +83,12 @@ class QuizService extends GetConnect {
         if (body is Map<String, dynamic> &&
             body['status'] == 'success' &&
             body['code'] == 200) {
+          print("성공적으로 제출됨");
           return; // 성공적으로 제출됨
         }
 
         throw Exception('Invalid response format: ${response.bodyString}');
       }
-
       // 응답 실패 처리
       throw Exception(
           'Submit failed: [${response.statusCode}] ${response.bodyString}');

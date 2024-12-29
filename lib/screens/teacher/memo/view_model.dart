@@ -34,3 +34,21 @@ class TeacherMemoController extends GetxController {
     }
   }
 }
+
+class TeacherMessageStatisticsController extends GetxController {
+  final MessageStatisticsService service = MessageStatisticsService();
+  RxList<MessageStatistics> statistics = <MessageStatistics>[].obs;
+  RxBool isLoading = false.obs;
+
+  Future<void> fetchMessageStatistics(int memoId) async {
+    try {
+      isLoading.value = true;
+      final response = await service.fetchMessageStatistics(memoId);
+      statistics.value = response;
+    } catch (e) {
+      print('Error loading message statistics: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
