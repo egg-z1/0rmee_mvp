@@ -7,12 +7,14 @@ import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeDropDownButton.dart';
 import 'package:ormee_mvp/designs/OrmeeFloatingPopup.dart';
+import 'package:ormee_mvp/designs/OrmeeModal.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField3.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/home/model.dart';
 import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
+import 'package:tab_container/tab_container.dart';
 
 class TeacherHome extends StatelessWidget {
   final TeacherHomeController controller = Get.put(TeacherHomeController());
@@ -23,15 +25,14 @@ class TeacherHome extends StatelessWidget {
     // final RxBool isPopupVisible = true.obs;
 
     return Scaffold(
-      backgroundColor: OrmeeColor.white,
+      backgroundColor: OrmeeColor.grey[5],
       appBar: TeacherHeader(),
       body: Row(
         children: [
           SizedBox(width: 348, child: TeacherSideMenu()),
-          Container(color: OrmeeColor.gray[50], width: 1),
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 70),
               // child: Obx(
               //   () => OrmeeFloatingPopupOverlay(
               //     message: "신규 강의를 개설해보세요!",
@@ -68,34 +69,42 @@ class TeacherHome extends StatelessWidget {
               //     ),
               //   ),
               // ),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 60),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 48),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          T1_24px(
-                            text: "강의 홈",
-                            color: OrmeeColor.gray[900],
+              child: Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 34),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Title1_Bold(
+                                text: "강의 관리",
+                                color: OrmeeColor.grey[90],
+                              ),
+                            ],
                           ),
-                          OrmeeButton2(
-                            onPressed: () {
-                              openOrmeeDialog(context);
-                            },
-                            text: '강의 개설',
-                          ),
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                          child: TeacherHomeTabBar(),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: TeacherHomeTabBar(),
+                  ),
+                  Positioned(
+                    top: 82,
+                    right: 60,
+                    child: OrmeeButton2(
+                      onTap: () {
+                        openOrmeeDialog(context);
+                      },
+                      text: '강의 개설',
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -157,92 +166,67 @@ class TeacherHomeTabBar extends StatelessWidget {
     controller.fetchTeacherLectures('3334');
 
     // final RxBool isPopupVisible = true.obs;
-    return DefaultTabController(
-      length: 2,
-      child: Column(
+    return Obx(
+      () => TabContainer(
+        color: OrmeeColor.white,
+        tabsStart: 0,
+        tabsEnd: 0.3,
+        borderRadius: BorderRadius.circular(25),
+        tabBorderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+          bottomLeft: Radius.circular(25),
+          bottomRight: Radius.zero,
+        ),
+        childPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 44),
+        selectedTextStyle: TextStyle(
+          color: OrmeeColor.purple[40],
+          fontFamily: 'Pretendard',
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedTextStyle: TextStyle(
+          color: OrmeeColor.grey[40],
+          fontFamily: 'Pretendard',
+          fontSize: 20,
+          fontWeight: FontWeight.w400,
+        ),
+        tabs: [
+          Text('진행 중 강의 ${controller.openLectures.length}'),
+          Text('이전 강의 ${controller.closedLectures.length}'),
+        ],
         children: [
-          Obx(
-            () => TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              indicatorWeight: 4,
-              indicatorColor: OrmeeColor.primaryPuple[400],
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: OrmeeColor.primaryPuple[400],
-              labelStyle: const TextStyle(
-                fontFamily: 'Pretendard',
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-              unselectedLabelColor: OrmeeColor.gray[500],
-              unselectedLabelStyle: const TextStyle(
-                fontFamily: 'Pretendard',
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-              tabs: [
-                Tab(text: '진행중 강의 ${controller.openLectures.length}'),
-                Tab(text: '이전 강의 ${controller.closedLectures.length}'),
-              ],
-            ),
-          ),
-          Container(
-            height: 1,
-            color: OrmeeColor.gray[200],
-          ),
-          Obx(
-            () => Expanded(
-              child: TabBarView(
-                children: [
-                  // Obx(() => OrmeeFloatingPopupOverlay2(
-                  //     message: '강의 코드를 복사해 학생에게 공유해보세요!',
-                  //     isVisible: isPopupVisible.value,
-                  //     onDismiss: () => isPopupVisible.value = false,
-                  //     top: MediaQuery.of(context).size.height / 5,
-                  //     child: Lectures())),
-                  controller.openLectures.isNotEmpty
-                      ? Lectures(0)
-                      : NullLecture('현재 진행 중인 강의가 없어요.'),
-                  controller.closedLectures.isNotEmpty
-                      ? Lectures(1)
-                      : NullLecture('이전 강의가 없어요.'),
-                ],
-              ),
-            ),
-          ),
+          controller.openLectures.isNotEmpty
+              ? Lectures(0)
+              : NullLecture('현재 진행 중인 강의가 없어요.'),
+          controller.closedLectures.isNotEmpty
+              ? Lectures(1)
+              : NullLecture('이전 강의가 없어요.'),
         ],
       ),
     );
   }
 
   Widget NullLecture(String message) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            "assets/icons/type=file_edit.svg",
-            color: OrmeeColor.gray[400],
-          ),
-          const SizedBox(height: 24),
-          T4_20px(
-            text: message,
-            color: OrmeeColor.gray[400],
-          ),
-        ],
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 78),
+      child: Center(
+        child: Heading2_Semibold(
+          text: message,
+          color: OrmeeColor.gray[400],
+        ),
       ),
     );
   }
 
   Widget Lectures(int OpenOrClose) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40),
-      child: GridView.builder(
+    return Obx(
+      () => GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          crossAxisSpacing: 25,
-          mainAxisSpacing: 25,
-          mainAxisExtent: 220,
+          crossAxisSpacing: 30,
+          mainAxisSpacing: 30,
+          mainAxisExtent: 178,
         ),
         itemCount: OpenOrClose == 0
             ? controller.openLectures.length
@@ -255,114 +239,125 @@ class TeacherHomeTabBar extends StatelessWidget {
   }
 
   Widget LectureCard(context, index, OpenOrClose) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(24, 28, 24, 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: OrmeeColor.white,
-        border: Border.all(color: OrmeeColor.gray[200]!, width: 2),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: OrmeeColor.primaryPuple[400],
+    return Obx(
+      () => Container(
+        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: OrmeeColor.white,
+          border: Border.all(color: OrmeeColor.gray[200]!, width: 2),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/lecture.svg',
                 ),
-                child: SvgPicture.asset(
-                  'assets/icons/type=file.svg',
+                SizedBox(width: 12),
+                Headline2_Semibold(
+                    text: OpenOrClose == 0
+                        ? controller.openLectures[index].title
+                        : controller.closedLectures[index].title),
+                Spacer(),
+                PopupMenuButton<String>(
+                  offset: Offset(5, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(color: OrmeeColor.gray[200]!, width: 1),
+                  ),
+                  elevation: 8,
                   color: OrmeeColor.white,
-                ),
-              ),
-              SizedBox(width: 8),
-              T4_20px(
-                  text: OpenOrClose == 0
-                      ? controller.openLectures[index].title
-                      : controller.closedLectures[index].title),
-              Spacer(),
-              PopupMenuButton<String>(
-                offset: Offset(5, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: OrmeeColor.gray[200]!, width: 1),
-                ),
-                elevation: 8,
-                color: OrmeeColor.white,
-                shadowColor: OrmeeColor.black.withOpacity(0.5),
-                padding: EdgeInsets.zero,
-                icon: SvgPicture.asset(
-                  'assets/icons/type=more_vertical.svg',
-                  color: OrmeeColor.gray[500],
-                ),
-                onSelected: (String value) {
-                  if (value == 'delete') {
-                    final int lectureCode = OpenOrClose == 0
-                        ? controller.openLectures[index].code
-                        : controller.closedLectures[index].code;
+                  shadowColor: OrmeeColor.black.withOpacity(0.5),
+                  padding: EdgeInsets.zero,
+                  icon: SvgPicture.asset(
+                    '/icons/dots.svg',
+                    color: OrmeeColor.gray[500],
+                  ),
+                  onSelected: (String value) {
+                    if (value == 'delete') {
+                      final int lectureCode = OpenOrClose == 0
+                          ? controller.openLectures[index].code
+                          : controller.closedLectures[index].code;
 
-                    controller.fetchTeacherDeleteLecture(lectureCode);
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'delete',
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: B3_18px_M(
-                        text: '삭제하기',
-                        color: OrmeeColor.gray[600],
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return OrmeeModal(
+                            titleText: '강의를 삭제하시겠어요?',
+                            contentText: '삭제된 강의는 복구가 불가능해요.',
+                            onCancel: () {
+                              Get.back();
+                            },
+                            onConfirm: () {
+                              controller.fetchTeacherDeleteLecture(lectureCode);
+                              Get.back();
+                            },
+                          );
+                        },
+                      );
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        child: B3_18px_M(
+                          text: '삭제하기',
+                          color: OrmeeColor.gray[600],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Spacer(),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     SvgPicture.asset(
-          //       'assets/icons/type=user_profile.svg',
-          //       color: OrmeeColor.gray[400],
-          //     ),
-          //     SizedBox(width: 8),
-          //     T6_16px(
-          //       text: '44명',
-          //       color: OrmeeColor.primaryPuple[400],
-          //     ),
-          //   ],
-          // ),
-          Row(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/type=calender.svg',
-                color: OrmeeColor.gray[400],
-              ),
-              SizedBox(width: 8),
-              B4_16px_M(
-                text: OpenOrClose == 0
-                    ? DateFormat('yyyy.MM.dd').format(
-                        DateTime.parse(controller.openLectures[index].dueTime))
-                    : DateFormat('yyyy.MM.dd').format(DateTime.parse(
-                        controller.closedLectures[index].dueTime)),
-                color: OrmeeColor.gray[700],
-              ),
-              Spacer(),
-              InkWell(
-                onTap: () {},
-                child: SvgPicture.asset(
-                  'assets/icons/type=copy.svg',
-                  color: OrmeeColor.primaryPuple[400],
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            Spacer(),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //     SvgPicture.asset(
+            //       'assets/icons/type=user_profile.svg',
+            //       color: OrmeeColor.gray[400],
+            //     ),
+            //     SizedBox(width: 8),
+            //     T6_16px(
+            //       text: '44명',
+            //       color: OrmeeColor.primaryPuple[400],
+            //     ),
+            //   ],
+            // ),
+            Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/Property 1=calender, size=l.svg',
+                  color: OrmeeColor.grey[30],
+                ),
+                SizedBox(width: 8),
+                B4_16px_M(
+                  text: OpenOrClose == 0
+                      ? DateFormat('yyyy.MM.dd').format(DateTime.parse(
+                          controller.openLectures[index].dueTime))
+                      : DateFormat('yyyy.MM.dd').format(DateTime.parse(
+                          controller.closedLectures[index].dueTime)),
+                  color: OrmeeColor.grey[70],
+                ),
+                Spacer(),
+                InkWell(
+                  onTap: () {},
+                  child: SvgPicture.asset(
+                    '/icons/copy.svg',
+                    color: OrmeeColor.grey[30],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
