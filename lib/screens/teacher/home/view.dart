@@ -33,7 +33,8 @@ class TeacherHome extends StatelessWidget {
         appBar: TeacherHeader(),
         body: Row(
           children: [
-            SizedBox(width: 348, child: TeacherSideMenu(teacherCode: teacherCode)),
+            SizedBox(
+                width: 348, child: TeacherSideMenu(teacherCode: teacherCode)),
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 70),
@@ -261,16 +262,25 @@ class TeacherHomeTabBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SvgPicture.asset(
-                  'assets/icons/lecture.svg',
+                Expanded(
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/lecture.svg',
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Headline2_Semibold(
+                            overflow: TextOverflow.ellipsis,
+                            text: OpenOrClose == 0
+                                ? controller.openLectures[index].title
+                                : controller.closedLectures[index].title),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(width: 12),
-                Headline2_Semibold(
-                    text: OpenOrClose == 0
-                        ? controller.openLectures[index].title
-                        : controller.closedLectures[index].title),
-                Spacer(),
                 PopupMenuButton<String>(
                   offset: Offset(5, 40),
                   shape: RoundedRectangleBorder(
@@ -349,13 +359,16 @@ class TeacherHomeTabBar extends StatelessWidget {
                   color: OrmeeColor.grey[30],
                 ),
                 SizedBox(width: 8),
-                B4_16px_M(
-                  text: OpenOrClose == 0
-                      ? DateFormat('yyyy.MM.dd').format(DateTime.parse(
-                          controller.openLectures[index].dueTime))
-                      : DateFormat('yyyy.MM.dd').format(DateTime.parse(
-                          controller.closedLectures[index].dueTime)),
-                  color: OrmeeColor.grey[70],
+                Expanded(
+                  child: B4_16px_M(
+                    overflow: TextOverflow.ellipsis,
+                    text: OpenOrClose == 0
+                        ? DateFormat('yyyy.MM.dd').format(DateTime.parse(
+                            controller.openLectures[index].dueTime))
+                        : DateFormat('yyyy.MM.dd').format(DateTime.parse(
+                            controller.closedLectures[index].dueTime)),
+                    color: OrmeeColor.grey[70],
+                  ),
                 ),
                 Spacer(),
                 InkWell(
