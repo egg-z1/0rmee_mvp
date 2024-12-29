@@ -119,7 +119,7 @@ class TeacherQuizList extends StatelessWidget {
   createQuizButton() {
     return InkWell(
       onTap: () {
-        Get.to(Quizcreate(lectureId: '9789'));
+        Get.to(Quizcreate(lectureId: '9789', isUpdate: false,));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
