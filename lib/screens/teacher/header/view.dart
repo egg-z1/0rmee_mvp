@@ -13,6 +13,7 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: OrmeeColor.grey[5],
       surfaceTintColor: Colors.transparent,
       toolbarHeight: 88,
