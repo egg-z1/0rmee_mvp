@@ -116,7 +116,7 @@ class TeacherSignIn extends StatelessWidget {
                 onTap: () async {
                   if(await controller.checkTeacherInfo(Teacher(code: int.parse(controller.codeController.text), password: controller.passwordController.text).toJson())) {
                     OrmeeSnackbar.show(context, "로그인이 완료되었어요.", 'assets/icons/check.svg', OrmeeColor.systemGreen[5]!, OrmeeColor.systemGreen[30]!);
-                    Get.off(TeacherHome());
+                    Get.offAll(TeacherHome(teacherCode: controller.codeController.text));
                   } else {
                     OrmeeSnackbar.show(context, "로그인 정보가 일치하지 않습니다. 다시 시도해 주세요.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
                   }

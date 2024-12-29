@@ -12,20 +12,20 @@ import 'package:ormee_mvp/screens/teacher/home/model.dart';
 import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
+import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
 
 class TeacherSideMenu extends StatelessWidget {
-  TeacherSideMenu({super.key});
+  String teacherCode;
+  TeacherSideMenu({super.key, required this.teacherCode});
 
-  final TeacherSideMenuController controller =
-      Get.put(TeacherSideMenuController());
+  final TeacherSideMenuController controller = Get.put(TeacherSideMenuController());
   final LectureController _controller = Get.put(LectureController());
 
   final TeacherHomeController controller1 = Get.put(TeacherHomeController());
 
   @override
   Widget build(BuildContext context) {
-    final String code = "3334"; // 예시용 ID
-    controller.fetchTeacherSideMenu(code);
+    controller.fetchTeacherSideMenu(teacherCode);
 
     return Obx(() {
       if (controller.isLoading.value) {
@@ -324,7 +324,7 @@ class TeacherSideMenu extends StatelessWidget {
                 Get.back();
               },
               onConfirm: () {
-                Get.back();
+                Get.offAll(TeacherSignIn());
               },
             );
           },

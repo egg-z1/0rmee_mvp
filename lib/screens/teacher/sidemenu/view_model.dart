@@ -8,11 +8,11 @@ class TeacherSideMenuController extends GetxController {
   var error = Rxn<String>();
   var sidemenu = Rx<TeacherSideMenuModel?>(null);
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchTeacherSideMenu('3334'); // 예시 코드로 초기화
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   fetchTeacherSideMenu('3334'); // 예시 코드로 초기화
+  // }
 
   Future<void> fetchTeacherSideMenu(String code) async {
     try {

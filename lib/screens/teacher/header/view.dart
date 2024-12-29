@@ -13,12 +13,13 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: OrmeeColor.grey[5],
       surfaceTintColor: Colors.transparent,
-      toolbarHeight: 88,
+      toolbarHeight: 74,
       elevation: 0,
       title: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Row(
           children: [
             SvgPicture.asset(

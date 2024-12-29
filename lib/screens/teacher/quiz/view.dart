@@ -12,7 +12,8 @@ class TeacherQuizList extends StatelessWidget {
   final TeacherQuizController controller = Get.put(TeacherQuizController());
   final TeacherQuizStatisticsController controller1 =
       Get.put(TeacherQuizStatisticsController());
-  TeacherQuizList({super.key});
+  String lectureId;
+  TeacherQuizList({super.key, required this.lectureId});
   final RxBool isRegister = true.obs;
 
   final TeacherProblemStatisticsController controller2 =
@@ -63,8 +64,8 @@ class TeacherQuizList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchTeacherQuizList('0a962d36-470f-47f4-8224-68f5200547a6');
-    controller.fetchTeacherQuizDraft('0a962d36-470f-47f4-8224-68f5200547a6');
+    controller.fetchTeacherQuizList(lectureId);
+    controller.fetchTeacherQuizDraft(lectureId);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
