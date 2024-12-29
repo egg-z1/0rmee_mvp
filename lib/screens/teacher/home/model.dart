@@ -27,12 +27,14 @@ class LectureCreateModel {
 }
 
 class Lecture {
+  final String id;
   final int code;
   final String title;
   final String? openTime;
   final String dueTime;
 
   Lecture({
+    required this.id,
     required this.code,
     required this.title,
     required this.openTime,
@@ -41,6 +43,7 @@ class Lecture {
 
   factory Lecture.fromJson(Map<String, dynamic> json) {
     return Lecture(
+      id: json['id'],
       code: json['code'],
       title: json['title'],
       openTime: json['openTime'],

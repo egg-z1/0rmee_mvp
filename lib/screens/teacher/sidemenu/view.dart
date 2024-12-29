@@ -18,7 +18,8 @@ class TeacherSideMenu extends StatelessWidget {
   String teacherCode;
   TeacherSideMenu({super.key, required this.teacherCode});
 
-  final TeacherSideMenuController controller = Get.put(TeacherSideMenuController());
+  final TeacherSideMenuController controller =
+      Get.put(TeacherSideMenuController());
   final LectureController _controller = Get.put(LectureController());
 
   final TeacherHomeController controller1 = Get.put(TeacherHomeController());
@@ -217,7 +218,7 @@ class TeacherSideMenu extends StatelessWidget {
           },
           onConfirm: () async {
             controller1.fetchTeacherCreateLecture(
-                '3334',
+                teacherCode,
                 LectureCreateModel(
                   title: titleController.textEditingController.text,
                   openTime: getLocalDateTimeFromMonthString(
