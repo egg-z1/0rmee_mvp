@@ -1,9 +1,11 @@
 class LectureModel {
+  final String id;
   final String? profileImage;
   final String name;
   final String title;
 
   LectureModel({
+    required this.id,
     this.profileImage,
     required this.name,
     required this.title,
@@ -11,6 +13,7 @@ class LectureModel {
 
   factory LectureModel.fromJson(Map<String, dynamic> json) {
     return LectureModel(
+      id: json['id'],
       profileImage: json['profileImage'],
       name: json['name'],
       title: json['title'],

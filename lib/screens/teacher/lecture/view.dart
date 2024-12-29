@@ -3,33 +3,22 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
-import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/lecture/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/memo/view.dart';
 import 'package:ormee_mvp/screens/teacher/quiz/view.dart';
-import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 import 'package:tab_container/tab_container.dart';
 
 class TeacherLecture extends StatelessWidget {
-  final TeacherLectureController controller =
-      Get.put(TeacherLectureController());
-  TeacherLecture({super.key});
+  final TeacherLectureController controller = Get.put(TeacherLectureController());
+  String lectureId;
+  String lectureTitle;
+  TeacherLecture({super.key, required this.lectureId, required this.lectureTitle});
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchMemoData('0a962d36-470f-47f4-8224-68f5200547a6');
-    controller.fetchQuizData('0a962d36-470f-47f4-8224-68f5200547a6');
-    return Scaffold(
-      backgroundColor: OrmeeColor.grey[5],
-      appBar: TeacherHeader(),
-      body: Row(
-        children: [
-          SizedBox(width: 348, child: TeacherSideMenu()),
-          Container(color: OrmeeColor.gray[50], width: 1),
-          SizedBox(
-            width: 70,
-          ),
-          Expanded(
+    controller.fetchMemoData(lectureId);
+    controller.fetchQuizData(lectureId);
+    return Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -39,7 +28,7 @@ class TeacherLecture extends StatelessWidget {
                   children: [
                     SvgPicture.asset('/icons/lecture.svg'),
                     SizedBox(width: 15),
-                    Title1_Bold(text: '오르미 토익 rc'),
+                    Title1_Bold(text: lectureTitle),
                   ],
                 ),
                 SizedBox(height: 13),
@@ -77,20 +66,14 @@ class TeacherLecture extends StatelessWidget {
                             '쪽지 ${controller.openMemosLength.value + controller.closeMemosLength.value}'),
                       ],
                       children: [
-                        TeacherQuizList(),
-                        TeacherMemoList(),
+                        TeacherQuizList(lectureId: lectureId),
+                        TeacherMemoList(lectureId: lectureId)
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            width: 70,
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

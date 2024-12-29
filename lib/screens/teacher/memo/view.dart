@@ -13,12 +13,13 @@ class TeacherMemoList extends StatelessWidget {
   final TeacherMemoController controller = Get.put(TeacherMemoController());
   final TeacherMessageStatisticsController controller1 =
       Get.put(TeacherMessageStatisticsController());
-  TeacherMemoList({super.key});
+  String lectureId;
+  TeacherMemoList({super.key, required this.lectureId});
   final RxBool isComplete = true.obs;
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchTeacherMemos('0a962d36-470f-47f4-8224-68f5200547a6');
+    controller.fetchTeacherMemos(lectureId);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -73,7 +74,7 @@ class TeacherMemoList extends StatelessWidget {
                   },
                   onConfirm: () {
                     controller.fetchTeacherCreateMemo(
-                        '0a962d36-470f-47f4-8224-68f5200547a6',
+                        lectureId,
                         MemoCreateModel(
                             title: titleController.textEditingController.text));
                     titleController.textEditingController.clear();

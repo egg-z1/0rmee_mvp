@@ -17,8 +17,9 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 import 'package:tab_container/tab_container.dart';
 
 class TeacherHome extends StatelessWidget {
+  String teacherCode;
   final TeacherHomeController controller = Get.put(TeacherHomeController());
-  TeacherHome({super.key});
+  TeacherHome({super.key, required this.teacherCode});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class TeacherHome extends StatelessWidget {
         appBar: TeacherHeader(),
         body: Row(
           children: [
-            SizedBox(width: 348, child: TeacherSideMenu()),
+            SizedBox(width: 348, child: TeacherSideMenu(teacherCode: teacherCode)),
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 70),
@@ -95,7 +96,7 @@ class TeacherHome extends StatelessWidget {
                             ),
                           ),
                           Expanded(
-                            child: TeacherHomeTabBar(),
+                            child: TeacherHomeTabBar(teacherCode: teacherCode),
                           ),
                         ],
                       ),
@@ -141,7 +142,7 @@ class TeacherHome extends StatelessWidget {
           },
           onConfirm: () async {
             controller.fetchTeacherCreateLecture(
-                '3334',
+                teacherCode,
                 LectureCreateModel(
                   title: titleController.textEditingController.text,
                   openTime: getLocalDateTimeFromMonthString(
@@ -167,11 +168,12 @@ class TeacherHome extends StatelessWidget {
 
 class TeacherHomeTabBar extends StatelessWidget {
   final TeacherHomeController controller = Get.put(TeacherHomeController());
-  TeacherHomeTabBar({super.key});
+  String teacherCode;
+  TeacherHomeTabBar({super.key, required this.teacherCode});
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchTeacherLectures('3334');
+    controller.fetchTeacherLectures(teacherCode);
 
     // final RxBool isPopupVisible = true.obs;
     return Obx(
