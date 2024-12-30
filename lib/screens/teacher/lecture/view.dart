@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/lecture/view_model.dart';
@@ -11,18 +12,20 @@ import 'package:tab_container/tab_container.dart';
 class TeacherLecture extends StatelessWidget {
   final TeacherLectureController controller =
       Get.put(TeacherLectureController());
-  String lectureId;
+  late final lectureId;
   String lectureTitle;
   TeacherLecture(
-      {super.key, required this.lectureId, required this.lectureTitle});
+      {super.key, required this.lectureTitle});
 
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+    lectureId = box.read('lectureId');
     controller.fetchMemoData(lectureId);
     controller.fetchQuizData(lectureId);
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 70),
+        padding: EdgeInsets.only(left: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -35,44 +38,46 @@ class TeacherLecture extends StatelessWidget {
                 Title1_Bold(text: lectureTitle),
               ],
             ),
-            SizedBox(height: 13),
-            SizedBox(height: 21),
+            SizedBox(height: 34),
             Obx(
               () => Expanded(
-                child: TabContainer(
-                  color: OrmeeColor.white,
-                  tabsStart: 0,
-                  tabsEnd: 0.3,
-                  borderRadius: BorderRadius.circular(25),
-                  tabBorderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.zero,
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: TabContainer(
+                    color: OrmeeColor.white,
+                    tabsStart: 0,
+                    tabsEnd: 0.3,
+                    borderRadius: BorderRadius.circular(25),
+                    tabBorderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.zero,
+                    ),
+                    childPadding: EdgeInsets.all(30),
+                    selectedTextStyle: TextStyle(
+                      color: OrmeeColor.purple[40],
+                      fontFamily: 'Pretendard',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    unselectedTextStyle: TextStyle(
+                      color: OrmeeColor.grey[40],
+                      fontFamily: 'Pretendard',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    tabs: [
+                      Text(
+                          '퀴즈 ${controller.openQuizzesLength.value + controller.closedQuizzesLength.value}'),
+                      Text(
+                          '쪽지 ${controller.openMemosLength.value + controller.closeMemosLength.value}'),
+                    ],
+                    children: [
+                      TeacherQuizList(),
+                      TeacherMemoList()
+                    ],
                   ),
-                  childPadding: EdgeInsets.all(30),
-                  selectedTextStyle: TextStyle(
-                    color: OrmeeColor.purple[40],
-                    fontFamily: 'Pretendard',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  unselectedTextStyle: TextStyle(
-                    color: OrmeeColor.grey[40],
-                    fontFamily: 'Pretendard',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  tabs: [
-                    Text(
-                        '퀴즈 ${controller.openQuizzesLength.value + controller.closedQuizzesLength.value}'),
-                    Text(
-                        '쪽지 ${controller.openMemosLength.value + controller.closeMemosLength.value}'),
-                  ],
-                  children: [
-                    TeacherQuizList(lectureId: lectureId),
-                    TeacherMemoList(lectureId: lectureId)
-                  ],
                 ),
               ),
             ),

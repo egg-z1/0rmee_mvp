@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeSnackbar.dart';
@@ -12,12 +13,10 @@ import 'package:ormee_mvp/screens/teacher/quiz_create/view_model.dart';
 import '../../../designs/OrmeeSelect.dart';
 
 class Quizcreate extends StatefulWidget {
-  final String? lectureId;
-  final String? quizId;
   final bool isUpdate;
 
   const Quizcreate(
-      {super.key, this.lectureId, this.quizId, required this.isUpdate});
+      {super.key, required this.isUpdate});
 
   @override
   State<Quizcreate> createState() => _QuizcreateState();
@@ -25,6 +24,9 @@ class Quizcreate extends StatefulWidget {
 
 class _QuizcreateState extends State<Quizcreate> {
   QuizCreateController quizCreateController = Get.put(QuizCreateController());
+  final GetStorage box = GetStorage();
+  late final String lectureId;
+  late final String quizId;
 
   OverlayEntry? overlayEntry;
 
@@ -76,44 +78,44 @@ class _QuizcreateState extends State<Quizcreate> {
   @override
   void initState() {
     super.initState();
+    lectureId = box.read("lectureId");
+    quizId = box.read('quizId');
+    print("<확인용>\n강의: $lectureId\n퀴즈: $quizId");
     if (widget.isUpdate) {
-      quizCreateController.getDraftQuiz(widget.quizId!);
+      quizCreateController.getDraftQuiz(quizId);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TeacherHeader(),
-      backgroundColor: OrmeeColor.grey[5],
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(370, 0, 80, 0),
-          child: Column(
-            children: [
-              bar(),
-              Container(
-                padding: const EdgeInsets.all(30),
-                decoration: BoxDecoration(
-                    color: OrmeeColor.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  children: [
-                    quizTitle(),
-                    const SizedBox(height: 12),
-                    quizCondition()
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(370, 0, 80, 0),
+            child: Column(
+              children: [
+                bar(),
+                Container(
+                  padding: const EdgeInsets.all(30),
+                  decoration: BoxDecoration(
+                      color: OrmeeColor.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    children: [
+                      quizTitle(),
+                      const SizedBox(height: 12),
+                      quizCondition()
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              problemCards(),
-              const SizedBox(height: 20),
-              Center(child: addButton()),
-              const SizedBox(height: 48)
-            ],
+                const SizedBox(height: 20),
+                problemCards(),
+                const SizedBox(height: 20),
+                Center(child: addButton()),
+                const SizedBox(height: 48)
+              ],
+            ),
           ),
         ),
-      ),
     );
   }
 
@@ -389,9 +391,9 @@ class _QuizcreateState extends State<Quizcreate> {
     quiz.problems = quizCreateController.problems;
 
     if (widget.isUpdate) {
-      quizCreateController.updateQuiz(quiz.toJson(), widget.quizId!);
+      quizCreateController.updateQuiz(quiz.toJson(), quizId);
     } else {
-      quizCreateController.createQuiz(quiz.toJson(), widget.lectureId!);
+      quizCreateController.createQuiz(quiz.toJson(), lectureId);
     }
   }
 

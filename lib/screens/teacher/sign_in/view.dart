@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeSnackbar.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
-import 'package:ormee_mvp/screens/teacher/home/view.dart';
 import 'package:ormee_mvp/screens/teacher/sign_in/model.dart';
 import 'package:ormee_mvp/screens/teacher/sign_in/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/main/view.dart';
 
 class TeacherSignIn extends StatelessWidget {
   TeacherSignInController controller = Get.put(TeacherSignInController());
+  final box = GetStorage();
 
   TeacherSignIn({super.key});
 
@@ -132,8 +133,8 @@ class TeacherSignIn extends StatelessWidget {
                         'assets/icons/check.svg',
                         OrmeeColor.systemGreen[5]!,
                         OrmeeColor.systemGreen[30]!);
-                    Get.offAll(TeacherMain(
-                        teacherCode: controller.codeController.text));
+                    box.write("teacherCode", controller.codeController.text);
+                    Get.offAll(TeacherMain());
                   } else {
                     OrmeeSnackbar.show(
                         context,
@@ -144,7 +145,7 @@ class TeacherSignIn extends StatelessWidget {
                   }
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 18),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
                   decoration: BoxDecoration(
                       color: OrmeeColor.purple[40],
                       borderRadius: BorderRadius.circular(10)),

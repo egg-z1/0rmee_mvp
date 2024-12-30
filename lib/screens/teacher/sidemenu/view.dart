@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeDropDownButton.dart';
@@ -15,19 +16,20 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
 
 class TeacherSideMenu extends StatelessWidget {
-  String teacherCode;
-  TeacherSideMenu({super.key, required this.teacherCode});
+  late final teacherCode;
+  TeacherSideMenu({super.key});
 
   final TeacherSideMenuController controller =
       Get.put(TeacherSideMenuController());
-  final LectureController _controller = Get.put(LectureController());
+  final LectureController _controller = Get.find<LectureController>();
 
-  final TeacherHomeController controller1 = Get.put(TeacherHomeController());
+  final TeacherHomeController controller1 = Get.find<TeacherHomeController>();
 
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+    teacherCode = box.read('teacherCode');
     controller.fetchTeacherSideMenu(teacherCode);
-
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
@@ -42,7 +44,6 @@ class TeacherSideMenu extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: Container(
-            margin: EdgeInsets.only(bottom: 10),
             padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
             decoration: BoxDecoration(
               color: OrmeeColor.white,
