@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/screens/branching/view.dart';
+import 'package:ormee_mvp/screens/classcode/view.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view.dart';
 import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
@@ -24,8 +25,9 @@ class OrmeeApp extends StatelessWidget {
     return GetMaterialApp(
       builder: (context, child) {
         return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: child!);
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child ?? const SizedBox.shrink(),
+        );
       },
       theme: ThemeData(
           appBarTheme: AppBarTheme(
@@ -33,12 +35,17 @@ class OrmeeApp extends StatelessWidget {
                   statusBarColor: OrmeeColor.white,
                   statusBarIconBrightness: Brightness.dark))),
       title: 'Ormee',
-      home: Branch(),
+      initialRoute: '/',
       defaultTransition: Transition.noTransition,
       getPages: [
+        GetPage(name: '/', page: () => Branch()),
         GetPage(
           name: '/ClassCode/:lectureId', // URL 경로로 lectureId를 전달
           page: () => LectureDetail(),
+        ),
+        GetPage(
+          name: '/ClassCode',
+          page: () => ClassCode(),
         ),
       ],
       debugShowCheckedModeBanner: false,

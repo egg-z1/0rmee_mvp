@@ -24,7 +24,7 @@ class Branch extends StatelessWidget {
               height: 45,
             ),
             GestureDetector(
-              onTap: () => Get.to(ClassCode()),
+              onTap: () => Get.to(() => ClassCode()),
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(
