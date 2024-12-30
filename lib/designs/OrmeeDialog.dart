@@ -15,6 +15,7 @@ class OrmeeDialog extends StatelessWidget {
   final VoidCallback onCancel;
   final VoidCallback onConfirm;
   final bool haveDropdown;
+  final String buttonText;
 
   OrmeeDialog({
     required this.titleText,
@@ -25,6 +26,7 @@ class OrmeeDialog extends StatelessWidget {
     required this.onCancel,
     required this.onConfirm,
     required this.haveDropdown,
+    this.buttonText = '개설하기',
   });
 
   @override
@@ -110,7 +112,7 @@ class OrmeeDialog extends StatelessWidget {
                           : true);
                   return OrmeeButton1(
                     onPressed: isFormValid ? onConfirm : null,
-                    text: '개설하기',
+                    text: buttonText,
                     textColor:
                         isFormValid ? OrmeeColor.white : OrmeeColor.gray[400]!,
                     backgroundColor: isFormValid

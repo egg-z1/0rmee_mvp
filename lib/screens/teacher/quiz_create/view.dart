@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/designs/OrmeeSnackbar.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
+import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_create/model.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_create/view_model.dart';
 
-class Quizcreate extends StatefulWidget {
-  final String lectureId;
+import '../../../designs/OrmeeSelect.dart';
 
-  const Quizcreate({super.key, required this.lectureId});
+class Quizcreate extends StatefulWidget {
+  final bool isUpdate;
+
+  const Quizcreate(
+      {super.key, required this.isUpdate});
 
   @override
   State<Quizcreate> createState() => _QuizcreateState();
@@ -18,8 +24,47 @@ class Quizcreate extends StatefulWidget {
 
 class _QuizcreateState extends State<Quizcreate> {
   QuizCreateController quizCreateController = Get.put(QuizCreateController());
+  final GetStorage box = GetStorage();
+  late final String lectureId;
+  late final String quizId;
 
-  List<Problem> problems = [];
+  OverlayEntry? overlayEntry;
+
+  void openOrmeeSelect(BuildContext context, int index, Offset position) {
+    overlayEntry = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          Positioned(
+              child: GestureDetector(
+            onTap: () {
+              overlayEntry?.remove();
+              overlayEntry = null;
+            },
+            child: Container(
+              color: Colors.transparent,
+            ),
+          )),
+          Positioned(
+            left: position.dx + 50,
+            top: position.dy - 200,
+            child: OrmeeSelect(
+              problemIndex: index,
+              answerList: quizCreateController.optionControllers[index]
+                  .map((controller) => controller.text)
+                  .toList(),
+              onSelect: (selected) {
+                quizCreateController.answers[index] = selected;
+                overlayEntry?.remove();
+                overlayEntry = null;
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+    Overlay.of(context).insert(overlayEntry!);
+  }
+
   Quiz quiz = Quiz(
     title: "",
     description: "",
@@ -31,83 +76,98 @@ class _QuizcreateState extends State<Quizcreate> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    lectureId = box.read("lectureId");
+    quizId = box.read('quizId');
+    if (widget.isUpdate) {
+      quizCreateController.getDraftQuiz(quizId);
+    }
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: OrmeeColor.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              bar(),
-              quizTitle(),
-              const SizedBox(height: 32),
-              quizCondition(),
-              const SizedBox(height: 32),
-              problemCards(),
-              const SizedBox(height: 32),
-              Center(child: addButton()), // 추가 버튼
-            ],
+    return Container(
+      color: OrmeeColor.grey[5],
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: Scaffold(
+        backgroundColor: OrmeeColor.grey[5],
+        appBar: TeacherHeader(),
+        body: SingleChildScrollView(
+            child: Column(
+              children: [
+                bar(),
+                Container(
+                  padding: const EdgeInsets.all(30),
+                  decoration: BoxDecoration(
+                      color: OrmeeColor.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    children: [
+                      quizTitle(),
+                      const SizedBox(height: 12),
+                      quizCondition()
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                problemCards(),
+                const SizedBox(height: 20),
+                Center(child: addButton()),
+                const SizedBox(height: 48)
+              ],
+            ),
           ),
-        ),
       ),
     );
   }
 
   bar() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 64),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(
-          children: [
-            GestureDetector(
-                onTap: Get.back,
-                child: SvgPicture.asset('assets/icons/arrow_left.svg',
-                    colorFilter: ColorFilter.mode(
-                        OrmeeColor.gray[900]!, BlendMode.srcIn))),
-            const SizedBox(width: 12),
-            T1_28px(text: '퀴즈 생성', color: OrmeeColor.gray[900]),
-          ],
-        ),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                saveQuiz(true);
+      padding: const EdgeInsets.symmetric(vertical: 18),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          GestureDetector(
+            onTap: () {
+              if(saveQuiz(true)) {
+                Get.forceAppUpdate();
                 Get.back();
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                decoration: BoxDecoration(
-                    color: OrmeeColor.gray[100],
-                    borderRadius: BorderRadius.circular(16)),
-                child: const Center(
-                  child: T5_18px(text: '임시저장'),
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                  border: Border.all(color: OrmeeColor.grey[20]!),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Center(
+                child: Headline1_Semibold(
+                  text: '임시저장',
+                  color: OrmeeColor.grey[90],
                 ),
               ),
             ),
-            const SizedBox(width: 18),
-            GestureDetector(
-              onTap: () {
-                saveQuiz(false);
+          ),
+          const SizedBox(width: 18),
+          GestureDetector(
+            onTap: () {
+              if(saveQuiz(false)) {
+                Get.forceAppUpdate();
                 Get.back();
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                decoration: BoxDecoration(
-                    color: OrmeeColor.primaryPuple[400],
-                    borderRadius: BorderRadius.circular(16)),
-                child: const Center(
-                  child: T5_18px(text: '등록하기', color: OrmeeColor.white),
-                ),
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                  color: OrmeeColor.purple[40],
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Center(
+                child:
+                    Headline1_Semibold(text: '등록하기', color: OrmeeColor.white),
               ),
             ),
-          ],
-        )
-      ]),
+          ),
+        ],
+      ),
     );
   }
 
@@ -115,31 +175,22 @@ class _QuizcreateState extends State<Quizcreate> {
     return TextFormField(
       controller: quizCreateController.titleController,
       focusNode: quizCreateController.titleFocusNode,
+      keyboardType: TextInputType.multiline,
       style: TextStyle(
-        fontFamily: 'Pretendard',
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-        color: OrmeeColor.gray[900],
-      ),
+          fontFamily: 'Pretendard',
+          color: OrmeeColor.grey[90],
+          fontSize: 22,
+          fontWeight: FontWeight.w600),
       decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(width: 2, color: OrmeeColor.gray[200]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide:
-              BorderSide(width: 2, color: OrmeeColor.primaryPuple[500]!),
-        ),
+        border: InputBorder.none,
         hintText: '퀴즈 제목을 입력하세요',
         hintStyle: TextStyle(
-          fontFamily: 'Pretendard',
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-          color: OrmeeColor.gray[500],
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+            fontFamily: 'Pretendard',
+            color: OrmeeColor.grey[30],
+            fontSize: 22,
+            fontWeight: FontWeight.w600),
+        counterText: "",
+        contentPadding: const EdgeInsets.all(10),
       ),
     );
   }
@@ -148,23 +199,22 @@ class _QuizcreateState extends State<Quizcreate> {
     return Row(
       children: [
         dateTimePicker(
-            icon: 'assets/icons/type=calender.svg',
-            label: '응시 기한',
+            icon: 'assets/icons/Property 1=calender, size=l.svg',
+            label: '응시기한',
             onChanged: (value) {
               quiz.dueTime = value;
             },
             context: context),
-        const SizedBox(width: 24),
+        const SizedBox(width: 16),
         dropDown(
-          icon: 'assets/icons/type=stopwatch.svg',
-          label: '응시 시간',
-          items: ['10분', '15분', '20분', '25분', '30분', '35분'],
+          icon: 'assets/icons/Property 1=timer, size=l.svg',
+          label: '응시시간',
+          items: ['10분', '20분', '30분', '40분', '50분', '60분'],
           onChanged: (value) {
             if (value != null) {
               quiz.timeLimit = int.parse(value.replaceAll('분', ''));
             }
           },
-          // context: context
         ),
       ],
     );
@@ -177,7 +227,6 @@ class _QuizcreateState extends State<Quizcreate> {
     required ValueChanged<String?> onChanged,
   }) {
     final GlobalKey key = GlobalKey();
-    var selectedValue = Rx<String?>(null);
 
     return GestureDetector(
         key: key,
@@ -209,7 +258,7 @@ class _QuizcreateState extends State<Quizcreate> {
                           color: OrmeeColor.white,
                           border: Border.all(
                               color: OrmeeColor.gray[200]!, width: 1),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
@@ -222,28 +271,23 @@ class _QuizcreateState extends State<Quizcreate> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ListView.separated(
+                            ListView.builder(
                               shrinkWrap: true,
                               itemCount: items.length,
-                              separatorBuilder: (context, index) {
-                                return Divider(
-                                  color: OrmeeColor.gray[200]!,
-                                  thickness: 1,
-                                );
-                              },
                               itemBuilder: (context, index) {
                                 String item = items[index];
                                 return InkWell(
                                   onTap: () {
-                                    selectedValue.value = item;
+                                    quizCreateController
+                                        .selectedTimeLimit(item);
+                                    onChanged(item);
                                     Navigator.pop(context);
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 8),
-                                    child: B3_18px_M(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Headline2_Regular(
                                       text: item,
-                                      color: OrmeeColor.gray[600],
+                                      color: OrmeeColor.grey[90],
                                     ),
                                   ),
                                 );
@@ -260,26 +304,20 @@ class _QuizcreateState extends State<Quizcreate> {
           );
         },
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           decoration: BoxDecoration(
-            color: OrmeeColor.white,
-            border: Border.all(
-              color: OrmeeColor.gray[200]!,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(12),
+            color: OrmeeColor.grey[5],
+            borderRadius: BorderRadius.circular(5),
           ),
           child: Row(
             children: [
-              SvgPicture.asset(icon, color: OrmeeColor.primaryPuple[400]),
-              const SizedBox(width: 8),
-              T5_18px(text: label, color: OrmeeColor.gray[900]),
-              const SizedBox(width: 16),
-              Obx(() => B2_20px_M(
-                    text: selectedValue.value ?? '선택하기',
-                    color: selectedValue.value == null
-                        ? OrmeeColor.gray[500]
-                        : OrmeeColor.gray[900],
+              SvgPicture.asset(icon, color: OrmeeColor.purple[40]),
+              const SizedBox(width: 12),
+              Obx(() => Heading2_Semibold(
+                    text: quizCreateController.selectedTimeLimit.value ?? label,
+                    color: quizCreateController.selectedTimeLimit.value == null
+                        ? OrmeeColor.grey[40]
+                        : OrmeeColor.grey[90],
                   )),
             ],
           ),
@@ -287,19 +325,82 @@ class _QuizcreateState extends State<Quizcreate> {
   }
 
   saveQuiz(bool isDraft) {
+    if (quizCreateController.titleController.text.isEmpty) {
+      OrmeeSnackbar.show(context, "제목은 필수입니다.", 'assets/icons/notice.svg',
+          OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+      return false;
+    }
     quiz.isDraft = isDraft;
-    for(int i = 0; i < quizCreateController.problems.length; i++) {
-      quizCreateController.problems[i].content = quizCreateController.problemControllers[i].value.toString();
-      // 타입 저장
-      // 정답 저장
-      for(int j = 0; j < quizCreateController.options[i].length; j++) {
-        quizCreateController.options[i][j] = quizCreateController.optionControllers[i][j].value.toString();
+    quiz.title = quizCreateController.titleController.text;
+
+    for (int i = 0; i < quizCreateController.problems.length; i++) {
+      if (!isDraft && quizCreateController.problemControllers[i].text.isEmpty) {
+        OrmeeSnackbar.show(
+            context,
+            "문제 ${i + 1}의 내용이 비어 있습니다.",
+            'assets/icons/notice.svg',
+            OrmeeColor.systemRed[5]!,
+            OrmeeColor.systemRed[30]!);
+
+        return false;
+      }
+      quizCreateController.problems[i].content =
+          quizCreateController.problemControllers[i].text;
+
+      if (!isDraft && quizCreateController.types[i] == null) {
+        OrmeeSnackbar.show(
+            context,
+            "문제 ${i + 1}의 유형이 설정되지 않았습니다.",
+            'assets/icons/notice.svg',
+            OrmeeColor.systemRed[5]!,
+            OrmeeColor.systemRed[30]!);
+
+        return false;
+      }
+      quizCreateController.problems[i].type = quizCreateController.types[i];
+
+      if (!isDraft &&
+          (quizCreateController.answers[i] == null ||
+              quizCreateController.answers[i].isEmpty)) {
+        OrmeeSnackbar.show(
+            context,
+            "문제 ${i + 1}의 정답이 설정되지 않았습니다.",
+            'assets/icons/notice.svg',
+            OrmeeColor.systemRed[5]!,
+            OrmeeColor.systemRed[30]!);
+
+        return false;
+      }
+      quizCreateController.problems[i].answer = quizCreateController.answers[i];
+
+      if (quizCreateController.problems[i].type == 'CHOICE') {
+        for (int j = 0; j < quizCreateController.options[i].length; j++) {
+          String optionText = quizCreateController.optionControllers[i][j].text;
+          if (!isDraft && optionText.isEmpty) {
+            OrmeeSnackbar.show(
+                context,
+                "문제 ${i + 1}의 선지 ${j + 1}이 비어 있습니다.",
+                'assets/icons/notice.svg',
+                OrmeeColor.systemRed[5]!,
+                OrmeeColor.systemRed[30]!);
+
+            return false;
+          }
+          quizCreateController.options[i][j] = optionText;
+        }
       }
       quizCreateController.problems[i].items = quizCreateController.options[i];
     }
 
     quiz.problems = quizCreateController.problems;
-    quizCreateController.createQuiz(quiz.toJson(), widget.lectureId);
+
+    if (widget.isUpdate) {
+      quizCreateController.updateQuiz(quiz.toJson(), quizId);
+    } else {
+      quizCreateController.createQuiz(quiz.toJson(), lectureId);
+    }
+
+    return true;
   }
 
   Widget dateTimePicker(
@@ -320,7 +421,7 @@ class _QuizcreateState extends State<Quizcreate> {
               data: ThemeData.light().copyWith(
                 primaryColor: OrmeeColor.white,
                 colorScheme: ColorScheme.light(
-                  primary: OrmeeColor.primaryPuple[400]!,
+                  primary: OrmeeColor.purple[40]!,
                   onPrimary: OrmeeColor.white,
                   onSurface: OrmeeColor.gray[500]!,
                 ),
@@ -339,7 +440,7 @@ class _QuizcreateState extends State<Quizcreate> {
                 data: ThemeData.light().copyWith(
                   primaryColor: OrmeeColor.white,
                   colorScheme: ColorScheme.light(
-                    primary: OrmeeColor.primaryPuple[400]!,
+                    primary: OrmeeColor.purple[40]!,
                     onPrimary: OrmeeColor.white,
                     onSurface: OrmeeColor.gray[500]!,
                   ),
@@ -365,28 +466,23 @@ class _QuizcreateState extends State<Quizcreate> {
     return GestureDetector(
       onTap: showMaterialDateTimePicker,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
-          border: Border.all(
-            color: OrmeeColor.gray[200]!,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: OrmeeColor.grey[5],
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
           children: [
-            SvgPicture.asset(icon, color: OrmeeColor.primaryPuple[400]),
-            const SizedBox(width: 8),
-            T5_18px(text: label, color: OrmeeColor.gray[900]),
-            const SizedBox(width: 16),
-            Obx(() => B2_20px_M(
+            SvgPicture.asset(icon, color: OrmeeColor.purple[40]),
+            const SizedBox(width: 12),
+            Obx(() => Heading2_Semibold(
                   text: quizCreateController.selectedDueTime.value == null
-                      ? '선택하기'
-                      : DateFormat('yyyy.MM.dd HH:mm')
+                      ? label
+                      : DateFormat('yy.MM.dd HH:mm')
                           .format(quizCreateController.selectedDueTime.value!),
                   color: quizCreateController.selectedDueTime.value == null
-                      ? OrmeeColor.gray[500]
-                      : OrmeeColor.gray[900],
+                      ? OrmeeColor.grey[40]
+                      : OrmeeColor.grey[90],
                 )),
           ],
         ),
@@ -401,12 +497,17 @@ class _QuizcreateState extends State<Quizcreate> {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: quizCreateController.problems.length,
           itemBuilder: (context, index) {
+            late final List<GlobalKey> containerKeys = List.generate(
+                quizCreateController.problems.length, (_) => GlobalKey());
+            late final List<GlobalKey> answerSelectKeys = List.generate(
+                quizCreateController.problems.length, (_) => GlobalKey());
             return Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              padding: const EdgeInsets.all(24),
+              key: containerKeys[index],
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
-                color: OrmeeColor.gray[100],
-                borderRadius: BorderRadius.circular(16),
+                color: OrmeeColor.white,
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,55 +516,79 @@ class _QuizcreateState extends State<Quizcreate> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       const SizedBox(width: 12),
-                      T4_20px(text: '${index + 1}번'),
+                      Title3_Semibold(
+                          text: '${index + 1}', color: OrmeeColor.grey[90]),
                       const Spacer(),
-                      Row(
-                        children: [
-                          dropDown(
-                              icon: '',
-                              label: '타입',
-                              items: ['객관식', '단답형'],
-                              onChanged: (value) {}),
-                          const SizedBox(width: 12),
-                          GestureDetector(
-                              onTap: () {
-                                quizCreateController.removeProblem(index);
-                              },
-                              child: SvgPicture.asset(
-                                  'assets/icons/type=trash.svg',
-                                  color: OrmeeColor.gray[500])),
-                        ],
-                      )
+                      selectProblemType(
+                          icon: 'assets/icons/Property 1=bottom, size=m.svg',
+                          index: index,
+                          items: ['객관식', '단답형'],
+                          onChanged: (value) {
+                            quizCreateController.types[index] =
+                                (value == '객관식') ? 'CHOICE' : 'ESSAY';
+                          })
                     ],
                   ),
                   const SizedBox(height: 16),
                   problemTitle(index),
                   const SizedBox(height: 16),
-                  options(index), // 단답형 디자인 참고해 problem type에 따라 변경
+                  Obx(() => quizCreateController.types[index] == "CHOICE"
+                      ? options(index)
+                      : const SizedBox()),
                   const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 28),
-                    decoration: BoxDecoration(
-                      color: OrmeeColor.primaryPuple[50],
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        T4_20px(
-                            text: '정답', color: OrmeeColor.primaryPuple[400]),
-                        const SizedBox(width: 28),
-                        GestureDetector(
-                          onTap: () {
-                            // 정답 선택 모달
-                          },
-                          child: T4_20px(
-                            text: '선택하기',
-                            color: OrmeeColor.primaryPuple[400],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                                color: OrmeeColor.purple[5],
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Headline1_Semibold(
+                                text: '정답', color: OrmeeColor.purple[40]),
                           ),
-                        ),
-                      ],
-                    ),
+                          const SizedBox(width: 16),
+                          Obx(() => (quizCreateController.types[index] ==
+                                  'CHOICE')
+                              ? GestureDetector(
+                                  key: answerSelectKeys[index],
+                                  onTap: () {
+                                    final RenderBox renderBox =
+                                        answerSelectKeys[index]
+                                            .currentContext!
+                                            .findRenderObject() as RenderBox;
+                                    final position =
+                                        renderBox.localToGlobal(Offset.zero);
+                                    openOrmeeSelect(context, index, position);
+                                  },
+                                  child: (quizCreateController.answers[index] ==
+                                          "")
+                                      ? Headline1_Semibold(
+                                          text: '선택',
+                                          color: OrmeeColor.grey[30],
+                                        )
+                                      : Heading2_Semibold(
+                                          text: quizCreateController
+                                              .answers[index],
+                                          color: OrmeeColor.purple[40],
+                                        ),
+                                )
+                              : inputAnswer(index))
+                        ],
+                      ),
+                      Obx(() => quizCreateController.problems.length > 1
+                          ? GestureDetector(
+                              onTap: () {
+                                quizCreateController.removeProblem(index);
+                              },
+                              child: SvgPicture.asset(
+                                  'assets/icons/Property 1=trash, size=l.svg',
+                                  color: OrmeeColor.grey[50]))
+                          : const SizedBox())
+                    ],
                   ),
                 ],
               ),
@@ -478,23 +603,14 @@ class _QuizcreateState extends State<Quizcreate> {
         quizCreateController.addProblem();
       },
       child: Container(
-        height: 45,
-        width: 45,
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: OrmeeColor.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 2,
-                blurRadius: 8,
-              )
-            ]),
+        height: 60,
+        width: 60,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: OrmeeColor.white,
+        ),
         child: Center(
-          child: SvgPicture.asset(
-            'assets/icons/plus.svg',
-            color: OrmeeColor.primaryPuple[400]!,
-          ),
+          child: Icon(Icons.add, color: OrmeeColor.purple[40]!, size: 36),
         ),
       ),
     );
@@ -517,23 +633,21 @@ class _QuizcreateState extends State<Quizcreate> {
         fillColor: OrmeeColor.white,
         hoverColor: Colors.transparent,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(width: 2, color: OrmeeColor.white),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(width: 1, color: OrmeeColor.grey[20]!),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(10),
           borderSide:
-              BorderSide(width: 2, color: OrmeeColor.primaryPuple[500]!),
+              BorderSide(width: 1, color: OrmeeColor.primaryPuple[500]!),
         ),
         hintText: '질문을 입력하세요',
         hintStyle: TextStyle(
-          fontFamily: 'Pretendard',
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: OrmeeColor.gray[500],
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+            color: OrmeeColor.grey[30],
+            fontFamily: 'Pretendard',
+            fontSize: 18,
+            fontWeight: FontWeight.w400),
+        contentPadding: const EdgeInsets.all(20),
       ),
     );
   }
@@ -541,9 +655,9 @@ class _QuizcreateState extends State<Quizcreate> {
   options(int problemIndex) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-          color: OrmeeColor.white, borderRadius: BorderRadius.circular(16)),
+          color: OrmeeColor.grey[5], borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
           Obx(() {
@@ -558,72 +672,202 @@ class _QuizcreateState extends State<Quizcreate> {
                     const SizedBox(width: 10),
                     IntrinsicWidth(
                       child: TextField(
-                        controller: quizCreateController.optionControllers[problemIndex][index],
-                        focusNode: quizCreateController.optionFocusNodes[problemIndex][index],
+                        controller: quizCreateController
+                            .optionControllers[problemIndex][index],
+                        focusNode: quizCreateController
+                            .optionFocusNodes[problemIndex][index],
+                        maxLength: 50,
+                        keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
-                            hintText: '옵션 입력',
+                            hintText: '선지입력',
                             hintStyle: TextStyle(
+                                color: OrmeeColor.grey[90],
                                 fontFamily: 'Pretendard',
                                 fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: OrmeeColor.gray[900]
-                            ),
-                            border: InputBorder.none
-                        ),
+                                fontWeight: FontWeight.w400),
+                            counterText: '',
+                            border: InputBorder.none),
                         style: TextStyle(
                             fontFamily: 'Pretendard',
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
-                            color: OrmeeColor.gray[900]
-                        ),
+                            color: OrmeeColor.gray[900]),
                       ),
                     ),
                     const SizedBox(width: 8),
-                    GestureDetector(
-                        onTap: () {
-                          quizCreateController.options[problemIndex].removeAt(index);
-                          quizCreateController.optionControllers[problemIndex].removeAt(index);
-                          quizCreateController.optionFocusNodes[problemIndex].removeAt(index);
-
-                          quizCreateController.options[problemIndex] = List<String>.from(quizCreateController.options[problemIndex]);
-                        },
-                        child: Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: OrmeeColor.gray[100],
-                          ),
-                          child: Center(
-                            child: Icon(Icons.remove, color: OrmeeColor.primaryPuple[400], size: 16),
-                          ),
-                        )
-                    )
+                    Obx(() =>
+                        (quizCreateController.options[problemIndex].length > 1)
+                            ? GestureDetector(
+                                onTap: () {
+                                  quizCreateController.removeOption(
+                                      problemIndex, index);
+                                },
+                                child: Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: OrmeeColor.gray[5],
+                                  ),
+                                  child: Center(
+                                    child: Icon(Icons.close,
+                                        color: OrmeeColor.grey[60], size: 14),
+                                  ),
+                                ))
+                            : const SizedBox())
                   ],
                 );
               },
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: 20), // 간격 추가
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
             );
           }),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           GestureDetector(
             onTap: () {
-              quizCreateController.options[problemIndex].add("");
-              quizCreateController.optionControllers[problemIndex].add(TextEditingController());
-              quizCreateController.optionFocusNodes[problemIndex].add(FocusNode());
-
-              quizCreateController.options[problemIndex] = List<String>.from(quizCreateController.options[problemIndex]);
+              quizCreateController.addOption(problemIndex);
             },
             child: Row(
               children: [
+                const SizedBox(width: 4),
                 Icon(Icons.add, color: OrmeeColor.primaryPuple[400]),
                 const SizedBox(width: 8),
-                B4_16px_M(text: '옵션 추가', color: OrmeeColor.gray[500]),
+                Body_Regular(text: '선지 추가', color: OrmeeColor.grey[40]),
               ],
             ),
           )
         ],
+      ),
+    );
+  }
+
+  selectProblemType({
+    required String icon,
+    required int index,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    final GlobalKey key = GlobalKey();
+    var selectedValue = Rx<String?>(
+        (quizCreateController.types[index] == 'CHOICE') ? "객관식" : "단답형");
+
+    return GestureDetector(
+        key: key,
+        onTap: () async {
+          final RenderBox renderBox =
+              key.currentContext!.findRenderObject() as RenderBox;
+          final Offset offset = renderBox.localToGlobal(Offset.zero);
+          final double x = offset.dx;
+          final double y = offset.dy + renderBox.size.height + 16;
+          final double width = renderBox.size.width;
+
+          await showDialog(
+            context: context,
+            barrierDismissible: true,
+            barrierColor: Colors.transparent,
+            builder: (BuildContext context) {
+              return Stack(
+                children: [
+                  Positioned(
+                    left: x,
+                    top: y,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        width: width,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: OrmeeColor.white,
+                          border: Border.all(
+                              color: OrmeeColor.gray[200]!, width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 2,
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: items.length,
+                              itemBuilder: (context, index) {
+                                String item = items[index];
+                                return InkWell(
+                                  onTap: () {
+                                    selectedValue.value = item;
+                                    onChanged(item);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Headline2_Regular(
+                                      text: item,
+                                      color: OrmeeColor.grey[90],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          decoration: BoxDecoration(
+              color: OrmeeColor.white,
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: OrmeeColor.grey[30]!)),
+          child: Row(
+            children: [
+              Obx(() => Headline2_Semibold(
+                    text: selectedValue.value!,
+                    color: OrmeeColor.grey[90],
+                  )),
+              const SizedBox(width: 36),
+              SvgPicture.asset(icon, color: OrmeeColor.grey[30])
+            ],
+          ),
+        ));
+  }
+
+  inputAnswer(int index) {
+    final TextEditingController controller =
+        TextEditingController(text: quizCreateController.answers[index]);
+    return IntrinsicWidth(
+      child: TextField(
+        controller: controller,
+        maxLength: 50,
+        decoration: InputDecoration(
+            hintText: '입력',
+            hintStyle: TextStyle(
+                color: OrmeeColor.grey[30],
+                fontFamily: 'Pretendard',
+                fontSize: 18,
+                fontWeight: FontWeight.w600),
+            counterText: '',
+            border: InputBorder.none),
+        style: TextStyle(
+          fontFamily: 'Pretendard',
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: OrmeeColor.purple[40],
+        ),
+        onSubmitted: (value) {
+          quizCreateController.answers[index] = value;
+        },
       ),
     );
   }

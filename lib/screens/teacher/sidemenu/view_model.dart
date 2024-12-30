@@ -3,16 +3,16 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/service.dart';
 
 class TeacherSideMenuController extends GetxController {
-  final TeacherSideMenuService _service = TeacherSideMenuService();
+  final TeacherLectureService _service = TeacherLectureService();
   var isLoading = true.obs;
   var error = Rxn<String>();
   var sidemenu = Rx<TeacherSideMenuModel?>(null);
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchTeacherSideMenu('3334'); // 예시 코드로 초기화
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   fetchTeacherSideMenu('3334'); // 예시 코드로 초기화
+  // }
 
   Future<void> fetchTeacherSideMenu(String code) async {
     try {

@@ -4,6 +4,7 @@ import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/classcode/view.dart';
+import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
 
 class Branch extends StatelessWidget {
   const Branch({super.key});
@@ -41,16 +42,19 @@ class Branch extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            Container(
-              height: 120,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: OrmeeColor.primaryPuple[500],
-              ),
-              child: Center(
-                child: B4_14px_R(
-                  text: "교사입니다",
-                  color: OrmeeColor.white,
+            GestureDetector(
+              onTap: () => Get.to(TeacherSignIn()),
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: OrmeeColor.primaryPuple[500],
+                ),
+                child: const Center(
+                  child: B4_14px_R(
+                    text: "교사입니다",
+                    color: OrmeeColor.white,
+                  ),
                 ),
               ),
             )

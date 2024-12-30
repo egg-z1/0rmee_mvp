@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/designs/OrmeeDialog.dart';
+import 'package:ormee_mvp/designs/OrmeeDropDownButton.dart';
+import 'package:ormee_mvp/designs/OrmeeModal.dart';
+import 'package:ormee_mvp/designs/OrmeeTextField3.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
+import 'package:ormee_mvp/screens/teacher/home/model.dart';
+import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
+import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
 
 class TeacherSideMenu extends StatelessWidget {
+  late final teacherCode;
   TeacherSideMenu({super.key});
 
   final TeacherSideMenuController controller =
       Get.put(TeacherSideMenuController());
-  final LectureController _controller = Get.put(LectureController());
+  final LectureController _controller = Get.find<LectureController>();
+
+  final TeacherHomeController controller1 = Get.find<TeacherHomeController>();
 
   @override
   Widget build(BuildContext context) {
-    final String code = "3334"; // 예시용 ID
-    controller.fetchTeacherSideMenu(code);
-
+    final box = GetStorage();
+    teacherCode = box.read('teacherCode');
+    controller.fetchTeacherSideMenu(teacherCode);
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
@@ -32,39 +44,56 @@ class TeacherSideMenu extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: Container(
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
             decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                ),
-                BoxShadow(
-                  color: OrmeeColor.gray[50]!,
-                  spreadRadius: -0.5,
-                  blurRadius: 20.0,
-                  offset: Offset(-15, 15),
-                ),
-              ],
+              color: OrmeeColor.white,
+              borderRadius: BorderRadius.circular(25),
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-              child: Column(
-                children: [
-                  teacherInfo(),
-                  Divider(
-                    height: 1.2,
-                    color: OrmeeColor.gray[200],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                teacherInfo(),
+                SizedBox(height: 50),
+                myLecture(context),
+                SizedBox(height: 15),
+                Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 33,
+                      ),
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Container(
+                              child:
+                                  SingleChildScrollView(child: lectureList()),
+                            ),
+                            Positioned(
+                              left: 0,
+                              top: 0,
+                              bottom: 0,
+                              child: Container(
+                                width: 1,
+                                color: OrmeeColor.grey[10],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(padding: EdgeInsets.only(bottom: 20)),
-                  myLecture(),
-                  lectureList(),
-                  Spacer(),
-                  Divider(
-                    height: 1.2,
-                    color: OrmeeColor.gray[200],
-                  ),
-                  logout(),
-                ],
-              ),
+                ),
+                SizedBox(height: 15),
+                Divider(
+                  height: 1.2,
+                  color: OrmeeColor.gray[200],
+                ),
+                SizedBox(height: 25),
+                logout(context),
+              ],
             ),
           ),
         );
@@ -74,21 +103,20 @@ class TeacherSideMenu extends StatelessWidget {
 
   Widget teacherInfo() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       child: Row(
         children: [
           Container(
-            width: 54,
-            height: 54,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(width: 2, color: OrmeeColor.gray[100]!)),
             child: Container(
-              width: 50,
-              height: 50,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: OrmeeColor.gray[300],
+                color: OrmeeColor.grey[10],
                 image: DecorationImage(
                   image: controller.sidemenu.value!.closedLectures.first
                               .profileImage ==
@@ -107,12 +135,12 @@ class TeacherSideMenu extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 12,
+            width: 11,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              T2_20px(
+              Headline1_Semibold(
                 text: controller.sidemenu.value == null
                     ? ''
                     : controller.sidemenu.value!.openLectures.isEmpty
@@ -120,22 +148,22 @@ class TeacherSideMenu extends StatelessWidget {
                             ? ''
                             : '${controller.sidemenu.value!.closedLectures.first.name}')
                         : '${controller.sidemenu.value!.openLectures.first.name}',
-                color: OrmeeColor.primaryPuple[500],
+                color: OrmeeColor.grey[90],
               ),
               SizedBox(
-                height: 2,
+                height: 5,
               ),
-              T4_16px(
+              Headline2_Regular(
                 text: '선생님',
-                color: OrmeeColor.gray[500],
+                color: OrmeeColor.grey[40],
               )
             ],
           ),
           Spacer(),
           Container(
             child: SvgPicture.asset(
-              'assets/icons/chevron-right.svg',
-              color: OrmeeColor.gray[500],
+              '/icons/chevron-right.svg',
+              color: OrmeeColor.grey[30],
             ),
           ),
         ],
@@ -143,45 +171,100 @@ class TeacherSideMenu extends StatelessWidget {
     );
   }
 
-  Widget myLecture() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            'assets/icons/folder.svg',
-            color: OrmeeColor.gray[700],
-          ),
-          SizedBox(
-            width: 8,
-          ),
-          T3_18px(
-            text: '나의 강의',
-            color: OrmeeColor.gray[700],
-          ),
-          Spacer(),
-          SvgPicture.asset(
+  Widget myLecture(context) {
+    return Row(
+      children: [
+        SvgPicture.asset(
+          '/icons/mylecture.svg',
+        ),
+        SizedBox(
+          width: 13,
+        ),
+        Headline1_Semibold(
+          text: '나의 강의',
+          color: OrmeeColor.grey[90],
+        ),
+        Spacer(),
+        InkWell(
+          onTap: () {
+            openOrmeeDialog(context);
+          },
+          child: SvgPicture.asset(
             'icons/plus.svg',
-            color: OrmeeColor.gray[700],
+            color: OrmeeColor.grey[30],
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  void openOrmeeDialog(BuildContext context) {
+    final TextFieldController titleController = TextFieldController();
+    final DropdownController dropdownController1 = DropdownController();
+    final DropdownController dropdownController2 = DropdownController();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return OrmeeDialog(
+          titleText: '신규 강의 개설',
+          contentText: '강의 명',
+          titleController: titleController,
+          dropdownController1: dropdownController1,
+          dropdownController2: dropdownController2,
+          haveDropdown: true,
+          onCancel: () {
+            Get.back();
+          },
+          onConfirm: () async {
+            controller1.fetchTeacherCreateLecture(
+                teacherCode,
+                LectureCreateModel(
+                  title: titleController.textEditingController.text,
+                  openTime: getLocalDateTimeFromMonthString(
+                      dropdownController1.selectedMonth.value),
+                  dueTime: getLocalDateTimeFromMonthString(
+                      dropdownController2.selectedMonth.value),
+                ));
+            Get.forceAppUpdate();
+            Get.back();
+          },
+        );
+      },
+    );
+  }
+
+  DateTime getLocalDateTimeFromMonthString(String monthString) {
+    int currentYear = DateTime.now().year;
+    String monthNumberString = monthString.replaceAll(RegExp(r'[^0-9]'), '');
+    int month = int.parse(monthNumberString);
+    return DateTime(currentYear, month, 1, 0, 0, 0);
   }
 
   Widget lectureList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          child: B4_16px_M(
-            text: '강의 전체',
-            color: OrmeeColor.gray[600],
+        InkWell(
+          onTap: () {
+            _controller.updateLectureClick(0);
+          },
+          child: Container(
+            margin: EdgeInsets.only(bottom: 7),
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 15),
+            child: _controller.lecture_index.value == 0
+                ? Headline2_Semibold(
+                    text: '강의 관리',
+                    color: OrmeeColor.purple[40],
+                  )
+                : Headline2_Regular(
+                    text: '강의 관리',
+                    color: OrmeeColor.grey[40],
+                  ),
           ),
         ),
         Obx(() {
-          // Obx로 상태 변화를 감지
           return buildLectureCards(
               controller.sidemenu.value?.openLectures ?? []);
         }),
@@ -194,40 +277,36 @@ class TeacherSideMenu extends StatelessWidget {
   }
 
   Widget buildLectureCards(List<LectureModel> lectures) {
-    return ListView.builder(
+    return ListView.separated(
       shrinkWrap: true,
       itemCount: lectures.length,
+      separatorBuilder: (context, index) {
+        return Container(
+          height: 7,
+        );
+      },
       itemBuilder: (context, index) {
         final lecture = lectures[index];
-        return Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: OrmeeColor.gray[100],
-            onTap: () {
-              _controller.updateLectureClick(index); // 상태 갱신
-              print('index = ${index}');
-              print('lectureClick.value = ${_controller.lecture_index.value}');
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-              child: Row(
-                children: [
-                  _controller.lecture_index.value == index
-                      ? Container(
-                          margin: EdgeInsets.only(right: 8),
-                          width: 17,
-                          height: 2,
-                          color: OrmeeColor.primaryPuple[500],
-                        )
-                      : Container(),
-                  B4_16px_M(
-                    text: lecture.title,
-                    color: _controller.lecture_index.value == index
-                        ? OrmeeColor.primaryPuple[500] // 클릭 시 색상
-                        : OrmeeColor.gray[600], // 기본 색상
-                  )
-                ],
-              ),
+        return InkWell(
+          onTap: () {
+            _controller.updateLectureClick(index + 1);
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 15),
+            child: Wrap(
+              children: [
+                _controller.lecture_index.value == index + 1
+                    ? Headline2_Semibold(
+                        text: lecture.title,
+                        overflow: TextOverflow.ellipsis,
+                        color: OrmeeColor.purple[40],
+                      )
+                    : Headline2_Regular(
+                        text: lecture.title,
+                        overflow: TextOverflow.ellipsis,
+                        color: OrmeeColor.grey[40],
+                      ),
+              ],
             ),
           ),
         );
@@ -235,22 +314,37 @@ class TeacherSideMenu extends StatelessWidget {
     );
   }
 
-  Widget logout() {
-    return Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 20,
-        ),
-        child: Row(children: [
+  Widget logout(context) {
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return OrmeeModal(
+              titleText: '로그아웃 하시겠어요?',
+              onCancel: () {
+                Get.back();
+              },
+              onConfirm: () {
+                Get.offAll(TeacherSignIn());
+              },
+            );
+          },
+        );
+      },
+      child: Row(
+        children: [
           SvgPicture.asset(
-            'icons/plus.svg',
-            color: OrmeeColor.gray[500],
+            'icons/logout.svg',
+            color: OrmeeColor.grey[30],
           ),
-          SizedBox(width: 16),
-          T3_18px(
+          SizedBox(width: 10),
+          Headline2_Semibold(
             text: '로그아웃',
-            color: OrmeeColor.gray[500],
+            color: OrmeeColor.grey[60],
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }

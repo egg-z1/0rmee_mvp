@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/api/OrmeeApi.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/model.dart';
 
-class TeacherSideMenuService extends GetConnect {
-  TeacherSideMenuService() {
+class TeacherLectureService extends GetConnect {
+  TeacherLectureService() {
     httpClient.baseUrl = '${API.hostConnect}';
     httpClient.timeout = const Duration(seconds: 10);
 
