@@ -27,7 +27,7 @@ class TeacherSideMenuController extends GetxController {
   }
 }
 
-class LectureController extends GetxController {
+class LectureListController extends GetxController {
   RxInt lecture_index = 0.obs; // 상태를 Rx로 선언
 
   void updateLectureClick(int index) {

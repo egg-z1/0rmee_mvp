@@ -21,7 +21,7 @@ class TeacherSideMenu extends StatelessWidget {
 
   final TeacherSideMenuController controller =
       Get.put(TeacherSideMenuController());
-  final LectureController _controller = Get.find<LectureController>();
+  final LectureListController _controller = Get.find<LectureListController>();
 
   final TeacherHomeController controller1 = Get.find<TeacherHomeController>();
 

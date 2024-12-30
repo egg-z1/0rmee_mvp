@@ -12,7 +12,8 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 
 class TeacherMain extends StatelessWidget {
   TeacherMain({super.key});
-  LectureController managementController = Get.find<LectureController>();
+  LectureListController managementController =
+      Get.find<LectureListController>();
   TeacherHomeController controller = Get.find<TeacherHomeController>();
 
   late int index = managementController.lecture_index.value;
@@ -50,11 +51,16 @@ class TeacherMain extends StatelessWidget {
       } else {
         String lectureId;
         String lectureTitle;
-        if (managementController.lecture_index.value <= controller.openLectures.length) {
-          lectureId = controller.openLectures[managementController.lecture_index.value - 1].id;
-          lectureTitle = controller.openLectures[managementController.lecture_index.value - 1].title;
+        if (managementController.lecture_index.value <=
+            controller.openLectures.length) {
+          lectureId = controller
+              .openLectures[managementController.lecture_index.value - 1].id;
+          lectureTitle = controller
+              .openLectures[managementController.lecture_index.value - 1].title;
         } else {
-          int closedIndex = managementController.lecture_index.value - controller.openLectures.length - 1;
+          int closedIndex = managementController.lecture_index.value -
+              controller.openLectures.length -
+              1;
           lectureId = controller.closedLectures[closedIndex].id;
           lectureTitle = controller.closedLectures[closedIndex].title;
         }

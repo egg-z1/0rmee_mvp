@@ -12,7 +12,7 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  Get.put(LectureController());
+  Get.put(LectureListController());
   Get.put(TeacherHomeController());
   runApp(const OrmeeApp());
 }
