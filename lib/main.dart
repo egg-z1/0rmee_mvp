@@ -7,7 +7,11 @@ import 'package:ormee_mvp/screens/branching/view.dart';
 import 'package:ormee_mvp/screens/classcode/view.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view.dart';
 import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
+import 'package:ormee_mvp/screens/teacher/main/view.dart';
+import 'package:ormee_mvp/screens/teacher/quiz_create/view.dart';
+import 'package:ormee_mvp/screens/teacher/quiz_detail/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
+import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +51,10 @@ class OrmeeApp extends StatelessWidget {
           name: '/ClassCode',
           page: () => ClassCode(),
         ),
+        GetPage(name: '/teacher/signIn', page: () => TeacherSignIn()),
+        GetPage(name: '/teacher/main', page: () => TeacherMain()),
+        GetPage(name: '/teacher/quiz', page: () => Quizcreate()),
+        GetPage(name: '/teacher/quiz/detail', page: () => QuizDetail()),
       ],
       debugShowCheckedModeBanner: false,
     );

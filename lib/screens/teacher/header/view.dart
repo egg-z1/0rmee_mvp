@@ -24,7 +24,7 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             GestureDetector(
-              onTap: () => Get.offAll(() => TeacherMain()),
+              onTap: () => Get.offAllNamed('teacher/main'),
               child: SvgPicture.asset(
                 '/icons/logo.svg',
               ),

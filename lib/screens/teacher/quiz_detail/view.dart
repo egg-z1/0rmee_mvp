@@ -40,7 +40,7 @@ class QuizDetail extends StatelessWidget {
                          mainAxisAlignment: MainAxisAlignment.end,
                          children: [
                            GestureDetector(
-                             onTap: () => Get.to(() => const Quizcreate(isUpdate: true)),
+                             onTap: () => Get.toNamed('/teacher/quiz', arguments: {'isUpdate': true}),
                              child: Container(
                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                decoration: BoxDecoration(
@@ -65,7 +65,7 @@ class QuizDetail extends StatelessWidget {
                                          OrmeeSnackbar.show(context, '퀴즈가 삭제됐습니다.', 'assets/icons/check.svg', OrmeeColor.systemGreen[5]!, OrmeeColor.systemGreen[30]!);
                                        }
                                        Get.forceAppUpdate();
-                                       Get.offAll(TeacherMain());
+                                       Get.offAllNamed('teacher/main');
                                      },
                                    );
                                  },

@@ -13,10 +13,9 @@ import 'package:ormee_mvp/screens/teacher/quiz_create/view_model.dart';
 import '../../../designs/OrmeeSelect.dart';
 
 class Quizcreate extends StatefulWidget {
-  final bool isUpdate;
+  final bool isUpdate = Get.arguments['isUpdate'];
 
-  const Quizcreate(
-      {super.key, required this.isUpdate});
+  Quizcreate({super.key});
 
   @override
   State<Quizcreate> createState() => _QuizcreateState();
