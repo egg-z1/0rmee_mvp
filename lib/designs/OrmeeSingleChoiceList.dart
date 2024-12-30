@@ -40,10 +40,14 @@ class OrmeeSingleChoiceList extends StatelessWidget {
                   height: 24,
                 ),
                 const SizedBox(width: 8),
-                B4_14px_R(
-                  text: items[index],
-                  color:
-                      isSelected ? OrmeeColor.gray[900] : OrmeeColor.gray[600],
+                Expanded(
+                  child: B4_14px_R(
+                    text: items[index],
+                    color: isSelected
+                        ? OrmeeColor.gray[900]
+                        : OrmeeColor.gray[600],
+                    overflow: TextOverflow.visible,
+                  ),
                 ),
               ],
             );

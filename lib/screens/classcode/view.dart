@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField1.dart';
+import 'package:ormee_mvp/designs/OrmeeToast.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/classcode/view_model.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view.dart';
@@ -58,7 +59,18 @@ class ClassCode extends StatelessWidget {
           return GestureDetector(
             onTap: controller.isTextFieldNotEmpty.value
                 ? () {
-                    Get.toNamed('/ClassCode/${controller.textController.text}');
+                    controller
+                        .fetchLectureValidate(
+                            '${controller.textController.text}')
+                        .then((_) {
+                      final lectureValidate = controller.lectureValidate.value;
+                      if (lectureValidate != null && true == lectureValidate) {
+                        Get.toNamed(
+                            '/ClassCode/${controller.textController.text}');
+                      } else {
+                        OrmeeToast.show(context, "유효한 강의실 ID가 아닙니다.");
+                      }
+                    });
                   }
                 : null,
             child: Container(

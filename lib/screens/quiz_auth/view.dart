@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField1.dart';
+import 'package:ormee_mvp/designs/OrmeeToast.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/quiz/view.dart';
 import 'package:ormee_mvp/screens/quiz_auth/view_model.dart';
@@ -24,6 +25,7 @@ class QuizAuth extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller_id = QuizAuthController();
     final controller_pw = QuizAuthController();
+    final controller = QuizAuthController();
 
     return SafeArea(
       child: Scaffold(
@@ -84,20 +86,35 @@ class QuizAuth extends StatelessWidget {
               onTap: (controller_id.isTextFieldNotEmpty.value &&
                       controller_pw.isTextFieldNotEmpty.value)
                   ? () {
-                      if (quizAvailable)
+                      if (quizAvailable) {
                         Get.to(() => Quiz(
                               quizId: quizId,
                               quizTitle: quizTitle,
                               author: controller_id.textController.text,
                               password: controller_pw.textController.text,
                             ));
-                      else
-                        Get.to(QuizResult(
-                          quizId: quizId,
-                          quizTitle: quizTitle,
-                          author: controller_id.textController.text,
-                          password: controller_pw.textController.text,
-                        ));
+                      } else {
+                        controller
+                            .fetchUserInfoValidate(
+                                quizId,
+                                controller_id.textController.text,
+                                controller_pw.textController.text)
+                            .then((_) {
+                          final userInfoValidate =
+                              controller.userInfoValidate.value;
+                          if (userInfoValidate != null &&
+                              true == userInfoValidate) {
+                            Get.to(QuizResult(
+                              quizId: quizId,
+                              quizTitle: quizTitle,
+                              author: controller_id.textController.text,
+                              password: controller_pw.textController.text,
+                            ));
+                          } else {
+                            OrmeeToast.show(context, "유효한 사용자 정보가 아닙니다.");
+                          }
+                        });
+                      }
                     }
                   : null,
               child: Container(
