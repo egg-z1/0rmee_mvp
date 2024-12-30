@@ -134,7 +134,7 @@ class TeacherSignIn extends StatelessWidget {
                         OrmeeColor.systemGreen[5]!,
                         OrmeeColor.systemGreen[30]!);
                     box.write("teacherCode", controller.codeController.text);
-                    Get.offAll(TeacherMain());
+                    Get.offAll(() => TeacherMain());
                   } else {
                     OrmeeSnackbar.show(
                         context,

@@ -176,7 +176,7 @@ class TeacherQuizList extends StatelessWidget {
   createQuizButton() {
     return InkWell(
       onTap: () {
-        Get.to(const Quizcreate(isUpdate: false));
+        Get.to(() => const Quizcreate(isUpdate: false));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
@@ -230,7 +230,7 @@ class TeacherQuizList extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 box!.write('quizId', controller.openQuizzes[index].id);
-                Get.to(QuizDetail());
+                Get.to(() => QuizDetail());
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
@@ -619,19 +619,25 @@ class TeacherQuizList extends StatelessWidget {
                 Headline1_Semibold(
                     text: '${controller.draftQuizzes[index].timeLimit}분'),
                 SizedBox(width: 29),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: OrmeeColor.purple[40]!,
-                      width: 1,
+                InkWell(
+                  onTap: () {
+                    box!.write('quizId', controller.draftQuizzes[index].id);
+                    Get.to(() => const Quizcreate(isUpdate: true));
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: OrmeeColor.purple[40]!,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: OrmeeColor.white,
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                    color: OrmeeColor.white,
-                  ),
-                  child: Headline2_Semibold(
-                    text: '수정하기',
-                    color: OrmeeColor.purple[40],
+                    child: Headline2_Semibold(
+                      text: '수정하기',
+                      color: OrmeeColor.purple[40],
+                    ),
                   ),
                 ),
               ],

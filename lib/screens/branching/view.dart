@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ormee_mvp/designs/OrmeeAppbar.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
+import 'package:ormee_mvp/designs/OrmeeSnackbar.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/classcode/view.dart';
 import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
@@ -24,7 +26,13 @@ class Branch extends StatelessWidget {
               height: 45,
             ),
             GestureDetector(
-              onTap: () => Get.to(() => ClassCode()),
+              onTap: () {
+                if(defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
+                  Get.to(() => ClassCode());
+                } else {
+                  OrmeeSnackbar.show(context, "모바일로 이용해 주세요.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+                }
+              },
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(
@@ -43,7 +51,13 @@ class Branch extends StatelessWidget {
               height: 40,
             ),
             GestureDetector(
-              onTap: () => Get.to(TeacherSignIn()),
+              onTap: () {
+                if(defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
+                  OrmeeSnackbar.show(context, "데스크톱을 이용해 주세요.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+                } else {
+                  Get.to(() => TeacherSignIn());
+                }
+              },
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(

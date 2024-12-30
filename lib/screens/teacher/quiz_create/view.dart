@@ -25,8 +25,8 @@ class Quizcreate extends StatefulWidget {
 class _QuizcreateState extends State<Quizcreate> {
   QuizCreateController quizCreateController = Get.put(QuizCreateController());
   final GetStorage box = GetStorage();
-  late final String lectureId;
-  late final String quizId;
+  String? lectureId;
+  String? quizId;
 
   OverlayEntry? overlayEntry;
 
@@ -78,14 +78,19 @@ class _QuizcreateState extends State<Quizcreate> {
   @override
   void initState() {
     super.initState();
-    lectureId = box.read("lectureId");
-    quizId = box.read('quizId');
+
+    quizId = box.read('quizId')?? '';
+    print(quizId);
+    lectureId = box.read('lectureId')?? '';
     if (widget.isUpdate) {
-      quizCreateController.getDraftQuiz(quizId);
+      quizCreateController.getDraftQuiz(quizId!);
     }
   }
   @override
   Widget build(BuildContext context) {
+    quizId = box.read('quizId')?? '';
+    print(quizId);
+    lectureId = box.read('lectureId')?? '';
     return Container(
       color: OrmeeColor.grey[5],
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -395,9 +400,9 @@ class _QuizcreateState extends State<Quizcreate> {
     quiz.problems = quizCreateController.problems;
 
     if (widget.isUpdate) {
-      quizCreateController.updateQuiz(quiz.toJson(), quizId);
+      quizCreateController.updateQuiz(quiz.toJson(), quizId!);
     } else {
-      quizCreateController.createQuiz(quiz.toJson(), lectureId);
+      quizCreateController.createQuiz(quiz.toJson(), lectureId!);
     }
 
     return true;
