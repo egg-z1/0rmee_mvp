@@ -192,7 +192,7 @@ class TeacherQuizList extends StatelessWidget {
         child: Row(
           children: [
             SvgPicture.asset(
-              '/icons/plus.svg',
+              'assets/icons/plus.svg',
               color: OrmeeColor.purple[40],
             ),
             SizedBox(width: 10),
@@ -250,7 +250,7 @@ class TeacherQuizList extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: SvgPicture.asset(
-                              '/icons/ing_quiz.svg',
+                              'assets/icons/ing_quiz.svg',
                               color: OrmeeColor.purple[40],
                             ),
                           ),
@@ -277,7 +277,7 @@ class TeacherQuizList extends StatelessWidget {
                     Row(
                       children: [
                         SvgPicture.asset(
-                          '/icons/timer.svg',
+                          'assets/icons/timer.svg',
                           color: OrmeeColor.purple[40],
                         ),
                         SizedBox(width: 5),
@@ -414,7 +414,7 @@ class TeacherQuizList extends StatelessWidget {
                       Row(
                         children: [
                           SvgPicture.asset(
-                            '/icons/timer.svg',
+                            'assets/icons/timer.svg',
                             color: OrmeeColor.grey[30],
                           ),
                           SizedBox(width: 5),
@@ -425,7 +425,7 @@ class TeacherQuizList extends StatelessWidget {
                           ),
                           SizedBox(width: 29),
                           SvgPicture.asset(
-                            '/icons/users.svg',
+                            'assets/icons/users.svg',
                             color: OrmeeColor.grey[30],
                           ),
                           SizedBox(width: 5),
@@ -443,11 +443,11 @@ class TeacherQuizList extends StatelessWidget {
                           SizedBox(width: 29),
                           isClick[index]
                               ? SvgPicture.asset(
-                                  '/icons/bottom-m.svg',
+                                  'assets/icons/bottom-m.svg',
                                   color: OrmeeColor.purple[40],
                                 )
                               : SvgPicture.asset(
-                                  '/icons/top-m.svg',
+                                  'assets/icons/top-m.svg',
                                   color: OrmeeColor.purple[40],
                                 ),
                         ],
@@ -653,7 +653,8 @@ class TeacherQuizList extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         box!.write('quizId', controller.draftQuizzes[index].id);
-                        Get.toNamed('/teacher/quiz', arguments: {'isUpdate': true});
+                        Get.toNamed('/teacher/quiz',
+                            arguments: {'isUpdate': true});
                       },
                       child: Container(
                         padding:

@@ -107,7 +107,7 @@ class TeacherMemoList extends StatelessWidget {
             child: Row(
               children: [
                 SvgPicture.asset(
-                  '/icons/plus.svg',
+                  'assets/icons/plus.svg',
                   color: OrmeeColor.purple[40],
                 ),
                 SizedBox(width: 10),
@@ -161,7 +161,7 @@ class TeacherMemoList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: SvgPicture.asset(
-                          '/icons/ing_memo.svg',
+                          'assets/icons/ing_memo.svg',
                           color: OrmeeColor.purple[40],
                         ),
                       ),
@@ -278,7 +278,7 @@ class TeacherMemoList extends StatelessWidget {
                         children: [
                           SizedBox(width: 29),
                           SvgPicture.asset(
-                            '/icons/users.svg',
+                            'assets/icons/users.svg',
                             color: OrmeeColor.grey[30],
                           ),
                           SizedBox(width: 5),
@@ -295,11 +295,11 @@ class TeacherMemoList extends StatelessWidget {
                           SizedBox(width: 29),
                           isClick[index]
                               ? SvgPicture.asset(
-                                  '/icons/bottom-m.svg',
+                                  'assets/icons/bottom-m.svg',
                                   color: OrmeeColor.purple[40],
                                 )
                               : SvgPicture.asset(
-                                  '/icons/top-m.svg',
+                                  'assets/icons/top-m.svg',
                                   color: OrmeeColor.purple[40],
                                 ),
                         ],

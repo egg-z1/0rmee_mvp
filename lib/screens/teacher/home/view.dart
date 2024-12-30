@@ -270,7 +270,7 @@ class TeacherHomeTabBar extends StatelessWidget {
                     shadowColor: OrmeeColor.black.withOpacity(0.5),
                     padding: EdgeInsets.zero,
                     icon: SvgPicture.asset(
-                      '/icons/dots.svg',
+                      'assets/icons/dots.svg',
                       color: OrmeeColor.gray[500],
                     ),
                     onSelected: (String value) {
@@ -364,7 +364,7 @@ class TeacherHomeTabBar extends StatelessWidget {
                           OrmeeColor.systemGreen[30]!);
                     },
                     child: SvgPicture.asset(
-                      '/icons/copy.svg',
+                      'assets/icons/copy.svg',
                       color: OrmeeColor.grey[30],
                     ),
                   ),

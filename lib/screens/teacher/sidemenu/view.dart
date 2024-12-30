@@ -156,7 +156,7 @@ class TeacherSideMenu extends StatelessWidget {
           Spacer(),
           Container(
             child: SvgPicture.asset(
-              '/icons/chevron-right.svg',
+              'assets/icons/chevron-right.svg',
               color: OrmeeColor.grey[30],
             ),
           ),
@@ -169,7 +169,7 @@ class TeacherSideMenu extends StatelessWidget {
     return Row(
       children: [
         SvgPicture.asset(
-          '/icons/mylecture.svg',
+          'assets/icons/mylecture.svg',
         ),
         SizedBox(
           width: 13,

@@ -26,7 +26,7 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
             GestureDetector(
               onTap: () => Get.offAllNamed('teacher/main'),
               child: SvgPicture.asset(
-                '/icons/logo.svg',
+                'assets/icons/logo.svg',
               ),
             ),
             const Spacer(),
@@ -39,11 +39,11 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
             const SizedBox(width: 28),
             SvgPicture.asset(
-              '/icons/setting.svg',
+              'assets/icons/setting.svg',
             ),
             const SizedBox(width: 28),
             SvgPicture.asset(
-              '/icons/bell.svg',
+              'assets/icons/bell.svg',
             ),
           ],
         ),

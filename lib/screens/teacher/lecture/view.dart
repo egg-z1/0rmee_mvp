@@ -32,7 +32,7 @@ class TeacherLecture extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset('/icons/lecture.svg'),
+              SvgPicture.asset('assets/icons/lecture.svg'),
               SizedBox(width: 15),
               Title1_Bold(text: lectureTitle),
             ],
