@@ -265,7 +265,7 @@ class _LectureDetailState extends State<LectureDetail> {
           Visibility(
             visible: controller.lectureDetail.value?.messageAvailable == true,
             child: Positioned(
-              top: 44,
+              top: 44 + MediaQuery.of(context).padding.top,
               right: 9,
               child: Material(
                 color: Colors.transparent,
