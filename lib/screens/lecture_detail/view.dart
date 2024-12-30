@@ -27,7 +27,6 @@ class _LectureDetailState extends State<LectureDetail> {
   final LectureController controller = Get.put(LectureController());
   final TextEditingController _controller = TextEditingController();
   final isTextFieldNotEmpty = false.obs;
-  OverlayEntry? overlayEntry;
 
   @override
   void initState() {
@@ -45,7 +44,6 @@ class _LectureDetailState extends State<LectureDetail> {
   void dispose() {
     _controller.removeListener(_onTextChanged);
     _controller.dispose();
-    overlayEntry?.remove();
     super.dispose();
   }
 
@@ -207,7 +205,6 @@ class _LectureDetailState extends State<LectureDetail> {
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
-                                    overlayEntry?.remove();
                                     Get.to(QuizAuth(
                                       quizId: quiz.id,
                                       quizTitle: quiz.quizName,
@@ -268,7 +265,7 @@ class _LectureDetailState extends State<LectureDetail> {
           Visibility(
             visible: controller.lectureDetail.value?.messageAvailable == true,
             child: Positioned(
-              top: 44,
+              top: 44 + MediaQuery.of(context).padding.top,
               right: 9,
               child: Material(
                 color: Colors.transparent,

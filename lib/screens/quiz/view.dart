@@ -170,8 +170,8 @@ class Quiz extends StatelessWidget {
             try {
               await controller.submitQuiz(submission);
               OrmeeToast.show(context, '시험 응시가 완료되었습니다.');
-              Get.back(); // 이전 페이지로 이동
-              Get.back();
+              Get.until((route) =>
+                  route.settings.name?.startsWith('/ClassCode/') ?? false);
             } catch (e) {
               OrmeeToast.show(context, '제출을 다시 시도해주세요.');
             }
@@ -243,10 +243,8 @@ class Quiz extends StatelessWidget {
               try {
                 await controller.submitQuiz(submission);
                 controller.isTimeUp.value = false;
-                Get.back(closeOverlays: true);
-                Get.back();
-                Get.back();
-                Get.back();
+                Get.until((route) =>
+                    route.settings.name?.startsWith('/ClassCode/') ?? false);
                 OrmeeToast.show(context, '시험 응시가 완료되었습니다.');
               } catch (e) {
                 OrmeeToast.show(context, '제출을 다시 시도해주세요.');
