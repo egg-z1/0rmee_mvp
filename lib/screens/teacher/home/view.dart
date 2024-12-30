@@ -244,136 +244,142 @@ class TeacherHomeTabBar extends StatelessWidget {
 
   Widget LectureCard(context, index, OpenOrClose) {
     return Obx(
-      () => Container(
-        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: OrmeeColor.white,
-          border: Border.all(color: OrmeeColor.gray[200]!, width: 2),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/lecture.svg',
-                      ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Headline2_Semibold(
-                            overflow: TextOverflow.ellipsis,
-                            text: OpenOrClose == 0
-                                ? controller.openLectures[index].title
-                                : controller.closedLectures[index].title),
+      () => InkWell(
+        onTap: () {
+          //여기에 Get.to
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: OrmeeColor.white,
+            border: Border.all(color: OrmeeColor.gray[200]!, width: 2),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/lecture.svg',
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Headline2_Semibold(
+                              overflow: TextOverflow.ellipsis,
+                              text: OpenOrClose == 0
+                                  ? controller.openLectures[index].title
+                                  : controller.closedLectures[index].title),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuButton<String>(
+                    offset: Offset(5, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: OrmeeColor.gray[200]!, width: 1),
+                    ),
+                    elevation: 8,
+                    color: OrmeeColor.white,
+                    shadowColor: OrmeeColor.black.withOpacity(0.5),
+                    padding: EdgeInsets.zero,
+                    icon: SvgPicture.asset(
+                      '/icons/dots.svg',
+                      color: OrmeeColor.gray[500],
+                    ),
+                    onSelected: (String value) {
+                      if (value == 'delete') {
+                        final int lectureCode = OpenOrClose == 0
+                            ? controller.openLectures[index].code
+                            : controller.closedLectures[index].code;
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return OrmeeModal(
+                              titleText: '강의를 삭제하시겠어요?',
+                              contentText: '삭제된 강의는 복구가 불가능해요.',
+                              onCancel: () {
+                                Get.back();
+                              },
+                              onConfirm: () {
+                                controller
+                                    .fetchTeacherDeleteLecture(lectureCode);
+                                Get.forceAppUpdate();
+                                Get.back();
+                              },
+                            );
+                          },
+                        );
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: 'delete',
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          child: B3_18px_M(
+                            text: '삭제하기',
+                            color: OrmeeColor.gray[600],
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                PopupMenuButton<String>(
-                  offset: Offset(5, 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: OrmeeColor.gray[200]!, width: 1),
-                  ),
-                  elevation: 8,
-                  color: OrmeeColor.white,
-                  shadowColor: OrmeeColor.black.withOpacity(0.5),
-                  padding: EdgeInsets.zero,
-                  icon: SvgPicture.asset(
-                    '/icons/dots.svg',
-                    color: OrmeeColor.gray[500],
-                  ),
-                  onSelected: (String value) {
-                    if (value == 'delete') {
-                      final int lectureCode = OpenOrClose == 0
-                          ? controller.openLectures[index].code
-                          : controller.closedLectures[index].code;
-
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return OrmeeModal(
-                            titleText: '강의를 삭제하시겠어요?',
-                            contentText: '삭제된 강의는 복구가 불가능해요.',
-                            onCancel: () {
-                              Get.back();
-                            },
-                            onConfirm: () {
-                              controller.fetchTeacherDeleteLecture(lectureCode);
-                              Get.forceAppUpdate();
-                              Get.back();
-                            },
-                          );
-                        },
-                      );
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      value: 'delete',
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        child: B3_18px_M(
-                          text: '삭제하기',
-                          color: OrmeeColor.gray[600],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Spacer(),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     SvgPicture.asset(
-            //       'assets/icons/type=user_profile.svg',
-            //       color: OrmeeColor.gray[400],
-            //     ),
-            //     SizedBox(width: 8),
-            //     T6_16px(
-            //       text: '44명',
-            //       color: OrmeeColor.primaryPuple[400],
-            //     ),
-            //   ],
-            // ),
-            Row(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Property 1=calender, size=l.svg',
-                  color: OrmeeColor.grey[30],
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: B4_16px_M(
-                    overflow: TextOverflow.ellipsis,
-                    text: OpenOrClose == 0
-                        ? DateFormat('yyyy.MM.dd').format(DateTime.parse(
-                            controller.openLectures[index].dueTime))
-                        : DateFormat('yyyy.MM.dd').format(DateTime.parse(
-                            controller.closedLectures[index].dueTime)),
-                    color: OrmeeColor.grey[70],
-                  ),
-                ),
-                Spacer(),
-                InkWell(
-                  onTap: () {},
-                  child: SvgPicture.asset(
-                    '/icons/copy.svg',
+                ],
+              ),
+              Spacer(),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: [
+              //     SvgPicture.asset(
+              //       'assets/icons/type=user_profile.svg',
+              //       color: OrmeeColor.gray[400],
+              //     ),
+              //     SizedBox(width: 8),
+              //     T6_16px(
+              //       text: '44명',
+              //       color: OrmeeColor.primaryPuple[400],
+              //     ),
+              //   ],
+              // ),
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/Property 1=calender, size=l.svg',
                     color: OrmeeColor.grey[30],
                   ),
-                ),
-              ],
-            ),
-          ],
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: B4_16px_M(
+                      overflow: TextOverflow.ellipsis,
+                      text: OpenOrClose == 0
+                          ? DateFormat('yyyy.MM.dd').format(DateTime.parse(
+                              controller.openLectures[index].dueTime))
+                          : DateFormat('yyyy.MM.dd').format(DateTime.parse(
+                              controller.closedLectures[index].dueTime)),
+                      color: OrmeeColor.grey[70],
+                    ),
+                  ),
+                  Spacer(),
+                  InkWell(
+                    onTap: () {},
+                    child: SvgPicture.asset(
+                      '/icons/copy.svg',
+                      color: OrmeeColor.grey[30],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
