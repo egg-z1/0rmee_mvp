@@ -32,7 +32,7 @@ class OrmeeButton2 extends StatelessWidget {
         child: Row(
           children: [
             SvgPicture.asset(
-              '/icons/plus.svg',
+              'assets/icons/plus.svg',
               color: OrmeeColor.purple[40],
             ),
             SizedBox(width: 10),
