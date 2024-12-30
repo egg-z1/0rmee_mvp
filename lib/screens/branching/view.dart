@@ -53,7 +53,7 @@ class Branch extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 if(defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
-                  OrmeeSnackbar.show(context, "컴퓨터로 이용해 주세요.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+                  OrmeeSnackbar.show(context, "데스크톱을 이용해 주세요.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
                 } else {
                   Get.to(() => TeacherSignIn());
                 }
