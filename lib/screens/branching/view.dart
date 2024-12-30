@@ -27,11 +27,12 @@ class Branch extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                if(defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
-                  Get.to(() => ClassCode());
-                } else {
-                  OrmeeSnackbar.show(context, "모바일로 이용해 주세요.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
-                }
+                // if(defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
+                //   Get.to(() => ClassCode());
+                // } else {
+                //   OrmeeSnackbar.show(context, "모바일로 이용해 주세요.", 'assets/icons/notice.svg', OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
+                // }
+                Get.to(() => ClassCode());
               },
               child: Container(
                 height: 120,
