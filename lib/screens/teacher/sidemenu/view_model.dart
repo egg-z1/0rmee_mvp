@@ -35,3 +35,25 @@ class LectureListController extends GetxController {
     print('lecture_index = ${index}');
   }
 }
+
+class TeacherUserController extends GetxController {
+  var isLoading = false.obs;
+  var teacherUser = Rx<TeacherUser?>(null);
+
+  final TeacherLectureService _service = TeacherLectureService();
+
+  Future<void> fetchTeacherUserInfo(String teacherCode) async {
+    isLoading.value = true;
+    try {
+      print('fetching~~~~');
+      final user = await _service.fetchTeacherUser(teacherCode);
+      if (user != null) {
+        teacherUser.value = user;
+      } else {
+        print("Failed to load teacher user.");
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
