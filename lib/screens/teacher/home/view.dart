@@ -34,82 +34,44 @@ class TeacherHome extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Container(
         padding: EdgeInsets.only(left: 50, bottom: 30),
-        child: Expanded(
-          // child: Obx(
-          //   () => OrmeeFloatingPopupOverlay(
-          //     message: "신규 강의를 개설해보세요!",
-          //     isVisible: isPopupVisible.value,
-          //     onDismiss: () => isPopupVisible.value = false,
-          //     child: Container(
-          //       padding: EdgeInsets.symmetric(horizontal: 60),
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.center,
-          //         children: [
-          //           Padding(
-          //             padding: const EdgeInsets.symmetric(vertical: 48),
-          //             child: Row(
-          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //               children: [
-          //                 T1_24px(
-          //                   text: "강의 홈",
-          //                   color: OrmeeColor.gray[900],
-          //                 ),
-          //                 OrmeeButton2(
-          //                   onPressed: () {
-          //                     openOrmeeDialog(context);
-          //                   },
-          //                   text: '강의 개설',
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //           Expanded(
-          //             child: TeacherHomeTabBar(),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          child: Stack(
-            children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Title1_Bold(
-                            text: "강의 관리",
-                            color: OrmeeColor.grey[90],
-                          ),
-                          SizedBox(
-                            height: 34,
-                          ),
-                        ],
-                      ),
+        child: Stack(
+          children: [
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Title1_Bold(
+                          text: "강의 관리",
+                          color: OrmeeColor.grey[90],
+                        ),
+                        SizedBox(
+                          height: 34,
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: TeacherHomeTabBar(teacherCode: teacherCode),
-                    ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: TeacherHomeTabBar(teacherCode: teacherCode),
+                  ),
+                ],
               ),
-              Positioned(
-                top: 65,
-                right: 0,
-                child: OrmeeButton2(
-                  onTap: () {
-                    openOrmeeDialog(context);
-                  },
-                  text: '강의 개설',
-                ),
+            ),
+            Positioned(
+              top: 65,
+              right: 0,
+              child: OrmeeButton2(
+                onTap: () {
+                  openOrmeeDialog(context);
+                },
+                text: '강의 개설',
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

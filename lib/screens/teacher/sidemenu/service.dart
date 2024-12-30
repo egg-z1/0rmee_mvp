@@ -44,10 +44,7 @@ class TeacherLectureService extends GetConnect {
     final response = await get(url);
 
     if (response.isOk && response.body['data'] != null) {
-      print('fetching~~~~!!!');
       try {
-        print('fetching~~~~!!!!!!!');
-        print(response.body['data']);
         return TeacherUser.fromJson(response.body['data']);
       } catch (e) {
         throw Exception('데이터 파싱 실패: ${e.toString()}');

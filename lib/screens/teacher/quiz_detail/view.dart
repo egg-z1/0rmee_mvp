@@ -15,7 +15,7 @@ import '../sidemenu/view.dart';
 
 class QuizDetail extends StatelessWidget {
   QuizDetailController controller = Get.put(QuizDetailController());
-  late final String quizId;
+  String? quizId;
 
   QuizDetail({super.key});
 
@@ -23,89 +23,102 @@ class QuizDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final box = GetStorage();
     quizId = box.read('quizId');
-    controller.fetchQuizDetail(quizId);
+    controller.fetchQuizDetail(quizId!);
     return Container(
       color: OrmeeColor.grey[5],
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: Scaffold(
         backgroundColor: OrmeeColor.grey[5],
         appBar: TeacherHeader(),
-        body:
-            SingleChildScrollView(
-                 child: Padding(
-                   padding: const EdgeInsets.all(30.0),
-                   child: Column(
-                     children: [
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.end,
-                         children: [
-                           GestureDetector(
-                             onTap: () => Get.toNamed('/teacher/quiz', arguments: {'isUpdate': true}),
-                             child: Container(
-                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                               decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(10),
-                                 border: Border.all(color: OrmeeColor.purple[40]!),
-                               ),
-                               child: Headline1_Semibold(text: '수정하기', color: OrmeeColor.purple[40]),
-                             ),
-                           ),
-                           const SizedBox(width: 20,),
-                           GestureDetector(
-                             onTap: () {
-                               showDialog(
-                                 context: context,
-                                 builder: (BuildContext context) {
-                                   return OrmeeModal(
-                                     titleText: "퀴즈를 삭제하시겠어요?",
-                                     contentText: "삭제된 퀴즈는 복구가 불가능해요.",
-                                     onCancel: () => Get.back(),
-                                     onConfirm: () async {
-                                       if(await controller.deleteQuiz(quizId)) {
-                                         OrmeeSnackbar.show(context, '퀴즈가 삭제됐습니다.', 'assets/icons/check.svg', OrmeeColor.systemGreen[5]!, OrmeeColor.systemGreen[30]!);
-                                       }
-                                       Get.forceAppUpdate();
-                                       Get.offAllNamed('teacher/main');
-                                     },
-                                   );
-                                 },
-                               );
-                             },
-                             child: Container(
-                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                               decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(10),
-                                 border: Border.all(color: OrmeeColor.grey[20]!),
-                               ),
-                               child: Headline1_Semibold(text: '삭제하기', color: OrmeeColor.grey[90]),
-                             ),
-                           )
-                         ],
-                       ),
-                       const SizedBox(height: 10),
-                       Obx(() {
-                         if (controller.quiz.value?.problems == null || controller.quiz.value!.problems.isEmpty) {
-                           return const Center(child: Text('문제가 없습니다.'));
-                         }
-                           return ListView.builder(
-                               shrinkWrap: true,
-                               physics: const NeverScrollableScrollPhysics(),
-                             itemCount: controller.quiz.value!.problems.length,
-                               itemBuilder: (context, index) {
-                                 return Padding(
-                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                   child: OrmeeProblemCard(problem: controller.quiz.value!.problems[index], currentIndex: index, totalIndex: controller.quiz.value!.problems.length),
-                                 );
-                               }
-                           );
-                         }
-                       )
-                     ],
-                   ),
-                 ),
-               ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Get.toNamed('/teacher/quiz',
+                          arguments: {'isUpdate': true}),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: OrmeeColor.purple[40]!),
+                        ),
+                        child: Headline1_Semibold(
+                            text: '수정하기', color: OrmeeColor.purple[40]),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return OrmeeModal(
+                              titleText: "퀴즈를 삭제하시겠어요?",
+                              contentText: "삭제된 퀴즈는 복구가 불가능해요.",
+                              onCancel: () => Get.back(),
+                              onConfirm: () async {
+                                if (await controller.deleteQuiz(quizId!)) {
+                                  OrmeeSnackbar.show(
+                                      context,
+                                      '퀴즈가 삭제됐습니다.',
+                                      'assets/icons/check.svg',
+                                      OrmeeColor.systemGreen[5]!,
+                                      OrmeeColor.systemGreen[30]!);
+                                }
+                                Get.forceAppUpdate();
+                                Get.offAllNamed('teacher/main');
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: OrmeeColor.grey[20]!),
+                        ),
+                        child: Headline1_Semibold(
+                            text: '삭제하기', color: OrmeeColor.grey[90]),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Obx(() {
+                  if (controller.quiz.value?.problems == null ||
+                      controller.quiz.value!.problems.isEmpty) {
+                    return const Center(child: Text('문제가 없습니다.'));
+                  }
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.quiz.value!.problems.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: OrmeeProblemCard(
+                              problem: controller.quiz.value!.problems[index],
+                              currentIndex: index,
+                              totalIndex:
+                                  controller.quiz.value!.problems.length),
+                        );
+                      });
+                })
+              ],
+            ),
+          ),
         ),
+      ),
     );
   }
-
 }

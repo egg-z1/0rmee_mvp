@@ -18,13 +18,12 @@ class QuizDetailController extends GetxController {
       quiz.value = quizDetail;
     } catch (e) {
       error(e.toString());
-      Get.snackbar(
-        '오류',
-        '퀴즈 정보를 불러오는데 실패했습니다. $e',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 3),
-      );
-
+      // Get.snackbar(
+      //   '오류',
+      //   '퀴즈 정보를 불러오는데 실패했습니다. $e',
+      //   snackPosition: SnackPosition.BOTTOM,
+      //   duration: const Duration(seconds: 3),
+      // );
     } finally {
       isLoading(false);
     }

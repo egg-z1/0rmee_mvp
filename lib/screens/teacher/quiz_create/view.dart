@@ -78,18 +78,19 @@ class _QuizcreateState extends State<Quizcreate> {
   void initState() {
     super.initState();
 
-    quizId = box.read('quizId')?? '';
+    quizId = box.read('quizId') ?? '';
     print(quizId);
-    lectureId = box.read('lectureId')?? '';
+    lectureId = box.read('lectureId') ?? '';
     if (widget.isUpdate) {
       quizCreateController.getDraftQuiz(quizId!);
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    quizId = box.read('quizId')?? '';
+    quizId = box.read('quizId') ?? '';
     print(quizId);
-    lectureId = box.read('lectureId')?? '';
+    lectureId = box.read('lectureId') ?? '';
     return Container(
       color: OrmeeColor.grey[5],
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -97,30 +98,30 @@ class _QuizcreateState extends State<Quizcreate> {
         backgroundColor: OrmeeColor.grey[5],
         appBar: TeacherHeader(),
         body: SingleChildScrollView(
-            child: Column(
-              children: [
-                bar(),
-                Container(
-                  padding: const EdgeInsets.all(30),
-                  decoration: BoxDecoration(
-                      color: OrmeeColor.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    children: [
-                      quizTitle(),
-                      const SizedBox(height: 12),
-                      quizCondition()
-                    ],
-                  ),
+          child: Column(
+            children: [
+              bar(),
+              Container(
+                padding: const EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                    color: OrmeeColor.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: [
+                    quizTitle(),
+                    const SizedBox(height: 12),
+                    quizCondition()
+                  ],
                 ),
-                const SizedBox(height: 20),
-                problemCards(),
-                const SizedBox(height: 20),
-                Center(child: addButton()),
-                const SizedBox(height: 48)
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              problemCards(),
+              const SizedBox(height: 20),
+              Center(child: addButton()),
+              const SizedBox(height: 48)
+            ],
           ),
+        ),
       ),
     );
   }
@@ -133,9 +134,9 @@ class _QuizcreateState extends State<Quizcreate> {
         children: [
           GestureDetector(
             onTap: () {
-              if(saveQuiz(true)) {
+              if (saveQuiz(true)) {
                 Get.forceAppUpdate();
-                Get.back();
+                Get.offAllNamed('/teacher/main');
               }
             },
             child: Container(
@@ -154,9 +155,9 @@ class _QuizcreateState extends State<Quizcreate> {
           const SizedBox(width: 18),
           GestureDetector(
             onTap: () {
-              if(saveQuiz(false)) {
+              if (saveQuiz(false)) {
                 Get.forceAppUpdate();
-                Get.back();
+                Get.offAllNamed('/teacher/main');
               }
             },
             child: Container(

@@ -45,7 +45,6 @@ class TeacherUserController extends GetxController {
   Future<void> fetchTeacherUserInfo(String teacherCode) async {
     isLoading.value = true;
     try {
-      print('fetching~~~~');
       final user = await _service.fetchTeacherUser(teacherCode);
       if (user != null) {
         teacherUser.value = user;

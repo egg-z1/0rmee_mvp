@@ -14,8 +14,7 @@ class TeacherLecture extends StatelessWidget {
       Get.put(TeacherLectureController());
   late final lectureId;
   late final lectureTitle;
-  TeacherLecture(
-      {super.key});
+  TeacherLecture({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,66 +23,61 @@ class TeacherLecture extends StatelessWidget {
     lectureTitle = box.read('lectureTitle');
     controller.fetchMemoData(lectureId);
     controller.fetchQuizData(lectureId);
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.only(left: 50),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 13),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset('/icons/lecture.svg'),
-                SizedBox(width: 15),
-                Title1_Bold(text: lectureTitle),
-              ],
-            ),
-            SizedBox(height: 34),
-            Obx(
-              () => Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(bottom: 30),
-                  child: TabContainer(
-                    color: OrmeeColor.white,
-                    tabsStart: 0,
-                    tabsEnd: 0.3,
-                    borderRadius: BorderRadius.circular(25),
-                    tabBorderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25),
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.zero,
-                    ),
-                    childPadding: EdgeInsets.all(30),
-                    selectedTextStyle: TextStyle(
-                      color: OrmeeColor.purple[40],
-                      fontFamily: 'Pretendard',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    unselectedTextStyle: TextStyle(
-                      color: OrmeeColor.grey[40],
-                      fontFamily: 'Pretendard',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    tabs: [
-                      Text(
-                          '퀴즈 ${controller.openQuizzesLength.value + controller.closedQuizzesLength.value}'),
-                      Text(
-                          '쪽지 ${controller.openMemosLength.value + controller.closeMemosLength.value}'),
-                    ],
-                    children: [
-                      TeacherQuizList(),
-                      TeacherMemoList()
-                    ],
+    return Container(
+      padding: EdgeInsets.only(left: 50),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 13),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset('/icons/lecture.svg'),
+              SizedBox(width: 15),
+              Title1_Bold(text: lectureTitle),
+            ],
+          ),
+          SizedBox(height: 34),
+          Obx(
+            () => Expanded(
+              child: Container(
+                padding: EdgeInsets.only(bottom: 30),
+                child: TabContainer(
+                  color: OrmeeColor.white,
+                  tabsStart: 0,
+                  tabsEnd: 0.3,
+                  borderRadius: BorderRadius.circular(25),
+                  tabBorderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.zero,
                   ),
+                  childPadding: EdgeInsets.all(30),
+                  selectedTextStyle: TextStyle(
+                    color: OrmeeColor.purple[40],
+                    fontFamily: 'Pretendard',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  unselectedTextStyle: TextStyle(
+                    color: OrmeeColor.grey[40],
+                    fontFamily: 'Pretendard',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  tabs: [
+                    Text(
+                        '퀴즈 ${controller.openQuizzesLength.value + controller.closedQuizzesLength.value}'),
+                    Text(
+                        '쪽지 ${controller.openMemosLength.value + controller.closeMemosLength.value}'),
+                  ],
+                  children: [TeacherQuizList(), TeacherMemoList()],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
