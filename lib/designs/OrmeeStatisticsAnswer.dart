@@ -183,7 +183,7 @@ class _OrmeeStatisticsAnswerState extends State<OrmeeStatisticsAnswer> {
                     : Container(),
                 const SizedBox(width: 28),
                 SvgPicture.asset(
-                  '/icons/user.svg',
+                  'assets/icons/user.svg',
                   color: OrmeeColor.grey[20],
                 ),
                 const SizedBox(width: 1),

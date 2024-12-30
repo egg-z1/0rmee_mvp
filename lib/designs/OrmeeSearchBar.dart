@@ -59,7 +59,7 @@ class OrmeeSearchBar extends StatelessWidget {
                 ? GestureDetector(
                     onTap: onClear,
                     child: SvgPicture.asset(
-                      '/icons/type=circle_x.svg',
+                      'assets/icons/type=circle_x.svg',
                       color: OrmeeColor.gray[300],
                       height: 24,
                     ),
@@ -72,7 +72,7 @@ class OrmeeSearchBar extends StatelessWidget {
               onSubmitted(controller.text);
             },
             child: SvgPicture.asset(
-              '/icons/search.svg',
+              'assets/icons/search.svg',
             ),
           ),
         ],

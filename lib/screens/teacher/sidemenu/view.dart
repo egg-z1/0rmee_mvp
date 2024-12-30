@@ -329,7 +329,7 @@ class TeacherSideMenu extends StatelessWidget {
       child: Row(
         children: [
           SvgPicture.asset(
-            'icons/logout.svg',
+            'assets/icons/logout.svg',
             color: OrmeeColor.grey[30],
           ),
           SizedBox(width: 10),

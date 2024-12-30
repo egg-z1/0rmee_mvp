@@ -643,7 +643,7 @@ class TeacherQuizList extends StatelessWidget {
                 Row(
                   children: [
                     SvgPicture.asset(
-                      '/icons/timer.svg',
+                      'assets/icons/timer.svg',
                       color: OrmeeColor.purple[40],
                     ),
                     SizedBox(width: 5),
