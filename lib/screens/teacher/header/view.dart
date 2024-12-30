@@ -20,7 +20,7 @@ class TeacherHeader extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 74,
       elevation: 0,
       title: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
         child: Row(
           children: [
             GestureDetector(

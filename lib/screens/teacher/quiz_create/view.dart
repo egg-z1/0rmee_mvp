@@ -80,17 +80,19 @@ class _QuizcreateState extends State<Quizcreate> {
     super.initState();
     lectureId = box.read("lectureId");
     quizId = box.read('quizId');
-    print("<확인용>\n강의: $lectureId\n퀴즈: $quizId");
     if (widget.isUpdate) {
       quizCreateController.getDraftQuiz(quizId);
     }
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(370, 0, 80, 0),
+    return Container(
+      color: OrmeeColor.grey[5],
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: Scaffold(
+        backgroundColor: OrmeeColor.grey[5],
+        appBar: TeacherHeader(),
+        body: SingleChildScrollView(
             child: Column(
               children: [
                 bar(),
@@ -115,7 +117,7 @@ class _QuizcreateState extends State<Quizcreate> {
               ],
             ),
           ),
-        ),
+      ),
     );
   }
 
@@ -127,9 +129,10 @@ class _QuizcreateState extends State<Quizcreate> {
         children: [
           GestureDetector(
             onTap: () {
-              saveQuiz(true);
-              Get.forceAppUpdate();
-              Get.back();
+              if(saveQuiz(true)) {
+                Get.forceAppUpdate();
+                Get.back();
+              }
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -147,9 +150,10 @@ class _QuizcreateState extends State<Quizcreate> {
           const SizedBox(width: 18),
           GestureDetector(
             onTap: () {
-              saveQuiz(false);
-              Get.forceAppUpdate();
-              Get.back();
+              if(saveQuiz(false)) {
+                Get.forceAppUpdate();
+                Get.back();
+              }
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -324,7 +328,7 @@ class _QuizcreateState extends State<Quizcreate> {
     if (quizCreateController.titleController.text.isEmpty) {
       OrmeeSnackbar.show(context, "제목은 필수입니다.", 'assets/icons/notice.svg',
           OrmeeColor.systemRed[5]!, OrmeeColor.systemRed[30]!);
-      return;
+      return false;
     }
     quiz.isDraft = isDraft;
     quiz.title = quizCreateController.titleController.text;
@@ -338,7 +342,7 @@ class _QuizcreateState extends State<Quizcreate> {
             OrmeeColor.systemRed[5]!,
             OrmeeColor.systemRed[30]!);
 
-        return;
+        return false;
       }
       quizCreateController.problems[i].content =
           quizCreateController.problemControllers[i].text;
@@ -351,7 +355,7 @@ class _QuizcreateState extends State<Quizcreate> {
             OrmeeColor.systemRed[5]!,
             OrmeeColor.systemRed[30]!);
 
-        return;
+        return false;
       }
       quizCreateController.problems[i].type = quizCreateController.types[i];
 
@@ -365,7 +369,7 @@ class _QuizcreateState extends State<Quizcreate> {
             OrmeeColor.systemRed[5]!,
             OrmeeColor.systemRed[30]!);
 
-        return;
+        return false;
       }
       quizCreateController.problems[i].answer = quizCreateController.answers[i];
 
@@ -380,7 +384,7 @@ class _QuizcreateState extends State<Quizcreate> {
                 OrmeeColor.systemRed[5]!,
                 OrmeeColor.systemRed[30]!);
 
-            return;
+            return false;
           }
           quizCreateController.options[i][j] = optionText;
         }
@@ -395,6 +399,8 @@ class _QuizcreateState extends State<Quizcreate> {
     } else {
       quizCreateController.createQuiz(quiz.toJson(), lectureId);
     }
+
+    return true;
   }
 
   Widget dateTimePicker(

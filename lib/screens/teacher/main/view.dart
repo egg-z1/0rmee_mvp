@@ -6,6 +6,7 @@ import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/home/view.dart';
 import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/lecture/view.dart';
+import 'package:ormee_mvp/screens/teacher/quiz_detail/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 
@@ -58,8 +59,8 @@ class TeacherMain extends StatelessWidget {
           lectureTitle = controller.closedLectures[closedIndex].title;
         }
         box.write('lectureId', lectureId);
+        box.write('lectureTitle', lectureTitle);
         return TeacherLecture(
-          lectureTitle: lectureTitle,
           key: ValueKey('lecture_$lectureId'),
         );
       }
