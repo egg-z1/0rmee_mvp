@@ -12,7 +12,7 @@ import 'package:ormee_mvp/screens/teacher/quiz_detail/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 
 class TeacherQuizList extends StatelessWidget {
-  LectureController lectureController = Get.find<LectureController>();
+  LectureListController lectureController = Get.find<LectureListController>();
   final TeacherQuizController controller = Get.put(TeacherQuizController());
   final TeacherQuizStatisticsController controller1 =
       Get.put(TeacherQuizStatisticsController());

@@ -54,3 +54,26 @@ class TeacherSideMenuModel {
             closedLectures.map((lecture) => lecture.toJson()).toList(),
       };
 }
+
+class TeacherUser {
+  final String name;
+  final String email;
+  final String phoneNumber;
+  final String image;
+
+  TeacherUser({
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
+    required this.image,
+  });
+
+  factory TeacherUser.fromJson(Map<String, dynamic> json) {
+    return TeacherUser(
+      name: json['name'],
+      email: json['email'],
+      phoneNumber: json['phoneNumber'],
+      image: json['image'],
+    );
+  }
+}

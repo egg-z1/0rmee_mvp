@@ -246,7 +246,8 @@ class TeacherHomeTabBar extends StatelessWidget {
   }
 
   Widget LectureCard(context, index, OpenOrClose) {
-    final LectureController managementController = Get.find<LectureController>();
+    final LectureListController managementController =
+        Get.find<LectureListController>();
     final GetStorage box = GetStorage();
     return Obx(
       () => InkWell(
@@ -260,7 +261,8 @@ class TeacherHomeTabBar extends StatelessWidget {
           } else {
             lectureId = controller.closedLectures[index].id;
             lectureTitle = controller.closedLectures[index].title;
-            managementController.lecture_index.value = (controller.openLectures.length + index + 1).toInt();
+            managementController.lecture_index.value =
+                (controller.openLectures.length + index + 1).toInt();
           }
           box.write('lectureId', lectureId);
           box.write('lectureTitle', lectureTitle);
@@ -388,10 +390,16 @@ class TeacherHomeTabBar extends StatelessWidget {
                   Spacer(),
                   InkWell(
                     onTap: () {
-                      Clipboard.setData(ClipboardData(text: (OpenOrClose == 0)
-                          ? '${controller.openLectures[index].code}'
-                          : '${controller.closedLectures[index].code}'));
-                      OrmeeSnackbar.show(context, '강의실 코드가 복사되었어요.', 'assets/icons/check.svg', OrmeeColor.systemGreen[5]!, OrmeeColor.systemGreen[30]!);
+                      Clipboard.setData(ClipboardData(
+                          text: (OpenOrClose == 0)
+                              ? '${controller.openLectures[index].code}'
+                              : '${controller.closedLectures[index].code}'));
+                      OrmeeSnackbar.show(
+                          context,
+                          '강의실 코드가 복사되었어요.',
+                          'assets/icons/check.svg',
+                          OrmeeColor.systemGreen[5]!,
+                          OrmeeColor.systemGreen[30]!);
                     },
                     child: SvgPicture.asset(
                       '/icons/copy.svg',

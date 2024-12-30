@@ -17,19 +17,22 @@ import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
 
 class TeacherSideMenu extends StatelessWidget {
   late final teacherCode;
+  late final teacherId;
   TeacherSideMenu({super.key});
 
   final TeacherSideMenuController controller =
       Get.put(TeacherSideMenuController());
-  final LectureController _controller = Get.find<LectureController>();
+  final LectureListController _controller = Get.find<LectureListController>();
 
   final TeacherHomeController controller1 = Get.find<TeacherHomeController>();
+  final TeacherUserController controller2 = Get.put(TeacherUserController());
 
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
     teacherCode = box.read('teacherCode');
     controller.fetchTeacherSideMenu(teacherCode);
+    controller2.fetchTeacherUserInfo(teacherCode);
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
@@ -118,17 +121,10 @@ class TeacherSideMenu extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: OrmeeColor.grey[10],
                 image: DecorationImage(
-                  image: controller.sidemenu.value!.closedLectures.first
-                              .profileImage ==
-                          null
-                      ? controller.sidemenu.value!.openLectures.first
-                                  .profileImage ==
-                              null
-                          ? AssetImage('assets/images/user-profile-03.png')
-                          : NetworkImage(controller.sidemenu.value!.openLectures
-                              .first.profileImage!) as ImageProvider
-                      : NetworkImage(controller.sidemenu.value!.closedLectures
-                          .first.profileImage!) as ImageProvider,
+                  image: controller2.teacherUser.value!.image.isEmpty
+                      ? AssetImage('/images/user-profile-03.png')
+                      : NetworkImage(controller2.teacherUser.value!.image)
+                          as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -141,13 +137,11 @@ class TeacherSideMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Headline1_Semibold(
-                text: controller.sidemenu.value == null
+                text: controller2.teacherUser.value == null
                     ? ''
-                    : controller.sidemenu.value!.openLectures.isEmpty
-                        ? (controller.sidemenu.value!.closedLectures.isEmpty
-                            ? ''
-                            : '${controller.sidemenu.value!.closedLectures.first.name}')
-                        : '${controller.sidemenu.value!.openLectures.first.name}',
+                    : controller2.teacherUser.value!.name.isEmpty
+                        ? ''
+                        : controller2.teacherUser.value!.name,
                 color: OrmeeColor.grey[90],
               ),
               SizedBox(
