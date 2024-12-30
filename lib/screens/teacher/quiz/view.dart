@@ -223,114 +223,119 @@ class TeacherQuizList extends StatelessWidget {
             padding: index == controller.openQuizzes.length - 1
                 ? EdgeInsets.zero
                 : EdgeInsets.only(bottom: 20),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
-              decoration: BoxDecoration(
-                border: Border.all(color: OrmeeColor.grey[10]!, width: 1),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 9),
-                    decoration: BoxDecoration(
-                      color: OrmeeColor.purple[3],
-                      borderRadius: BorderRadius.circular(10),
+            child: InkWell(
+              onTap: () {
+                //여기에 ontap
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+                decoration: BoxDecoration(
+                  border: Border.all(color: OrmeeColor.grey[10]!, width: 1),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 9),
+                      decoration: BoxDecoration(
+                        color: OrmeeColor.purple[3],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: SvgPicture.asset(
+                        '/icons/ing_quiz.svg',
+                        color: OrmeeColor.purple[40],
+                      ),
                     ),
-                    child: SvgPicture.asset(
-                      '/icons/ing_quiz.svg',
+                    SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Headline1_Semibold(
+                            text: controller.openQuizzes[index].quizName),
+                        SizedBox(height: 5),
+                        Label1(
+                          text: controller.openQuizzes[index].quizDate,
+                          color: OrmeeColor.grey[30],
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    SvgPicture.asset(
+                      '/icons/timer.svg',
                       color: OrmeeColor.purple[40],
                     ),
-                  ),
-                  SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Headline1_Semibold(
-                          text: controller.openQuizzes[index].quizName),
-                      SizedBox(height: 5),
-                      Label1(
-                        text: controller.openQuizzes[index].quizDate,
-                        color: OrmeeColor.grey[30],
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  SvgPicture.asset(
-                    '/icons/timer.svg',
-                    color: OrmeeColor.purple[40],
-                  ),
-                  SizedBox(width: 5),
-                  Headline1_Semibold(
-                      text: '${controller.openQuizzes[index].timeLimit}분'),
-                  SizedBox(width: 29),
-                  InkWell(
-                    onTap: () {
-                      controller.openQuizzes[index].quizAvailable
-                          ? showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return OrmeeModal(
-                                  titleText: '퀴즈를 마감하시겠어요?',
-                                  contentText: '퀴즈를 마감하면 재게시가 불가능해요.',
-                                  onCancel: () {
-                                    Get.back();
-                                  },
-                                  onConfirm: () {
-                                    controller.fetchTeacherQuizClose(
-                                        controller.openQuizzes[index].id);
-                                    Get.forceAppUpdate();
-                                    Get.back();
-                                  },
-                                );
-                              },
-                            )
-                          : showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return OrmeeModal(
-                                  titleText: '퀴즈를 게시하시겠어요?',
-                                  contentText: '퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.',
-                                  onCancel: () {
-                                    Get.back();
-                                  },
-                                  onConfirm: () {
-                                    controller.fetchTeacherQuizOpen(
-                                        controller.openQuizzes[index].id);
-                                    Get.forceAppUpdate();
-                                    Get.back();
-                                  },
-                                );
-                              },
-                            );
-                    },
-                    child: Obx(
-                      () => Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: OrmeeColor.purple[40]!,
-                            width: 1,
+                    SizedBox(width: 5),
+                    Headline1_Semibold(
+                        text: '${controller.openQuizzes[index].timeLimit}분'),
+                    SizedBox(width: 29),
+                    InkWell(
+                      onTap: () {
+                        controller.openQuizzes[index].quizAvailable
+                            ? showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return OrmeeModal(
+                                    titleText: '퀴즈를 마감하시겠어요?',
+                                    contentText: '퀴즈를 마감하면 재게시가 불가능해요.',
+                                    onCancel: () {
+                                      Get.back();
+                                    },
+                                    onConfirm: () {
+                                      controller.fetchTeacherQuizClose(
+                                          controller.openQuizzes[index].id);
+                                      Get.forceAppUpdate();
+                                      Get.back();
+                                    },
+                                  );
+                                },
+                              )
+                            : showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return OrmeeModal(
+                                    titleText: '퀴즈를 게시하시겠어요?',
+                                    contentText: '퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.',
+                                    onCancel: () {
+                                      Get.back();
+                                    },
+                                    onConfirm: () {
+                                      controller.fetchTeacherQuizOpen(
+                                          controller.openQuizzes[index].id);
+                                      Get.forceAppUpdate();
+                                      Get.back();
+                                    },
+                                  );
+                                },
+                              );
+                      },
+                      child: Obx(
+                        () => Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: OrmeeColor.purple[40]!,
+                              width: 1,
+                            ),
+                            color: controller.openQuizzes[index].quizAvailable
+                                ? OrmeeColor.white
+                                : OrmeeColor.purple[40],
                           ),
-                          color: controller.openQuizzes[index].quizAvailable
-                              ? OrmeeColor.white
-                              : OrmeeColor.purple[40],
-                        ),
-                        child: Headline2_Semibold(
-                          text: controller.openQuizzes[index].quizAvailable
-                              ? '마감하기'
-                              : '게시하기',
-                          color: controller.openQuizzes[index].quizAvailable
-                              ? OrmeeColor.purple[40]
-                              : OrmeeColor.white,
+                          child: Headline2_Semibold(
+                            text: controller.openQuizzes[index].quizAvailable
+                                ? '마감하기'
+                                : '게시하기',
+                            color: controller.openQuizzes[index].quizAvailable
+                                ? OrmeeColor.purple[40]
+                                : OrmeeColor.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
