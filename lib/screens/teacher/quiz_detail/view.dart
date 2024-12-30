@@ -40,7 +40,7 @@ class QuizDetail extends StatelessWidget {
                          mainAxisAlignment: MainAxisAlignment.end,
                          children: [
                            GestureDetector(
-                             onTap: () => Get.to(Quizcreate(isUpdate: true)),
+                             onTap: () => Get.to(() => const Quizcreate(isUpdate: true)),
                              child: Container(
                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                decoration: BoxDecoration(

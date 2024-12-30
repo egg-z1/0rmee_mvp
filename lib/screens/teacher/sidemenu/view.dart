@@ -326,7 +326,7 @@ class TeacherSideMenu extends StatelessWidget {
                 Get.back();
               },
               onConfirm: () {
-                Get.offAll(TeacherSignIn());
+                Get.offAll(() => TeacherSignIn());
               },
             );
           },

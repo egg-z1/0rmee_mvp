@@ -176,7 +176,7 @@ class TeacherQuizList extends StatelessWidget {
   createQuizButton() {
     return InkWell(
       onTap: () {
-        Get.to(const Quizcreate(isUpdate: false));
+        Get.to(() => const Quizcreate(isUpdate: false));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
@@ -230,7 +230,7 @@ class TeacherQuizList extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 box!.write('quizId', controller.openQuizzes[index].id);
-                Get.to(QuizDetail());
+                Get.to(() => QuizDetail());
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
@@ -622,7 +622,7 @@ class TeacherQuizList extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     box!.write('quizId', controller.draftQuizzes[index].id);
-                    Get.to(Quizcreate(isUpdate: true));
+                    Get.to(() => const Quizcreate(isUpdate: true));
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
