@@ -149,31 +149,41 @@ class TeacherMemoList extends StatelessWidget {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 9),
-                  decoration: BoxDecoration(
-                    color: OrmeeColor.purple[3],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: SvgPicture.asset(
-                    '/icons/ing_memo.svg',
-                    color: OrmeeColor.purple[40],
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 9),
+                        decoration: BoxDecoration(
+                          color: OrmeeColor.purple[3],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: SvgPicture.asset(
+                          '/icons/ing_memo.svg',
+                          color: OrmeeColor.purple[40],
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Headline1_Semibold(
+                                overflow: TextOverflow.ellipsis,
+                                text: controller.openMemos[index].title),
+                            SizedBox(height: 5),
+                            Label1(
+                              text: '${controller.openMemos[index].dueTime}',
+                              color: OrmeeColor.grey[30],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Headline1_Semibold(text: controller.openMemos[index].title),
-                    SizedBox(height: 5),
-                    Label1(
-                      text: '${controller.openMemos[index].dueTime}',
-                      color: OrmeeColor.grey[30],
-                    ),
-                  ],
-                ),
-                Spacer(),
                 InkWell(
                   onTap: () {
                     showDialog(
@@ -242,51 +252,58 @@ class TeacherMemoList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Headline1_Semibold(
+                              overflow: TextOverflow.ellipsis,
+                              text: controller.closeMemos[index].title,
+                              color: isClick[index]
+                                  ? OrmeeColor.grey[40]
+                                  : OrmeeColor.grey[90],
+                            ),
+                            SizedBox(height: 5),
+                            Label1(
+                              text: '${controller.closeMemos[index].dueTime}',
+                              color: OrmeeColor.grey[30],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
                         children: [
-                          Headline1_Semibold(
-                            text: controller.closeMemos[index].title,
-                            color: isClick[index]
-                                ? OrmeeColor.grey[40]
-                                : OrmeeColor.grey[90],
-                          ),
-                          SizedBox(height: 5),
-                          Label1(
-                            text: '${controller.closeMemos[index].dueTime}',
+                          SizedBox(width: 29),
+                          SvgPicture.asset(
+                            '/icons/users.svg',
                             color: OrmeeColor.grey[30],
                           ),
+                          SizedBox(width: 5),
+                          Headline1_Semibold(
+                            text: '${controller.closeMemos[index].submitCount}',
+                            color: isClick[index]
+                                ? OrmeeColor.grey[40]
+                                : OrmeeColor.grey[60],
+                          ),
+                          // Headline1_Regular(
+                          //   text: ' / 32',
+                          //   color: OrmeeColor.grey[30],
+                          // ),
+                          SizedBox(width: 29),
+                          isClick[index]
+                              ? SvgPicture.asset(
+                                  '/icons/bottom-m.svg',
+                                  color: OrmeeColor.purple[40],
+                                )
+                              : SvgPicture.asset(
+                                  '/icons/top-m.svg',
+                                  color: OrmeeColor.purple[40],
+                                ),
                         ],
                       ),
-                      Spacer(),
-                      SizedBox(width: 29),
-                      SvgPicture.asset(
-                        '/icons/users.svg',
-                        color: OrmeeColor.grey[30],
-                      ),
-                      SizedBox(width: 5),
-                      Headline1_Semibold(
-                        text: '${controller.closeMemos[index].submitCount}',
-                        color: isClick[index]
-                            ? OrmeeColor.grey[40]
-                            : OrmeeColor.grey[60],
-                      ),
-                      // Headline1_Regular(
-                      //   text: ' / 32',
-                      //   color: OrmeeColor.grey[30],
-                      // ),
-                      SizedBox(width: 29),
-                      isClick[index]
-                          ? SvgPicture.asset(
-                              '/icons/bottom-m.svg',
-                              color: OrmeeColor.purple[40],
-                            )
-                          : SvgPicture.asset(
-                              '/icons/top-m.svg',
-                              color: OrmeeColor.purple[40],
-                            ),
                     ],
                   ),
                 ),
