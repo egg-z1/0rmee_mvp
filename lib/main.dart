@@ -34,6 +34,7 @@ class OrmeeApp extends StatelessWidget {
                   statusBarIconBrightness: Brightness.dark))),
       title: 'Ormee',
       home: Branch(),
+      defaultTransition: Transition.noTransition,
       getPages: [
         GetPage(
           name: '/ClassCode/:lectureId', // URL 경로로 lectureId를 전달

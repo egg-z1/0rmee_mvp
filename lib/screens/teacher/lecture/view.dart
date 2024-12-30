@@ -13,14 +13,15 @@ class TeacherLecture extends StatelessWidget {
   final TeacherLectureController controller =
       Get.put(TeacherLectureController());
   late final lectureId;
-  String lectureTitle;
+  late final lectureTitle;
   TeacherLecture(
-      {super.key, required this.lectureTitle});
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
     final box = GetStorage();
     lectureId = box.read('lectureId');
+    lectureTitle = box.read('lectureTitle');
     controller.fetchMemoData(lectureId);
     controller.fetchQuizData(lectureId);
     return Expanded(

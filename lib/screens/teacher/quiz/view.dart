@@ -8,11 +8,15 @@ import 'package:ormee_mvp/designs/OrmeeStatisticsAnswer.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/quiz/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_create/view.dart';
+import 'package:ormee_mvp/screens/teacher/quiz_detail/view.dart';
+import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 
 class TeacherQuizList extends StatelessWidget {
+  LectureController lectureController = Get.find<LectureController>();
   final TeacherQuizController controller = Get.put(TeacherQuizController());
   final TeacherQuizStatisticsController controller1 =
       Get.put(TeacherQuizStatisticsController());
+  GetStorage? box;
   String? lectureId;
   TeacherQuizList({super.key});
   final RxBool isRegister = true.obs;
@@ -65,8 +69,8 @@ class TeacherQuizList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final box = GetStorage();
-    lectureId = box.read('lectureId');
+    box = GetStorage();
+    lectureId = box!.read('lectureId');
     controller.fetchTeacherQuizList(lectureId!);
     controller.fetchTeacherQuizDraft(lectureId!);
 
@@ -225,7 +229,8 @@ class TeacherQuizList extends StatelessWidget {
                 : EdgeInsets.only(bottom: 20),
             child: InkWell(
               onTap: () {
-                //여기에 ontap
+                box!.write('quizId', controller.openQuizzes[index].id);
+                Get.to(QuizDetail());
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),

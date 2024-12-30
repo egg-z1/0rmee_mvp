@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,12 +10,14 @@ import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeDropDownButton.dart';
 import 'package:ormee_mvp/designs/OrmeeFloatingPopup.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
+import 'package:ormee_mvp/designs/OrmeeSnackbar.dart';
 import 'package:ormee_mvp/designs/OrmeeTextField3.dart';
 import 'package:ormee_mvp/designs/OrmeeTypo.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/home/model.dart';
 import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
+import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 import 'package:tab_container/tab_container.dart';
 
 class TeacherHome extends StatelessWidget {
@@ -243,10 +246,24 @@ class TeacherHomeTabBar extends StatelessWidget {
   }
 
   Widget LectureCard(context, index, OpenOrClose) {
+    final LectureController managementController = Get.find<LectureController>();
+    final GetStorage box = GetStorage();
     return Obx(
       () => InkWell(
         onTap: () {
-          //여기에 Get.to
+          String lectureId;
+          String lectureTitle;
+          if (OpenOrClose == 0) {
+            lectureId = controller.openLectures[index].id;
+            lectureTitle = controller.openLectures[index].title;
+            managementController.lecture_index.value = index + 1;
+          } else {
+            lectureId = controller.closedLectures[index].id;
+            lectureTitle = controller.closedLectures[index].title;
+            managementController.lecture_index.value = (controller.openLectures.length + index + 1).toInt();
+          }
+          box.write('lectureId', lectureId);
+          box.write('lectureTitle', lectureTitle);
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
@@ -370,7 +387,12 @@ class TeacherHomeTabBar extends StatelessWidget {
                   ),
                   Spacer(),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: (OpenOrClose == 0)
+                          ? '${controller.openLectures[index].code}'
+                          : '${controller.closedLectures[index].code}'));
+                      OrmeeSnackbar.show(context, '강의실 코드가 복사되었어요.', 'assets/icons/check.svg', OrmeeColor.systemGreen[5]!, OrmeeColor.systemGreen[30]!);
+                    },
                     child: SvgPicture.asset(
                       '/icons/copy.svg',
                       color: OrmeeColor.grey[30],
