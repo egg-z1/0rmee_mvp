@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
@@ -13,13 +14,15 @@ class TeacherMemoList extends StatelessWidget {
   final TeacherMemoController controller = Get.put(TeacherMemoController());
   final TeacherMessageStatisticsController controller1 =
       Get.put(TeacherMessageStatisticsController());
-  String lectureId;
-  TeacherMemoList({super.key, required this.lectureId});
+  String? lectureId;
+  TeacherMemoList({super.key});
   final RxBool isComplete = true.obs;
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchTeacherMemos(lectureId);
+    final box = GetStorage();
+    lectureId = box.read('lectureId');
+    controller.fetchTeacherMemos(lectureId!);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -74,7 +77,7 @@ class TeacherMemoList extends StatelessWidget {
                   },
                   onConfirm: () {
                     controller.fetchTeacherCreateMemo(
-                        lectureId,
+                        lectureId!,
                         MemoCreateModel(
                             title: titleController.textEditingController.text));
                     titleController.textEditingController.clear();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ormee_mvp/designs/OrmeeButton2.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
@@ -17,19 +18,20 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 import 'package:tab_container/tab_container.dart';
 
 class TeacherHome extends StatelessWidget {
-  String teacherCode;
-  final TeacherHomeController controller = Get.put(TeacherHomeController());
-  TeacherHome({super.key, required this.teacherCode});
+  final TeacherHomeController controller = Get.find<TeacherHomeController>();
+  late final teacherCode;
+  TeacherHome({super.key});
 
   @override
   Widget build(BuildContext context) {
     // final RxBool isPopupVisible = true.obs;
-
+    final box = GetStorage();
+    teacherCode = box.read('teacherCode');
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Expanded(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 70),
+      body: Container(
+        padding: EdgeInsets.only(left: 50, bottom: 30),
+        child: Expanded(
           // child: Obx(
           //   () => OrmeeFloatingPopupOverlay(
           //     message: "신규 강의를 개설해보세요!",
@@ -82,7 +84,7 @@ class TeacherHome extends StatelessWidget {
                             color: OrmeeColor.grey[90],
                           ),
                           SizedBox(
-                            height: 21,
+                            height: 34,
                           ),
                         ],
                       ),
@@ -94,7 +96,7 @@ class TeacherHome extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 60,
+                top: 65,
                 right: 0,
                 child: OrmeeButton2(
                   onTap: () {
@@ -156,7 +158,7 @@ class TeacherHome extends StatelessWidget {
 }
 
 class TeacherHomeTabBar extends StatelessWidget {
-  final TeacherHomeController controller = Get.put(TeacherHomeController());
+  final TeacherHomeController controller = Get.find<TeacherHomeController>();
   String teacherCode;
   TeacherHomeTabBar({super.key, required this.teacherCode});
 
@@ -165,43 +167,46 @@ class TeacherHomeTabBar extends StatelessWidget {
     controller.fetchTeacherLectures(teacherCode);
 
     // final RxBool isPopupVisible = true.obs;
-    return Obx(
-      () => TabContainer(
-        color: OrmeeColor.white,
-        tabsStart: 0,
-        tabsEnd: 0.3,
-        borderRadius: BorderRadius.circular(25),
-        tabBorderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
-          bottomLeft: Radius.circular(25),
-          bottomRight: Radius.zero,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 30),
+      child: Obx(
+        () => TabContainer(
+          color: OrmeeColor.white,
+          tabsStart: 0,
+          tabsEnd: 0.3,
+          borderRadius: BorderRadius.circular(25),
+          tabBorderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.zero,
+          ),
+          childPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+          selectedTextStyle: TextStyle(
+            color: OrmeeColor.purple[40],
+            fontFamily: 'Pretendard',
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+          unselectedTextStyle: TextStyle(
+            color: OrmeeColor.grey[40],
+            fontFamily: 'Pretendard',
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
+          tabs: [
+            Text('진행 중 강의 ${controller.openLectures.length}'),
+            Text('이전 강의 ${controller.closedLectures.length}'),
+          ],
+          children: [
+            controller.openLectures.isNotEmpty
+                ? Lectures(0)
+                : NullLecture('현재 진행 중인 강의가 없어요.'),
+            controller.closedLectures.isNotEmpty
+                ? Lectures(1)
+                : NullLecture('이전 강의가 없어요.'),
+          ],
         ),
-        childPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 44),
-        selectedTextStyle: TextStyle(
-          color: OrmeeColor.purple[40],
-          fontFamily: 'Pretendard',
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-        unselectedTextStyle: TextStyle(
-          color: OrmeeColor.grey[40],
-          fontFamily: 'Pretendard',
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-        ),
-        tabs: [
-          Text('진행 중 강의 ${controller.openLectures.length}'),
-          Text('이전 강의 ${controller.closedLectures.length}'),
-        ],
-        children: [
-          controller.openLectures.isNotEmpty
-              ? Lectures(0)
-              : NullLecture('현재 진행 중인 강의가 없어요.'),
-          controller.closedLectures.isNotEmpty
-              ? Lectures(1)
-              : NullLecture('이전 강의가 없어요.'),
-        ],
       ),
     );
   }
@@ -240,7 +245,7 @@ class TeacherHomeTabBar extends StatelessWidget {
   Widget LectureCard(context, index, OpenOrClose) {
     return Obx(
       () => Container(
-        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: OrmeeColor.white,

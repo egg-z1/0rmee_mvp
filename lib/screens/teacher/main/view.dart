@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/screens/teacher/header/view.dart';
 import 'package:ormee_mvp/screens/teacher/home/view.dart';
@@ -9,11 +10,9 @@ import 'package:ormee_mvp/screens/teacher/sidemenu/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 
 class TeacherMain extends StatelessWidget {
-  final String teacherCode;
-  TeacherMain({required this.teacherCode, super.key});
-
-  LectureController managementController = Get.put(LectureController());
-  final TeacherHomeController controller = Get.put(TeacherHomeController());
+  TeacherMain({super.key});
+  LectureController managementController = Get.find<LectureController>();
+  TeacherHomeController controller = Get.find<TeacherHomeController>();
 
   late int index = managementController.lecture_index.value;
   @override
@@ -26,11 +25,10 @@ class TeacherMain extends StatelessWidget {
         appBar: TeacherHeader(),
         body: Row(
           children: [
-            SizedBox(
-              width: 348,
-              child: TeacherSideMenu(
-                teacherCode: teacherCode,
-              ),
+            Container(
+              padding: EdgeInsets.only(bottom: 30),
+              width: 300,
+              child: TeacherSideMenu(),
             ),
             Expanded(
               child: _buildTeacherBody(),
@@ -42,26 +40,25 @@ class TeacherMain extends StatelessWidget {
   }
 
   Widget _buildTeacherBody() {
+    final box = GetStorage();
     return Obx(() {
-      int currentIndex = managementController.lecture_index.value;
-      if (currentIndex == 0) {
+      if (managementController.lecture_index.value == 0) {
         return TeacherHome(
-          teacherCode: teacherCode,
           key: ValueKey('teacherHome'),
         );
       } else {
         String lectureId;
         String lectureTitle;
-        if (currentIndex <= controller.openLectures.length) {
-          lectureId = controller.openLectures[currentIndex - 1].id;
-          lectureTitle = controller.openLectures[currentIndex - 1].title;
+        if (managementController.lecture_index.value <= controller.openLectures.length) {
+          lectureId = controller.openLectures[managementController.lecture_index.value - 1].id;
+          lectureTitle = controller.openLectures[managementController.lecture_index.value - 1].title;
         } else {
-          int closedIndex = currentIndex - controller.openLectures.length - 1;
+          int closedIndex = managementController.lecture_index.value - controller.openLectures.length - 1;
           lectureId = controller.closedLectures[closedIndex].id;
           lectureTitle = controller.closedLectures[closedIndex].title;
         }
+        box.write('lectureId', lectureId);
         return TeacherLecture(
-          lectureId: lectureId,
           lectureTitle: lectureTitle,
           key: ValueKey('lecture_$lectureId'),
         );

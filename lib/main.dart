@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/screens/branching/view.dart';
 import 'package:ormee_mvp/screens/lecture_detail/view.dart';
-import 'package:ormee_mvp/screens/quiz/view.dart';
-import 'package:ormee_mvp/screens/quiz_answer/view.dart';
+import 'package:ormee_mvp/screens/teacher/home/view_model.dart';
+import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
+  Get.put(LectureController());
+  Get.put(TeacherHomeController());
   runApp(const OrmeeApp());
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
 import 'package:ormee_mvp/designs/OrmeeStatisticsAnswer.dart';
@@ -12,8 +13,8 @@ class TeacherQuizList extends StatelessWidget {
   final TeacherQuizController controller = Get.put(TeacherQuizController());
   final TeacherQuizStatisticsController controller1 =
       Get.put(TeacherQuizStatisticsController());
-  String lectureId;
-  TeacherQuizList({super.key, required this.lectureId});
+  String? lectureId;
+  TeacherQuizList({super.key});
   final RxBool isRegister = true.obs;
 
   final TeacherProblemStatisticsController controller2 =
@@ -64,8 +65,10 @@ class TeacherQuizList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchTeacherQuizList(lectureId);
-    controller.fetchTeacherQuizDraft(lectureId);
+    final box = GetStorage();
+    lectureId = box.read('lectureId');
+    controller.fetchTeacherQuizList(lectureId!);
+    controller.fetchTeacherQuizDraft(lectureId!);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +130,7 @@ class TeacherQuizList extends StatelessWidget {
                       : OrmeeColor.grey[20]!,
                 ),
               ),
-              child: Heading1_Semibold(
+              child: Headline1_Semibold(
                 text: '등록',
                 color:
                     isRegister.value ? OrmeeColor.white : OrmeeColor.grey[40],
@@ -152,7 +155,7 @@ class TeacherQuizList extends StatelessWidget {
                       : OrmeeColor.grey[60]!,
                 ),
               ),
-              child: Heading1_Semibold(
+              child: Headline1_Semibold(
                 text: '임시저장',
                 color:
                     isRegister.value ? OrmeeColor.grey[40] : OrmeeColor.white,
@@ -169,7 +172,7 @@ class TeacherQuizList extends StatelessWidget {
   createQuizButton() {
     return InkWell(
       onTap: () {
-        Get.to(Quizcreate(lectureId: '9789', isUpdate: false));
+        Get.to(const Quizcreate(isUpdate: false));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),

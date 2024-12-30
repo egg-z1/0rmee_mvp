@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
 import 'package:ormee_mvp/designs/OrmeeProblemCard.dart';
@@ -11,12 +12,14 @@ import 'package:ormee_mvp/screens/teacher/quiz_detail/view_model.dart';
 
 class QuizDetail extends StatelessWidget {
   QuizDetailController controller = Get.put(QuizDetailController());
-  String quizId;
+  late final String quizId;
 
-  QuizDetail({super.key, required this.quizId});
+  QuizDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+    quizId = box.read('quizId');
     controller.fetchQuizDetail(quizId);
     return Scaffold(
       backgroundColor: OrmeeColor.grey[5],
@@ -30,7 +33,7 @@ class QuizDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   GestureDetector(
-                    onTap: () => Get.to(Quizcreate(isUpdate: true, quizId: quizId)),
+                    onTap: () => Get.to(Quizcreate(isUpdate: true)),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       decoration: BoxDecoration(
