@@ -37,13 +37,13 @@ class TeacherMemoList extends StatelessWidget {
               children: [
                 Heading1_Semibold(text: '진행 쪽지'),
                 SizedBox(height: 20),
-                isComplete.value
+                controller.openMemos.isNotEmpty
                     ? ING_memoCard(context)
                     : NULL_memoCard('현재 진행 중인 쪽지가 없어요.'),
                 SizedBox(height: 30),
                 Heading1_Semibold(text: '마감 쪽지'),
                 SizedBox(height: 20),
-                isComplete.value
+                controller.closeMemos.isNotEmpty
                     ? END_memoCard()
                     : NULL_memoCard('현재 마감한 쪽지가 없어요.'),
               ],
