@@ -24,10 +24,22 @@ class TeacherQuizList extends StatelessWidget {
   final TeacherProblemStatisticsController controller2 =
       Get.put(TeacherProblemStatisticsController());
 
-  late final List<GlobalKey> containerKeys =
-      List.generate(controller1.statistics.length, (_) => GlobalKey());
-  late final List<GlobalKey> statisticsAnswerKeys =
-      List.generate(controller1.statistics.length, (_) => GlobalKey());
+  List<GlobalKey>? containerKeys = [];
+  List<GlobalKey>? statisticsAnswerKeys = [];
+
+  void synchronizeKeys(int length) {
+    if (containerKeys!.length < length) {
+      containerKeys!.addAll(List.generate(length - containerKeys!.length, (_) => GlobalKey()));
+    } else if (containerKeys!.length > length) {
+      containerKeys = containerKeys!.sublist(0, length);
+    }
+
+    if (statisticsAnswerKeys!.length < length) {
+      statisticsAnswerKeys!.addAll(List.generate(length - statisticsAnswerKeys!.length, (_) => GlobalKey()));
+    } else if (statisticsAnswerKeys!.length > length) {
+      statisticsAnswerKeys = statisticsAnswerKeys!.sublist(0, length);
+    }
+  }
 
   OverlayEntry? _overlayEntry;
 
@@ -69,6 +81,9 @@ class TeacherQuizList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ever(controller1.statistics, (_) {
+      synchronizeKeys(controller1.statistics.length);
+    });
     box = GetStorage();
     lectureId = box!.read('lectureId');
     controller.fetchTeacherQuizList(lectureId!);
@@ -480,9 +495,10 @@ class TeacherQuizList extends StatelessWidget {
   }
 
   Widget Statistic_quizCard(String quizId, context) {
+    controller1.fetchQuizStatistics(quizId);
     RxList<bool> isClick2 =
         List<bool>.filled(controller1.statistics.length, false).obs;
-    controller1.fetchQuizStatistics(quizId);
+
     return Obx(() {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -539,7 +555,7 @@ class TeacherQuizList extends StatelessWidget {
             Column(
               children: List.generate(controller1.statistics.length, (index) {
                 return Container(
-                  key: containerKeys[index],
+                  key: containerKeys![index],
                   padding: index == controller1.statistics.length - 1
                       ? EdgeInsets.zero
                       : EdgeInsets.only(bottom: 5),
@@ -556,12 +572,12 @@ class TeacherQuizList extends StatelessWidget {
                       ),
                       SizedBox(width: 55),
                       InkWell(
-                        key: statisticsAnswerKeys[index],
+                        key: statisticsAnswerKeys![index],
                         onTap: () {
                           int problem_id =
                               controller1.statistics[index].problemId;
                           final RenderBox renderBox =
-                              statisticsAnswerKeys[index]
+                              statisticsAnswerKeys![index]
                                   .currentContext!
                                   .findRenderObject() as RenderBox;
                           final position = renderBox.localToGlobal(Offset.zero);
