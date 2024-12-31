@@ -41,15 +41,18 @@ class QuizDetail extends StatelessWidget {
                     GestureDetector(
                       onTap: () => Get.toNamed('/teacher/quiz',
                           arguments: {'isUpdate': true}),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: OrmeeColor.purple[40]!),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: OrmeeColor.purple[40]!),
+                          ),
+                          child: Headline1_Semibold(
+                              text: '수정하기', color: OrmeeColor.purple[40]),
                         ),
-                        child: Headline1_Semibold(
-                            text: '수정하기', color: OrmeeColor.purple[40]),
                       ),
                     ),
                     const SizedBox(
@@ -80,15 +83,18 @@ class QuizDetail extends StatelessWidget {
                           },
                         );
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: OrmeeColor.grey[20]!),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: OrmeeColor.grey[20]!),
+                          ),
+                          child: Headline1_Semibold(
+                              text: '삭제하기', color: OrmeeColor.grey[90]),
                         ),
-                        child: Headline1_Semibold(
-                            text: '삭제하기', color: OrmeeColor.grey[90]),
                       ),
                     )
                   ],
