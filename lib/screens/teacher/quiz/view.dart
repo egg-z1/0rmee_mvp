@@ -29,13 +29,15 @@ class TeacherQuizList extends StatelessWidget {
 
   void synchronizeKeys(int length) {
     if (containerKeys!.length < length) {
-      containerKeys!.addAll(List.generate(length - containerKeys!.length, (_) => GlobalKey()));
+      containerKeys!.addAll(
+          List.generate(length - containerKeys!.length, (_) => GlobalKey()));
     } else if (containerKeys!.length > length) {
       containerKeys = containerKeys!.sublist(0, length);
     }
 
     if (statisticsAnswerKeys!.length < length) {
-      statisticsAnswerKeys!.addAll(List.generate(length - statisticsAnswerKeys!.length, (_) => GlobalKey()));
+      statisticsAnswerKeys!.addAll(List.generate(
+          length - statisticsAnswerKeys!.length, (_) => GlobalKey()));
     } else if (statisticsAnswerKeys!.length > length) {
       statisticsAnswerKeys = statisticsAnswerKeys!.sublist(0, length);
     }
@@ -60,7 +62,7 @@ class TeacherQuizList extends StatelessWidget {
           ),
           Positioned(
             left: position.dx + 100,
-            top: position.dy - 200,
+            top: position.dy - 300,
             child: OrmeeStatisticsAnswer(
               problemNum: controller1.statistics[index].problemNum,
               controller: controller2,
