@@ -34,16 +34,19 @@ class Branch extends StatelessWidget {
                 // }
                 Get.to(() => ClassCode());
               },
-              child: Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: OrmeeColor.primaryPuple[500],
-                ),
-                child: Center(
-                  child: B4_14px_R(
-                    text: "학생입니다",
-                    color: OrmeeColor.white,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: OrmeeColor.primaryPuple[500],
+                  ),
+                  child: Center(
+                    child: B4_14px_R(
+                      text: "학생입니다",
+                      color: OrmeeColor.white,
+                    ),
                   ),
                 ),
               ),
@@ -59,16 +62,19 @@ class Branch extends StatelessWidget {
                   Get.to(() => TeacherSignIn());
                 }
               },
-              child: Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: OrmeeColor.primaryPuple[500],
-                ),
-                child: const Center(
-                  child: B4_14px_R(
-                    text: "교사입니다",
-                    color: OrmeeColor.white,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: OrmeeColor.primaryPuple[500],
+                  ),
+                  child: const Center(
+                    child: B4_14px_R(
+                      text: "교사입니다",
+                      color: OrmeeColor.white,
+                    ),
                   ),
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -139,15 +140,18 @@ class _QuizcreateState extends State<Quizcreate> {
                 Get.offAllNamed('/teacher/main');
               }
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                  border: Border.all(color: OrmeeColor.grey[20]!),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Center(
-                child: Headline1_Semibold(
-                  text: '임시저장',
-                  color: OrmeeColor.grey[90],
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                    border: Border.all(color: OrmeeColor.grey[20]!),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Center(
+                  child: Headline1_Semibold(
+                    text: '임시저장',
+                    color: OrmeeColor.grey[90],
+                  ),
                 ),
               ),
             ),
@@ -160,14 +164,17 @@ class _QuizcreateState extends State<Quizcreate> {
                 Get.offAllNamed('/teacher/main');
               }
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                  color: OrmeeColor.purple[40],
-                  borderRadius: BorderRadius.circular(10)),
-              child: const Center(
-                child:
-                    Headline1_Semibold(text: '등록하기', color: OrmeeColor.white),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                    color: OrmeeColor.purple[40],
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Center(
+                  child:
+                      Headline1_Semibold(text: '등록하기', color: OrmeeColor.white),
+                ),
               ),
             ),
           ),
@@ -308,23 +315,26 @@ class _QuizcreateState extends State<Quizcreate> {
             },
           );
         },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-          decoration: BoxDecoration(
-            color: OrmeeColor.grey[5],
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Row(
-            children: [
-              SvgPicture.asset(icon, color: OrmeeColor.purple[40]),
-              const SizedBox(width: 12),
-              Obx(() => Heading2_Semibold(
-                    text: quizCreateController.selectedTimeLimit.value ?? label,
-                    color: quizCreateController.selectedTimeLimit.value == null
-                        ? OrmeeColor.grey[40]
-                        : OrmeeColor.grey[90],
-                  )),
-            ],
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            decoration: BoxDecoration(
+              color: OrmeeColor.grey[5],
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Row(
+              children: [
+                SvgPicture.asset(icon, color: OrmeeColor.purple[40]),
+                const SizedBox(width: 12),
+                Obx(() => Heading2_Semibold(
+                      text: quizCreateController.selectedTimeLimit.value ?? label,
+                      color: quizCreateController.selectedTimeLimit.value == null
+                          ? OrmeeColor.grey[40]
+                          : OrmeeColor.grey[90],
+                    )),
+              ],
+            ),
           ),
         ));
   }
@@ -470,26 +480,29 @@ class _QuizcreateState extends State<Quizcreate> {
 
     return GestureDetector(
       onTap: showMaterialDateTimePicker,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        decoration: BoxDecoration(
-          color: OrmeeColor.grey[5],
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          children: [
-            SvgPicture.asset(icon, color: OrmeeColor.purple[40]),
-            const SizedBox(width: 12),
-            Obx(() => Heading2_Semibold(
-                  text: quizCreateController.selectedDueTime.value == null
-                      ? label
-                      : DateFormat('yy.MM.dd HH:mm')
-                          .format(quizCreateController.selectedDueTime.value!),
-                  color: quizCreateController.selectedDueTime.value == null
-                      ? OrmeeColor.grey[40]
-                      : OrmeeColor.grey[90],
-                )),
-          ],
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+          decoration: BoxDecoration(
+            color: OrmeeColor.grey[5],
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(icon, color: OrmeeColor.purple[40]),
+              const SizedBox(width: 12),
+              Obx(() => Heading2_Semibold(
+                    text: quizCreateController.selectedDueTime.value == null
+                        ? label
+                        : DateFormat('yy.MM.dd HH:mm')
+                            .format(quizCreateController.selectedDueTime.value!),
+                    color: quizCreateController.selectedDueTime.value == null
+                        ? OrmeeColor.grey[40]
+                        : OrmeeColor.grey[90],
+                  )),
+            ],
+          ),
         ),
       ),
     );
@@ -569,17 +582,20 @@ class _QuizcreateState extends State<Quizcreate> {
                                         renderBox.localToGlobal(Offset.zero);
                                     openOrmeeSelect(context, index, position);
                                   },
-                                  child: (quizCreateController.answers[index] ==
-                                          "")
-                                      ? Headline1_Semibold(
-                                          text: '선택',
-                                          color: OrmeeColor.grey[30],
-                                        )
-                                      : Heading2_Semibold(
-                                          text: quizCreateController
-                                              .answers[index],
-                                          color: OrmeeColor.purple[40],
-                                        ),
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: (quizCreateController.answers[index] ==
+                                            "")
+                                        ? Headline1_Semibold(
+                                            text: '선택',
+                                            color: OrmeeColor.grey[30],
+                                          )
+                                        : Heading2_Semibold(
+                                            text: quizCreateController
+                                                .answers[index],
+                                            color: OrmeeColor.purple[40],
+                                          ),
+                                  ),
                                 )
                               : inputAnswer(index))
                         ],
@@ -589,9 +605,12 @@ class _QuizcreateState extends State<Quizcreate> {
                               onTap: () {
                                 quizCreateController.removeProblem(index);
                               },
-                              child: SvgPicture.asset(
-                                  'assets/icons/Property 1=trash, size=l.svg',
-                                  color: OrmeeColor.grey[50]))
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: SvgPicture.asset(
+                                    'assets/icons/Property 1=trash, size=l.svg',
+                                    color: OrmeeColor.grey[50]),
+                              ))
                           : const SizedBox())
                     ],
                   ),
@@ -607,15 +626,18 @@ class _QuizcreateState extends State<Quizcreate> {
       onTap: () {
         quizCreateController.addProblem();
       },
-      child: Container(
-        height: 60,
-        width: 60,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: OrmeeColor.white,
-        ),
-        child: Center(
-          child: Icon(Icons.add, color: OrmeeColor.purple[40]!, size: 36),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          height: 60,
+          width: 60,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: OrmeeColor.white,
+          ),
+          child: Center(
+            child: Icon(Icons.add, color: OrmeeColor.purple[40]!, size: 36),
+          ),
         ),
       ),
     );
@@ -707,16 +729,19 @@ class _QuizcreateState extends State<Quizcreate> {
                                   quizCreateController.removeOption(
                                       problemIndex, index);
                                 },
-                                child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: OrmeeColor.gray[5],
-                                  ),
-                                  child: Center(
-                                    child: Icon(Icons.close,
-                                        color: OrmeeColor.grey[60], size: 14),
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: Container(
+                                    height: 20,
+                                    width: 20,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: OrmeeColor.gray[5],
+                                    ),
+                                    child: Center(
+                                      child: Icon(Icons.close,
+                                          color: OrmeeColor.grey[60], size: 14),
+                                    ),
                                   ),
                                 ))
                             : const SizedBox())
@@ -731,13 +756,16 @@ class _QuizcreateState extends State<Quizcreate> {
             onTap: () {
               quizCreateController.addOption(problemIndex);
             },
-            child: Row(
-              children: [
-                const SizedBox(width: 4),
-                Icon(Icons.add, color: OrmeeColor.primaryPuple[400]),
-                const SizedBox(width: 8),
-                Body_Regular(text: '선지 추가', color: OrmeeColor.grey[40]),
-              ],
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Row(
+                children: [
+                  const SizedBox(width: 4),
+                  Icon(Icons.add, color: OrmeeColor.primaryPuple[400]),
+                  const SizedBox(width: 8),
+                  Body_Regular(text: '선지 추가', color: OrmeeColor.grey[40]),
+                ],
+              ),
             ),
           )
         ],
@@ -829,21 +857,24 @@ class _QuizcreateState extends State<Quizcreate> {
             },
           );
         },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          decoration: BoxDecoration(
-              color: OrmeeColor.white,
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: OrmeeColor.grey[30]!)),
-          child: Row(
-            children: [
-              Obx(() => Headline2_Semibold(
-                    text: selectedValue.value!,
-                    color: OrmeeColor.grey[90],
-                  )),
-              const SizedBox(width: 36),
-              SvgPicture.asset(icon, color: OrmeeColor.grey[30])
-            ],
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+                color: OrmeeColor.white,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: OrmeeColor.grey[30]!)),
+            child: Row(
+              children: [
+                Obx(() => Headline2_Semibold(
+                      text: selectedValue.value!,
+                      color: OrmeeColor.grey[90],
+                    )),
+                const SizedBox(width: 36),
+                SvgPicture.asset(icon, color: OrmeeColor.grey[30])
+              ],
+            ),
           ),
         ));
   }
