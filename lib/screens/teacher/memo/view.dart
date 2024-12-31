@@ -239,7 +239,17 @@ class TeacherMemoList extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  isClick[index] = !isClick[index];
+                  if (index < isClick.length) {
+                    if (isClick[index] == false) {
+                      isClick.value =
+                          List<bool>.filled(controller.closeMemos.length, true);
+                    } else {
+                      var newList =
+                          List<bool>.filled(controller.closeMemos.length, true);
+                      newList[index] = false;
+                      isClick.value = newList;
+                    }
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),

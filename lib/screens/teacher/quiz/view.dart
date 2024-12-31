@@ -369,14 +369,24 @@ class TeacherQuizList extends StatelessWidget {
   Widget END_quizCard(context) {
     RxList<bool> isClick =
         List<bool>.filled(controller.closedQuizzes.length, true).obs;
-    return Obx(
-      () => Column(
+    return Obx(() {
+      return Column(
         children: List.generate(controller.closedQuizzes.length, (index) {
           return Column(
             children: [
               InkWell(
                 onTap: () {
-                  isClick[index] = !isClick[index];
+                  if (index < isClick.length) {
+                    if (isClick[index] == false) {
+                      isClick.value = List<bool>.filled(
+                          controller.closedQuizzes.length, true);
+                    } else {
+                      var newList = List<bool>.filled(
+                          controller.closedQuizzes.length, true);
+                      newList[index] = false;
+                      isClick.value = newList;
+                    }
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 25, horizontal: 30),
@@ -465,106 +475,107 @@ class TeacherQuizList extends StatelessWidget {
             ],
           );
         }),
-      ),
-    );
+      );
+    });
   }
 
   Widget Statistic_quizCard(String quizId, context) {
     RxList<bool> isClick2 =
         List<bool>.filled(controller1.statistics.length, false).obs;
     controller1.fetchQuizStatistics(quizId);
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-      decoration: BoxDecoration(
-        color: OrmeeColor.grey[5],
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                width: 74,
-                child: Center(
-                  child: Label1(
-                    text: '순위',
-                    color: OrmeeColor.grey[50],
+    return Obx(() {
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        decoration: BoxDecoration(
+          color: OrmeeColor.grey[5],
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: 74,
+                  child: Center(
+                    child: Label1(
+                      text: '순위',
+                      color: OrmeeColor.grey[50],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 55),
-              SizedBox(
-                width: 89,
-                child: Center(
-                  child: Label1(
-                    text: '문항',
-                    color: OrmeeColor.grey[50],
+                SizedBox(width: 55),
+                SizedBox(
+                  width: 89,
+                  child: Center(
+                    child: Label1(
+                      text: '문항',
+                      color: OrmeeColor.grey[50],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 55),
-              SizedBox(
-                width: 89,
-                child: Center(
-                  child: Label1(
-                    text: '오답 비율',
-                    color: OrmeeColor.grey[50],
+                SizedBox(width: 55),
+                SizedBox(
+                  width: 89,
+                  child: Center(
+                    child: Label1(
+                      text: '오답 비율',
+                      color: OrmeeColor.grey[50],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 55),
-              SizedBox(
-                width: 89,
-                child: Center(
-                  child: Label1(
-                    text: '오답 인원',
-                    color: OrmeeColor.grey[50],
+                SizedBox(width: 55),
+                SizedBox(
+                  width: 89,
+                  child: Center(
+                    child: Label1(
+                      text: '오답 인원',
+                      color: OrmeeColor.grey[50],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Column(
-            children: List.generate(controller1.statistics.length, (index) {
-              return Container(
-                key: containerKeys[index],
-                padding: index == controller1.statistics.length - 1
-                    ? EdgeInsets.zero
-                    : EdgeInsets.only(bottom: 5),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 74,
-                      child: Center(
-                        child: Headline2_Semibold(
-                          text: '${controller1.statistics[index].rank}',
-                          color: OrmeeColor.grey[50],
+              ],
+            ),
+            SizedBox(height: 10),
+            Column(
+              children: List.generate(controller1.statistics.length, (index) {
+                return Container(
+                  key: containerKeys[index],
+                  padding: index == controller1.statistics.length - 1
+                      ? EdgeInsets.zero
+                      : EdgeInsets.only(bottom: 5),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 74,
+                        child: Center(
+                          child: Headline2_Semibold(
+                            text: '${controller1.statistics[index].rank}',
+                            color: OrmeeColor.grey[50],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 55),
-                    InkWell(
-                      key: statisticsAnswerKeys[index],
-                      onTap: () {
-                        int problem_id =
-                            controller1.statistics[index].problemId;
-                        final RenderBox renderBox = statisticsAnswerKeys[index]
-                            .currentContext!
-                            .findRenderObject() as RenderBox;
-                        final position = renderBox.localToGlobal(Offset.zero);
-                        openOrmeeStatisticsAnswer(
-                            context, index, problem_id, position);
-                        isClick2 = List<bool>.filled(
-                                controller1.statistics.length, false)
-                            .obs;
-                        isClick2[index] = !isClick2[index];
-                      },
-                      child: SizedBox(
-                        width: 89,
-                        child: Center(
-                          child: Obx(
-                            () => Headline2_Semibold(
+                      SizedBox(width: 55),
+                      InkWell(
+                        key: statisticsAnswerKeys[index],
+                        onTap: () {
+                          int problem_id =
+                              controller1.statistics[index].problemId;
+                          final RenderBox renderBox =
+                              statisticsAnswerKeys[index]
+                                  .currentContext!
+                                  .findRenderObject() as RenderBox;
+                          final position = renderBox.localToGlobal(Offset.zero);
+                          openOrmeeStatisticsAnswer(
+                              context, index, problem_id, position);
+                          isClick2 = List<bool>.filled(
+                                  controller1.statistics.length, false)
+                              .obs;
+                          isClick2[index] = !isClick2[index];
+                        },
+                        child: SizedBox(
+                          width: 89,
+                          child: Center(
+                            child: Headline2_Semibold(
                               text:
                                   '문항 ${controller1.statistics[index].problemNum}',
                               color: isClick2[index]
@@ -575,37 +586,37 @@ class TeacherQuizList extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 55),
-                    SizedBox(
-                      width: 89,
-                      child: Center(
-                        child: Headline2_Semibold(
-                          text:
-                              '${controller1.statistics[index].incorrectRate}%',
-                          color: OrmeeColor.grey[60],
+                      SizedBox(width: 55),
+                      SizedBox(
+                        width: 89,
+                        child: Center(
+                          child: Headline2_Semibold(
+                            text:
+                                '${controller1.statistics[index].incorrectRate}%',
+                            color: OrmeeColor.grey[60],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 55),
-                    SizedBox(
-                      width: 89,
-                      child: Center(
-                        child: Headline2_Semibold(
-                          text:
-                              '${controller1.statistics[index].incorrectCount}',
-                          color: OrmeeColor.grey[60],
+                      SizedBox(width: 55),
+                      SizedBox(
+                        width: 89,
+                        child: Center(
+                          child: Headline2_Semibold(
+                            text:
+                                '${controller1.statistics[index].incorrectCount}',
+                            color: OrmeeColor.grey[60],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
-    );
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget TEMP_quizCard() {
