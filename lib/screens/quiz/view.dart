@@ -167,11 +167,17 @@ class Quiz extends StatelessWidget {
               password: password,
               submissions: submissionList,
             );
+            final summitable = !controller.quizList.value
+                .any((quiz) => submissions[quiz.id] == "");
             try {
-              await controller.submitQuiz(submission);
-              OrmeeToast.show(context, '시험 응시가 완료되었습니다.');
-              Get.until((route) =>
-                  route.settings.name?.startsWith('/ClassCode/') ?? false);
+              if (summitable) {
+                await controller.submitQuiz(submission);
+                OrmeeToast.show(context, '시험 응시가 완료되었습니다.');
+                Get.until((route) =>
+                    route.settings.name?.startsWith('/ClassCode/') ?? false);
+              } else {
+                OrmeeToast.show(context, '모든 문제에 응답해주세요.');
+              }
             } catch (e) {
               OrmeeToast.show(context, '제출을 다시 시도해주세요.');
             }
