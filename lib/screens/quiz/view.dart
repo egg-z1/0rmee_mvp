@@ -76,7 +76,7 @@ class Quiz extends StatelessWidget {
                       Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                        margin: EdgeInsets.only(bottom: 48),
+                        margin: EdgeInsets.only(bottom: 89.5),
                         child: ListView.separated(
                           itemCount: controller.quizList.value.length,
                           itemBuilder: (context, index) {

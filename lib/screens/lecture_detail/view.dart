@@ -288,142 +288,146 @@ Widget customDialog(BuildContext context, TextEditingController controller,
   final isSubmitting = false.obs;
 
   return Dialog(
-    child: Container(
-      decoration: BoxDecoration(
-        color: OrmeeColor.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: T4_16px(
-                  text: '${title}',
-                  overflow: TextOverflow.visible,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: SvgPicture.asset("assets/icons/xLarge.svg"),
-              ),
-            ],
-          ),
-          SizedBox(height: 24),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: OrmeeColor.gray[100]!,
-              ),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
+    child: SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(
+          color: OrmeeColor.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                C1_12px_M(text: '받는 사람:', color: OrmeeColor.gray[500]),
-                C1_12px_M(text: '${teacherName}'),
+                Expanded(
+                  child: T4_16px(
+                    text: '${title}',
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  icon: SvgPicture.asset("assets/icons/xLarge.svg"),
+                ),
               ],
             ),
-          ),
-          SizedBox(height: 16),
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: OrmeeColor.gray[100]!),
-              color: OrmeeColor.gray[100],
-            ),
-            child: TextField(
-              controller: controller,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Pretendard',
-                color: Colors.black,
-              ),
-              cursorColor: OrmeeColor.gray[600],
-              decoration: InputDecoration(
-                hintText: '번호는 쉼표로 구분해서 제출해 주세요.\nex) 1, 7, 18, 22',
-                hintStyle: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Pretendard',
-                  color: OrmeeColor.gray[400]!,
+            SizedBox(height: 24),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: OrmeeColor.gray[100]!,
                 ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                border: InputBorder.none,
-                fillColor: OrmeeColor.gray[100],
               ),
-              maxLines: null,
-              onChanged: (value) {
-                final filteredValue =
-                    value.replaceAll(RegExp(r'[^0-9,\s]'), '');
-                if (value != filteredValue) {
-                  controller.value = TextEditingValue(
-                    text: filteredValue,
-                    selection:
-                        TextSelection.collapsed(offset: filteredValue.length),
-                  );
-                }
-              },
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  C1_12px_M(text: '받는 사람:', color: OrmeeColor.gray[500]),
+                  C1_12px_M(text: '${teacherName}'),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Spacer(),
-              Obx(() {
-                return TextButton(
-                  onPressed: (isTextFieldNotEmpty.value && !isSubmitting.value)
-                      ? () async {
-                          isSubmitting.value = true;
-                          final submission = MessageSubmission(
-                            context: controller.text.trim(),
-                          );
-                          try {
-                            await LectureService().submitMessage(
-                              submission,
-                              messageId,
-                            );
-                            Get.back(); // Close dialog
-                            OrmeeToast.show(context, "제출 완료 되었습니다.");
-                          } catch (e) {
-                            OrmeeToast.show(
-                                context, "제출이 완료 되지 않았습니다. 다시 시도해주세요.");
-                          } finally {
-                            isSubmitting.value = false;
-                          }
-                        }
-                      : null,
-                  child: C1_12px_M(
-                    text: "제출하기",
-                    color: isTextFieldNotEmpty.value
-                        ? OrmeeColor.white
-                        : OrmeeColor.gray[600]!,
+            SizedBox(height: 16),
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: OrmeeColor.gray[100]!),
+                color: OrmeeColor.gray[100],
+              ),
+              child: TextField(
+                controller: controller,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Pretendard',
+                  color: Colors.black,
+                ),
+                cursorColor: OrmeeColor.gray[600],
+                decoration: InputDecoration(
+                  hintText: '번호는 쉼표로 구분해서 제출해 주세요.\nex) 1, 7, 18, 22',
+                  hintStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Pretendard',
+                    color: OrmeeColor.gray[400]!,
                   ),
-                  style: TextButton.styleFrom(
-                    backgroundColor: isTextFieldNotEmpty.value
-                        ? OrmeeColor.primaryPuple[300]
-                        : OrmeeColor.gray[100]!,
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  border: InputBorder.none,
+                  fillColor: OrmeeColor.gray[100],
+                ),
+                maxLines: null,
+                onChanged: (value) {
+                  final filteredValue =
+                      value.replaceAll(RegExp(r'[^0-9,\s]'), '');
+                  if (value != filteredValue) {
+                    controller.value = TextEditingValue(
+                      text: filteredValue,
+                      selection:
+                          TextSelection.collapsed(offset: filteredValue.length),
+                    );
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Spacer(),
+                Obx(() {
+                  return TextButton(
+                    onPressed:
+                        (isTextFieldNotEmpty.value && !isSubmitting.value)
+                            ? () async {
+                                isSubmitting.value = true;
+                                final submission = MessageSubmission(
+                                  context: controller.text.trim(),
+                                );
+                                try {
+                                  await LectureService().submitMessage(
+                                    submission,
+                                    messageId,
+                                  );
+                                  Get.back(); // Close dialog
+                                  OrmeeToast.show(context, "제출 완료 되었습니다.");
+                                } catch (e) {
+                                  OrmeeToast.show(
+                                      context, "제출이 완료 되지 않았습니다. 다시 시도해주세요.");
+                                } finally {
+                                  isSubmitting.value = false;
+                                }
+                              }
+                            : null,
+                    child: C1_12px_M(
+                      text: "제출하기",
+                      color: isTextFieldNotEmpty.value
+                          ? OrmeeColor.white
+                          : OrmeeColor.gray[600]!,
                     ),
-                  ),
-                );
-              })
-            ],
-          )
-        ],
+                    style: TextButton.styleFrom(
+                      backgroundColor: isTextFieldNotEmpty.value
+                          ? OrmeeColor.primaryPuple[300]
+                          : OrmeeColor.gray[100]!,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  );
+                })
+              ],
+            )
+          ],
+        ),
       ),
     ),
   );
