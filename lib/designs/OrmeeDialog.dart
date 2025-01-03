@@ -37,7 +37,7 @@ class OrmeeDialog extends StatelessWidget {
       surfaceTintColor: Colors.transparent,
       contentPadding: EdgeInsets.symmetric(vertical: 40, horizontal: 64),
       content: SizedBox(
-        width: haveDropdown ? 528 : 400,
+        width: haveDropdown ? 491 : 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -93,7 +93,7 @@ class OrmeeDialog extends StatelessWidget {
               SizedBox(height: 8),
               OrmeeDropDownButton(
                 dropdownController: dropdownController2!,
-                topPadding: 610,
+                bottomPadding: 120,
               ),
             ],
             SizedBox(height: 48),
