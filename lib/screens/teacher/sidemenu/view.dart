@@ -262,10 +262,10 @@ class TeacherSideMenu extends StatelessWidget {
           return buildLectureCards(
               controller.sidemenu.value?.openLectures ?? []);
         }),
-        Obx(() {
-          return buildLectureCards(
-              controller.sidemenu.value?.closedLectures ?? []);
-        }),
+        // Obx(() {
+        //   return buildLectureCards(
+        //       controller.sidemenu.value?.closedLectures ?? []);
+        // }),
       ],
     );
   }

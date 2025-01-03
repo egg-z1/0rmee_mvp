@@ -103,7 +103,7 @@ class TeacherHome extends StatelessWidget {
                   title: titleController.textEditingController.text,
                   openTime: getLocalDateTimeFromMonthString(
                       dropdownController1.selectedMonth.value),
-                  dueTime: getLocalDateTimeFromMonthString(
+                  dueTime: calculateIncrementedMonth(
                       dropdownController2.selectedMonth.value),
                 ));
             Get.forceAppUpdate();
@@ -119,6 +119,17 @@ class TeacherHome extends StatelessWidget {
     String monthNumberString = monthString.replaceAll(RegExp(r'[^0-9]'), '');
     int month = int.parse(monthNumberString);
     return DateTime(currentYear, month, 1, 0, 0, 0);
+  }
+
+  DateTime calculateIncrementedMonth(String monthString) {
+    int currentYear = DateTime.now().year;
+    String monthNumberString = monthString.replaceAll(RegExp(r'[^0-9]'), '');
+    int month = int.parse(monthNumberString);
+
+    int newMonth = (month % 12) + 1;
+    int newYear = currentYear + (newMonth == 1 ? 1 : 0);
+
+    return DateTime(newYear, newMonth, 1, 0, 0, 0);
   }
 }
 

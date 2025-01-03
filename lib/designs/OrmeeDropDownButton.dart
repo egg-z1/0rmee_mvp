@@ -9,6 +9,7 @@ class DropdownController extends GetxController {
 
 class OrmeeDropDownButton extends StatelessWidget {
   final double? topPadding;
+  final double? bottomPadding;
   final DropdownController dropdownController;
   final List<String> dropdownItems = [
     '1월',
@@ -28,6 +29,7 @@ class OrmeeDropDownButton extends StatelessWidget {
   OrmeeDropDownButton({
     super.key,
     this.topPadding,
+    this.bottomPadding,
     required this.dropdownController,
   });
 
@@ -38,7 +40,8 @@ class OrmeeDropDownButton extends StatelessWidget {
       barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.only(top: topPadding ?? 0),
+          padding:
+              EdgeInsets.only(top: topPadding ?? 0, bottom: bottomPadding ?? 0),
           child: Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
