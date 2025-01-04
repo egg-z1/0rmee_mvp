@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:ormee_mvp/designs/OrmeeColor.dart';
 import 'package:ormee_mvp/designs/OrmeeDialog.dart';
 import 'package:ormee_mvp/designs/OrmeeModal.dart';
@@ -175,7 +176,7 @@ class TeacherMemoList extends StatelessWidget {
                                 text: controller.openMemos[index].title),
                             SizedBox(height: 5),
                             Label1(
-                              text: '${controller.openMemos[index].dueTime}',
+                              text: DateFormat('yyyy-MM-dd HH:mm').format(controller.openMemos[index].dueTime),
                               color: OrmeeColor.grey[30],
                             ),
                           ],
@@ -278,7 +279,7 @@ class TeacherMemoList extends StatelessWidget {
                             ),
                             SizedBox(height: 5),
                             Label1(
-                              text: '${controller.closeMemos[index].dueTime}',
+                              text: DateFormat('yyyy-MM-dd HH:mm').format(controller.closeMemos[index].dueTime),
                               color: OrmeeColor.grey[30],
                             ),
                           ],
