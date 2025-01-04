@@ -12,8 +12,10 @@ import 'package:ormee_mvp/screens/teacher/quiz_create/view.dart';
 import 'package:ormee_mvp/screens/teacher/quiz_detail/view.dart';
 import 'package:ormee_mvp/screens/teacher/sidemenu/view_model.dart';
 import 'package:ormee_mvp/screens/teacher/sign_in/view.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async {
+  usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   Get.put(LectureListController());
