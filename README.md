@@ -1,4 +1,4 @@
-# ormee_mvp
+# 오르미 mvp
 
 A new Flutter project.
 
